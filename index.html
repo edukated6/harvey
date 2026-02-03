@@ -394,16 +394,25 @@ Always looking for the next creative challenge—remote or in a new city—so le
 </footer>
 
 <script>
-const isTouch = window.matchMedia("(pointer: coarse)").matches;
+const videos = document.querySelectorAll("video");
 
-document.querySelectorAll("video").forEach(video => {
-  if (!isTouch) {
-    video.addEventListener("mouseenter", () => video.play());
-    video.addEventListener("mouseleave", () => {
-      video.pause();
-      video.currentTime = 0;
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
     });
-  }
+  },
+  { threshold: 0.6 }
+);
+
+videos.forEach(video => {
+  video.muted = true; // enforce mobile autoplay rule
+  observer.observe(video);
 });
 </script>
 
