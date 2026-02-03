@@ -394,15 +394,16 @@ Always looking for the next creative challenge—remote or in a new city—so le
 </footer>
 
 <script>
-/* =====================
-   HOVER PLAY INTERACTION
-   ===================== */
+const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
 document.querySelectorAll("video").forEach(video => {
-  video.addEventListener("mouseenter", () => video.play());
-  video.addEventListener("mouseleave", () => {
-    video.pause();
-    video.currentTime = 0;
-  });
+  if (!isTouch) {
+    video.addEventListener("mouseenter", () => video.play());
+    video.addEventListener("mouseleave", () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  }
 });
 </script>
 
