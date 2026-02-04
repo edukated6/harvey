@@ -231,6 +231,35 @@ header h1 {
 header p {
   font-size: 1.2rem;
   opacity: 0.9;
+  margin-bottom: 40px;
+}
+
+/* =====================
+   ANIMATED DOWN ARROW
+   ===================== */
+.scroll-arrow {
+  display: inline-block;
+  margin-top: 30px;
+  animation: bounce 2s infinite;
+}
+
+.scroll-arrow svg {
+  width: 32px;
+  height: 32px;
+  stroke: #FFFAFA;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(12px);
+  }
 }
 
 /* =====================
@@ -328,6 +357,12 @@ footer {
   <div>
     <h1>The Harvey Effect</h1>
     <p>Scroll for Shows, Motion graphics, and Visual designs by Ahmaad Harvey.</p>
+    <div class="scroll-arrow">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="18 7 12 13 6 7"></polyline>
+        <polyline points="18 13 12 19 6 13"></polyline>
+      </svg>
+    </div>
   </div>
 </header>
 
