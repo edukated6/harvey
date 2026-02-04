@@ -68,6 +68,76 @@
 }
 
 /* =====================
+   HAMBURGER MENU
+   ===================== */
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 1001;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  border: none;
+  color: var(--text-main);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-btn:hover {
+  transform: scale(1.08);
+}
+
+/* =====================
+   MOBILE RESPONSIVE
+   ===================== */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block;
+  }
+
+  .nav-bar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(100%);
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 10px;
+    border-radius: 0;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+  }
+
+  .nav-bar.visible {
+    display: flex;
+  }
+
+  .nav-bar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .nav-item {
+    font-size: 1rem;
+    padding: 12px 16px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover {
+    transform: translateX(5px);
+  }
+}
+
+/* =====================
    ABOUT SECTION
    ===================== */
 .about {
@@ -406,6 +476,9 @@ footer {
 </head>
 
 <body>
+<!-- HAMBURGER MENU BUTTON -->
+<button class="hamburger-btn" id="hamburgerBtn">☰</button>
+
 <!-- NAVIGATION BAR -->
 <nav class="nav-bar" id="navBar">
   <a href="#header" class="nav-item">The Harvey Effect</a>
@@ -577,6 +650,7 @@ Always looking for the next creative challenge—remote or in a new city—so le
 <script>
 // Navigation Bar Script
 const navBar = document.getElementById('navBar');
+const hamburgerBtn = document.getElementById('hamburgerBtn');
 const navItems = document.querySelectorAll('.nav-item');
 const sections = [
   { id: 'header', navIndex: 0 },
@@ -589,15 +663,36 @@ const sections = [
   { id: 'contact', navIndex: 7 }
 ];
 
+// Mobile menu toggle
+hamburgerBtn.addEventListener('click', () => {
+  navBar.classList.toggle('mobile-open');
+});
+
+// Close mobile menu when a nav item is clicked
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    navBar.classList.remove('mobile-open');
+  });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!navBar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+    navBar.classList.remove('mobile-open');
+  }
+});
+
 // Show nav bar when scrolling down
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
   
-  // Show nav bar after scrolling past the header
-  if (scrollY > 200) {
-    navBar.classList.add('visible');
-  } else {
-    navBar.classList.remove('visible');
+  // Show nav bar after scrolling past the header (only on desktop)
+  if (window.innerWidth > 768) {
+    if (scrollY > 200) {
+      navBar.classList.add('visible');
+    } else {
+      navBar.classList.remove('visible');
+    }
   }
 
   // Highlight active nav item
