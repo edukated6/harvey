@@ -508,6 +508,34 @@ header p {
 }
 
 /* =====================
+   TIGHTEN SPECIFIC PANELS
+   Bring About, Contact, and Graphics panels closer together
+   ===================== */
+#about, #contact, #lifeArt {
+  padding: 12px 10px;
+  min-height: 70vh;
+}
+
+#about .panel-inner,
+#contact .panel-inner,
+#lifeArt .panel-inner {
+  width: 98%;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+#about .content,
+#lifeArt .content {
+  padding: 16px 18px;
+}
+
+@media (max-width: 768px) {
+  #about, #contact, #lifeArt { padding: 10px 8px; min-height: 58vh; }
+  #about .panel-inner, #contact .panel-inner, #lifeArt .panel-inner { width: 100%; margin: 4px 0; }
+  #about .content, #lifeArt .content { padding: 14px; }
+}
+
+/* =====================
    MEDIA
    ===================== */
 .media {
