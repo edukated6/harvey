@@ -453,7 +453,7 @@ const observer = new IntersectionObserver(
 );
 
 videos.forEach(video => {
-  video.muted = false; // enforce mobile autoplay rule
+  video.muted = true; // enforce mobile autoplay rule
   observer.observe(video);
 
   document.querySelectorAll(".video-wrapper").forEach(wrapper => {
