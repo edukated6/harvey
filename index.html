@@ -187,8 +187,18 @@ header p {
   z-index: 1000;
 }
 
+.logo-fixed a {
+  display: block;
+  cursor: pointer;
+}
+
 .logo-fixed img {
   width: 160px;
+  transition: transform 0.3s ease;
+}
+
+.logo-fixed a:hover img {
+  transform: scale(1.05);
 }
 
 /* =====================
@@ -349,11 +359,13 @@ footer {
 <body>
 <!-- Sticky Corner Logo -->
 <div class="logo-fixed">
-  <img src="harvey logo.png" alt="Producer Logo">
+  <a href="#top">
+    <img src="harvey logo.png" alt="Producer Logo">
+  </a>
 </div>
 
 <!-- INTRO -->
-<header>
+<header id="top">
   <div>
     <h1>The Harvey Effect</h1>
     <p>Scroll for Shows, Motion graphics, and Visual designs by Ahmaad Harvey.</p>
