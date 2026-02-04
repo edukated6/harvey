@@ -94,7 +94,8 @@ video {
   padding: 0.5rem 0.75rem;
   border-radius: 999px;
   cursor: pointer;
-  z-index: 5;
+  pointer-events: auto;
+  z-index: 10;
 }
 
 /* FORM */
@@ -314,7 +315,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="For Studio 3.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="Studio 3.mp4" type="video/mp4">
+      </video>
       <button class="mute-toggle">🔊</button>
     </div>
     <div class="content">
@@ -331,7 +334,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="For T11.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="For T11.mp4" type="video/mp4">
+      </video>
       <button class="mute-toggle">🔊</button>
     </div>
     <div class="content">
@@ -349,7 +354,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Commercials.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="Commercials.mp4" type="video/mp4">
+      </video>
       <button class="mute-toggle">🔊</button>
     </div>
     <div class="content">
@@ -366,7 +373,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Opens.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="Opens.mp4" type="video/mp4">
+      </video>
       <button class="mute-toggle">🔊</button>
     </div>
     <div class="content">
@@ -384,7 +393,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Backgrounds.mp4" autoplay muted loop playsinline preload="auto"></video>
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="Backgrounds.mp4" type="video/mp4">
+      </video>
       <button class="mute-toggle">🔊</button>
     </div>
     <div class="content">
@@ -436,37 +447,37 @@ Always looking for the next creative challenge—remote or in a new city—so le
 </footer>
 
 <script>
-const videos = document.querySelectorAll("video");
+document.querySelectorAll(".video-wrapper").forEach(wrapper => {
+  const video = wrapper.querySelector("video");
+  const button = wrapper.querySelector(".mute-toggle");
 
-const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      const video = entry.target;
+  let userUnmuted = false;
+
+  // Intersection autoplay
+  const observer = new IntersectionObserver(
+    ([entry]) => {
       if (entry.isIntersecting) {
         video.play().catch(() => {});
       } else {
         video.pause();
       }
-    });
-  },
-  { threshold: 0.6 }
-);
+    },
+    { threshold: 0.6 }
+  );
 
-videos.forEach(video => {
-  video.muted = true; // enforce mobile autoplay rule
   observer.observe(video);
 
-  document.querySelectorAll(".video-wrapper").forEach(wrapper => {
-  const video = wrapper.querySelector("video");
-  const button = wrapper.querySelector(".mute-toggle");
-
-  button.addEventListener("click", () => {
-    video.muted = !video.muted;
+  // Mute toggle
+  button.addEventListener("click", e => {
+    e.stopPropagation();
+    userUnmuted = !userUnmuted;
+    video.muted = !userUnmuted;
     button.textContent = video.muted ? "🔊" : "🔇";
+
+    // REQUIRED for iOS: ensure play after interaction
+    video.play().catch(() => {});
   });
 });
-});
-
 </script>
 
 </body>
