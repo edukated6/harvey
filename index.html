@@ -18,6 +18,52 @@
   --text-main: #FFFAFA;
   --text-muted: #666;
 }
+
+/* =====================
+   NAVIGATION BAR
+   ===================== */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  padding: 15px 40px;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: none;
+  align-items: center;
+  gap: 30px;
+  overflow-x: auto;
+}
+
+.nav-bar.visible {
+  display: flex;
+}
+
+.nav-item {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: var(--secondary);
+  font-weight: 600;
+}
+
 /* =====================
    ABOUT SECTION
    ===================== */
@@ -357,6 +403,18 @@ footer {
 </head>
 
 <body>
+<!-- NAVIGATION BAR -->
+<nav class="nav-bar" id="navBar">
+  <a href="#header" class="nav-item">The Harvey Effect</a>
+  <a href="#studio3" class="nav-item">Studio 3</a>
+  <a href="#today11" class="nav-item">Today at 11</a>
+  <a href="#commercials" class="nav-item">Commercials</a>
+  <a href="#motionGraphics" class="nav-item">Motion Graphics</a>
+  <a href="#lifeArt" class="nav-item">Life is Art</a>
+  <a href="#about" class="nav-item">About</a>
+  <a href="#contact" class="nav-item">Contact</a>
+</nav>
+
 <!-- Sticky Corner Logo -->
 <div class="logo-fixed">
   <a href="#top">
@@ -365,7 +423,7 @@ footer {
 </div>
 
 <!-- INTRO -->
-<header id="top">
+<header id="header" id="top">
   <div>
     <h1>The Harvey Effect</h1>
     <p>Scroll for Shows, Motion graphics, and Visual designs by Ahmaad Harvey.</p>
@@ -379,7 +437,7 @@ footer {
 </header>
 
 <!-- SHOW 1 -->
-<section class="panel">
+<section class="panel" id="studio3">
   <div class="panel-inner">
     <div class="media">
       <video autoplay muted loop playsinline preload="auto">
@@ -398,7 +456,7 @@ footer {
 </section>
 
 <!-- SHOW 2 -->
-<section class="panel">
+<section class="panel" id="today11">
   <div class="panel-inner">
     <div class="media">
       <video autoplay muted loop playsinline preload="auto">
@@ -418,7 +476,7 @@ footer {
 </section>
 
 <!-- SHOW 3 -->
-<section class="panel">
+<section class="panel" id="commercials">
   <div class="panel-inner">
     <div class="media">
       <video autoplay muted loop playsinline preload="auto">
@@ -437,7 +495,7 @@ footer {
 </section>
 
 <!-- MOTION GRAPHICS -->
-<section class="panel">
+<section class="panel" id="motionGraphics">
   <div class="panel-inner">
     <div class="media">
       <video autoplay muted loop playsinline preload="auto">
@@ -457,7 +515,7 @@ footer {
 </section>
 
 <!-- BACKGROUNDS -->
-<section class="panel">
+<section class="panel" id="lifeArt">
   <div class="panel-inner">
     <div class="media">
       <video autoplay muted loop playsinline preload="auto">
@@ -476,7 +534,7 @@ footer {
   </div>
 </section>
 <!-- ABOUT + CONTACT -->
-<section class="panel">
+<section class="panel" id="about">
   <div class="panel-inner about">
 
     <div class="content">
@@ -489,7 +547,7 @@ Always looking for the next creative challenge—remote or in a new city—so le
       </p>
 
 <!-- CONTACT -->
-  <div class="panel-inner contact">
+  <div class="panel-inner contact" id="contact">
     
     <div class="content">
       <h2>Get in Touch</h2>
@@ -514,6 +572,60 @@ Always looking for the next creative challenge—remote or in a new city—so le
 </footer>
 
 <script>
+// Navigation Bar Script
+const navBar = document.getElementById('navBar');
+const navItems = document.querySelectorAll('.nav-item');
+const sections = [
+  { id: 'header', navIndex: 0 },
+  { id: 'studio3', navIndex: 1 },
+  { id: 'today11', navIndex: 2 },
+  { id: 'commercials', navIndex: 3 },
+  { id: 'motionGraphics', navIndex: 4 },
+  { id: 'lifeArt', navIndex: 5 },
+  { id: 'about', navIndex: 6 },
+  { id: 'contact', navIndex: 7 }
+];
+
+// Show nav bar when scrolling down
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  
+  // Show nav bar after scrolling past the header
+  if (scrollY > 200) {
+    navBar.classList.add('visible');
+  } else {
+    navBar.classList.remove('visible');
+  }
+
+  // Highlight active nav item
+  sections.forEach(section => {
+    const element = document.getElementById(section.id);
+    if (!element) return;
+    
+    const rect = element.getBoundingClientRect();
+    
+    if (rect.top <= 150 && rect.bottom >= 150) {
+      navItems.forEach(item => item.classList.remove('active'));
+      if (navItems[section.navIndex]) {
+        navItems[section.navIndex].classList.add('active');
+      }
+    }
+  });
+});
+
+// Smooth scroll for nav items
+navItems.forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = item.getAttribute('href').substring(1);
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
 document.querySelectorAll(".media").forEach(media => {
   const video = media.querySelector("video");
   const button = media.querySelector(".mute-toggle");
