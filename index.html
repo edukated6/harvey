@@ -455,17 +455,18 @@ const observer = new IntersectionObserver(
 videos.forEach(video => {
   video.muted = false; // enforce mobile autoplay rule
   observer.observe(video);
-});
 
-document.querySelectorAll(".video-wrapper").forEach(wrapper => {
+  document.querySelectorAll(".video-wrapper").forEach(wrapper => {
   const video = wrapper.querySelector("video");
   const button = wrapper.querySelector(".mute-toggle");
 
   button.addEventListener("click", () => {
     video.muted = !video.muted;
     button.textContent = video.muted ? "🔊" : "🔇";
+  });
 });
 });
+
 </script>
 
 </body>
