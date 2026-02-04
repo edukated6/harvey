@@ -82,6 +82,20 @@ video {
   object-fit: cover;
   display: block;
 }
+/* MUTE BUTTON */
+.mute-toggle {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 5;
+}
 
 /* FORM */
 .contact-form {
@@ -300,7 +314,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="For Studio 3.mp4" autoplay loop playsinline preload="auto"></video>
+      <video src="For Studio 3.mp4" autoplay muted loop playsinline preload="auto">
+        <button class="mute-toggle">🔊</button>
+      </video>
     </div>
     <div class="content">
       <h2>Studio 3 - LifeStyle Producer</h2>
@@ -316,7 +332,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="For T11.mp4" autoplay loop playsinline preload="auto"></video>
+      <video src="For T11.mp4" autoplay muted loop playsinline preload="auto">
+        <button class="mute-toggle">🔊</button>
+      </video>
     </div>
     <div class="content">
       <h2>Today at 11 - LifeStyle Producer</h2>
@@ -333,7 +351,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Commercials.mp4" autoplay loop playsinline preload="auto"></video>
+      <video src="Commercials.mp4" autoplay muted loop playsinline preload="auto">
+        <button class="mute-toggle">🔊</button>
+      </video>
     </div>
     <div class="content">
       <h2>Televised Commercials</h2>
@@ -349,7 +369,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Opens.mp4" autoplay loop playsinline preload="auto"></video>
+      <video src="Opens.mp4" autoplay muted loop playsinline preload="auto">
+        <button class="mute-toggle">🔊</button>
+      </video>
     </div>
     <div class="content">
       <h2>Motion Graphics/Animations/Show Opens</h2>
@@ -366,7 +388,9 @@ footer {
 <section class="panel">
   <div class="panel-inner">
     <div class="media">
-      <video src="Backgrounds.mp4" autoplay loop playsinline preload="auto"></video>
+      <video src="Backgrounds.mp4" autoplay muted loop playsinline preload="auto">
+        <button class="mute-toggle">🔊</button>
+      </video>
     </div>
     <div class="content">
       <h2>LIFE IS ART</h2>
@@ -436,6 +460,16 @@ const observer = new IntersectionObserver(
 videos.forEach(video => {
   video.muted = true; // enforce mobile autoplay rule
   observer.observe(video);
+});
+
+document.querySelectorAll(".video-wrapper").forEach(wrapper => {
+  const video = wrapper.querySelector("video");
+  const button = wrapper.querySelector(".mute-toggle");
+
+  button.addEventListener("click", () => {
+    video.muted = !video.muted;
+    button.textContent = video.muted ? "🔊" : "🔇";
+});
 });
 </script>
 
