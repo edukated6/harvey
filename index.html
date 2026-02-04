@@ -115,10 +115,12 @@
     border-radius: 0;
     transition: transform 0.3s ease;
     overflow-y: auto;
+    display: flex !important;
+    width: 100%;
   }
 
   .nav-bar.visible {
-    display: flex;
+    display: flex !important;
   }
 
   .nav-bar.mobile-open {
@@ -677,7 +679,8 @@ navItems.forEach(item => {
 
 // Close mobile menu when clicking outside
 document.addEventListener('click', (e) => {
-  if (!navBar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile && !navBar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
     navBar.classList.remove('mobile-open');
   }
 });
