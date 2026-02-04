@@ -440,9 +440,10 @@ Always looking for the next creative challenge—remote or in a new city—so le
 </footer>
 
 <script>
-document.querySelectorAll(".video-wrapper").forEach(wrapper => {
-  const video = wrapper.querySelector("video");
-  const button = wrapper.querySelector(".mute-toggle");
+document.querySelectorAll(".media").forEach(media => {
+  const video = media.querySelector("video");
+  const button = media.querySelector(".mute-toggle");
+  if (!video || !button) return;
 
   // autoplay when visible
   const observer = new IntersectionObserver(
@@ -458,20 +459,20 @@ document.querySelectorAll(".video-wrapper").forEach(wrapper => {
 
   observer.observe(video);
 
-  // toggle audio
+  // set initial button state (🔇 = muted, 🔊 = unmuted)
+  button.textContent = video.muted ? "🔇" : "🔊";
+
+  // toggle audio on user interaction
   button.addEventListener("click", e => {
     e.stopPropagation();
-
-    // toggle mute
     video.muted = !video.muted;
 
-    // REQUIRED: replay after unmuting
     if (!video.muted) {
       video.volume = 1;
       video.play().catch(() => {});
     }
 
-    button.textContent = video.muted ? "🔊" : "🔇";
+    button.textContent = video.muted ? "🔇" : "🔊";
   });
 });
 </script>
