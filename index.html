@@ -394,29 +394,30 @@ header p {
 }
 
 /* =====================
-   PANELS
+   PANELS (tighter / fuller)
    ===================== */
 .panel {
-  min-height: 100vh;
+  min-height: 80vh;
   scroll-snap-align: start;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 24px 12px;
 }
 
 .panel-inner {
-  max-width: 1100px;
-  width: 100%;
+  max-width: 1400px;
+  width: 96%;
+  margin: 0 auto;
   background: var(--panel-bg);
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  transition: transform 0.4s ease;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+  transition: transform 0.32s ease;
 }
 
 .panel-inner:hover {
-  transform: scale(1.01);
+  transform: scale(1.005);
 }
 
 /* =====================
@@ -439,7 +440,7 @@ header p {
    CONTENT
    ===================== */
 .content {
-  padding: 30px;
+  padding: 20px 22px;
 }
 
 .content h2 {
