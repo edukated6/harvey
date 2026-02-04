@@ -87,15 +87,8 @@ video {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-  background: rgba(0,0,0,0.6);
-  border: none;
-  color: white;
-  font-size: 1.1rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 999px;
-  cursor: pointer;
-  pointer-events: auto;
   z-index: 10;
+  pointer-events: auto;
 }
 
 /* FORM */
@@ -451,9 +444,7 @@ document.querySelectorAll(".video-wrapper").forEach(wrapper => {
   const video = wrapper.querySelector("video");
   const button = wrapper.querySelector(".mute-toggle");
 
-  let userUnmuted = false;
-
-  // Intersection autoplay
+  // autoplay when visible
   const observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
@@ -467,18 +458,24 @@ document.querySelectorAll(".video-wrapper").forEach(wrapper => {
 
   observer.observe(video);
 
-  // Mute toggle
+  // toggle audio
   button.addEventListener("click", e => {
     e.stopPropagation();
-    userUnmuted = !userUnmuted;
-    video.muted = !userUnmuted;
-    button.textContent = video.muted ? "🔊" : "🔇";
 
-    // REQUIRED for iOS: ensure play after interaction
-    video.play().catch(() => {});
+    // toggle mute
+    video.muted = !video.muted;
+
+    // REQUIRED: replay after unmuting
+    if (!video.muted) {
+      video.volume = 1;
+      video.play().catch(() => {});
+    }
+
+    button.textContent = video.muted ? "🔊" : "🔇";
   });
 });
 </script>
+
 
 </body>
 </html>
