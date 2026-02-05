@@ -826,6 +826,8 @@ hamburgerBtn.addEventListener('click', () => {
   if (logoFixed) {
     logoFixed.classList.toggle('hidden');
   }
+  // Disable/enable body scroll when menu is open
+  document.body.style.overflow = navBar.classList.contains('mobile-open') ? 'hidden' : 'auto';
 });
 
 // Close mobile menu when a nav item is clicked
@@ -836,6 +838,7 @@ navItems.forEach(item => {
     if (logoFixed) {
       logoFixed.classList.remove('hidden');
     }
+    document.body.style.overflow = 'auto';
   });
 });
 
@@ -848,6 +851,7 @@ document.addEventListener('click', (e) => {
     if (logoFixed) {
       logoFixed.classList.remove('hidden');
     }
+    document.body.style.overflow = 'auto';
   }
 });
 
@@ -932,6 +936,14 @@ window.addEventListener('resize', () => {
   if (!userIsDesktop()) {
     navBar.classList.remove('visible');
     if (navHideTimer) clearTimeout(navHideTimer);
+  } else {
+    // Restore scrolling when resizing to desktop
+    document.body.style.overflow = 'auto';
+    navBar.classList.remove('mobile-open');
+    const logoFixed = document.querySelector('.logo-fixed');
+    if (logoFixed) {
+      logoFixed.classList.remove('hidden');
+    }
   }
 });
 
