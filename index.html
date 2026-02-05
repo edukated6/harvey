@@ -31,7 +31,10 @@
   padding: 20px 15px;
   z-index: 999;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  display: none;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease, transform 260ms ease;
   flex-direction: column;
   align-items: center;
   gap: 15px;
@@ -39,7 +42,8 @@
 }
 
 .nav-bar.visible {
-  display: flex;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .nav-item {
@@ -739,7 +743,7 @@ footer {
       <div class="divider"></div>
 
       <p class="about-text">
-        I am a storyteller and visual creator based in Ridgeland, Mississippi, currently honing my craft by producing polished broadcast and digital content at WLBT 3 in Jackson, MS. My work spans a wide spectrum—from captivating shows and dynamic motion graphics to comprehensive visual packages—each project an opportunity to bring ideas to life in the most vivid and meaningful way possible.
+        I am a storyteller and visual creator based in Ridgeland, Mississippi, currently honing my craft by producing polished broadcast and digital content at WLBT 3 in Jackson, MS. My work spans a wide spectrum—from captivating shows and dynamic motion graphics to comprehensive visual packages—each project is an opportunity to bring ideas to life in the most vivid and meaningful way possible.
 
         But this journey is far more than a career or a hobby to me; it is a lifelong calling deeply rooted in my earliest memories. Ever since I was a child, I have been drawn to the magic of creation. I vividly remember watching my dad meticulously build old computers, not just as a task, but as a way to channel his creativity and passion into something tangible. Those moments planted a seed in me—a profound appreciation for the power of making, shaping, and telling stories through visual means.
 
@@ -818,34 +822,34 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Show nav bar when scrolling down
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  
-  // Show nav bar after scrolling past the header (only on desktop)
-  if (window.innerWidth > 768) {
-    if (scrollY > 200) {
-      navBar.classList.add('visible');
-    } else {
-      navBar.classList.remove('visible');
-    }
-  }
-
-  // Highlight active nav item
-  sections.forEach(section => {
-    const element = document.getElementById(section.id);
-    if (!element) return;
+  // Show nav bar when scrolling down (desktop). Auto-hide after inactivity.
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
     
-    const rect = element.getBoundingClientRect();
-    
-    if (rect.top <= 150 && rect.bottom >= 150) {
-      navItems.forEach(item => item.classList.remove('active'));
-      if (navItems[section.navIndex]) {
-        navItems[section.navIndex].classList.add('active');
+    // Show nav bar after scrolling past the header (only on desktop)
+    if (window.innerWidth > 768) {
+      if (scrollY > 200) {
+        showNavTemporary();
+      } else {
+        navBar.classList.remove('visible');
       }
     }
+
+    // Highlight active nav item
+    sections.forEach(section => {
+      const element = document.getElementById(section.id);
+      if (!element) return;
+      
+      const rect = element.getBoundingClientRect();
+      
+      if (rect.top <= 150 && rect.bottom >= 150) {
+        navItems.forEach(item => item.classList.remove('active'));
+        if (navItems[section.navIndex]) {
+          navItems[section.navIndex].classList.add('active');
+        }
+      }
+    });
   });
-});
 
 // Smooth scroll for nav items
 navItems.forEach(item => {
@@ -858,6 +862,60 @@ navItems.forEach(item => {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   });
+});
+
+/* Auto-hide nav on desktop when idle
+   - showNavTemporary(): shows nav and sets a timeout to hide
+   - desktop only (window.innerWidth > 768)
+*/
+let navHideTimer = null;
+const NAV_HIDE_DELAY = 1500; // ms
+
+function userIsDesktop() {
+  return window.innerWidth > 768;
+}
+
+function showNavTemporary() {
+  if (!userIsDesktop()) return;
+  navBar.classList.add('visible');
+  if (navHideTimer) clearTimeout(navHideTimer);
+  navHideTimer = setTimeout(() => {
+    navBar.classList.remove('visible');
+    navHideTimer = null;
+  }, NAV_HIDE_DELAY);
+}
+
+// Reset/hide behavior on user input
+// Only wake nav when mouse is in the vicinity of the right-edge nav (desktop only)
+document.addEventListener('mousemove', (e) => {
+  if (!userIsDesktop()) return;
+  const thresholdX = 220; // px from right edge
+  const centerY = window.innerHeight / 2;
+  const thresholdY = Math.max(120, window.innerHeight * 0.35);
+  const nearRight = e.clientX >= (window.innerWidth - thresholdX);
+  const nearVert = Math.abs(e.clientY - centerY) <= thresholdY;
+  if (nearRight && nearVert) showNavTemporary();
+});
+document.addEventListener('keydown', () => { showNavTemporary(); });
+document.addEventListener('touchstart', () => { if (!userIsDesktop()) navBar.classList.add('visible'); });
+
+window.addEventListener('resize', () => {
+  if (!userIsDesktop()) {
+    navBar.classList.remove('visible');
+    if (navHideTimer) clearTimeout(navHideTimer);
+  }
+});
+
+navBar.addEventListener('mouseenter', () => {
+  if (!userIsDesktop()) return;
+  if (navHideTimer) clearTimeout(navHideTimer);
+  navBar.classList.add('visible');
+});
+
+navBar.addEventListener('mouseleave', () => {
+  if (!userIsDesktop()) return;
+  if (navHideTimer) clearTimeout(navHideTimer);
+  navHideTimer = setTimeout(() => navBar.classList.remove('visible'), NAV_HIDE_DELAY);
 });
 
 document.querySelectorAll(".media").forEach(media => {
