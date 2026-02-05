@@ -121,6 +121,7 @@
     overflow-y: auto;
     display: flex !important;
     width: 100%;
+    z-index: 998;
   }
 
   .nav-bar.visible {
@@ -408,7 +409,13 @@ header p {
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1000;
+  z-index: 500;
+  transition: opacity 0.3s ease;
+}
+
+.logo-fixed.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .logo-fixed a {
@@ -814,12 +821,21 @@ const sections = [
 // Mobile menu toggle
 hamburgerBtn.addEventListener('click', () => {
   navBar.classList.toggle('mobile-open');
+  // Hide/show the sticky logo when menu is toggled
+  const logoFixed = document.querySelector('.logo-fixed');
+  if (logoFixed) {
+    logoFixed.classList.toggle('hidden');
+  }
 });
 
 // Close mobile menu when a nav item is clicked
 navItems.forEach(item => {
   item.addEventListener('click', () => {
     navBar.classList.remove('mobile-open');
+    const logoFixed = document.querySelector('.logo-fixed');
+    if (logoFixed) {
+      logoFixed.classList.remove('hidden');
+    }
   });
 });
 
@@ -828,6 +844,10 @@ document.addEventListener('click', (e) => {
   const isMobile = window.innerWidth <= 768;
   if (isMobile && !navBar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
     navBar.classList.remove('mobile-open');
+    const logoFixed = document.querySelector('.logo-fixed');
+    if (logoFixed) {
+      logoFixed.classList.remove('hidden');
+    }
   }
 });
 
