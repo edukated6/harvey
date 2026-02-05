@@ -239,16 +239,20 @@
   font-weight: 700;
 }
 
-#contact .contact-logo {
-  width: clamp(80px, 18vw, 160px);
-  height: auto;
-  margin-bottom: 12px;
-  opacity: 0.95;
-  transition: opacity 0.24s ease;
+/* Contact typography: make heading largest, paragraph prominent */
+#contact .content h2 {
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  margin-bottom: 6px;
+  color: #3e3e3e;
+  line-height: 1.05;
 }
 
-#contact .contact-logo:hover {
-  opacity: 1;
+#contact .contact-intro {
+  font-size: clamp(1.05rem, 3.5vw, 1.6rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 1000px;
+  text-align: center;
 }
 
 #contact .contact-social {
@@ -735,9 +739,14 @@ footer {
       <div class="divider"></div>
 
       <p class="about-text">
-        I’m a storyteller and visual creator from Ridgeland, Mississippi, currently producing polished broadcast and digital content at WLBT 3 in Jackson, MS. From shows to motion graphics to full visual packages, I love making ideas shine.
-Always looking for the next creative challenge—remote or in a new city—so let’s make something great together.
-      </p>
+        I am a storyteller and visual creator based in Ridgeland, Mississippi, currently honing my craft by producing polished broadcast and digital content at WLBT 3 in Jackson, MS. My work spans a wide spectrum—from captivating shows and dynamic motion graphics to comprehensive visual packages—each project an opportunity to bring ideas to life in the most vivid and meaningful way possible.
+
+        But this journey is far more than a career or a hobby to me; it is a lifelong calling deeply rooted in my earliest memories. Ever since I was a child, I have been drawn to the magic of creation. I vividly remember watching my dad meticulously build old computers, not just as a task, but as a way to channel his creativity and passion into something tangible. Those moments planted a seed in me—a profound appreciation for the power of making, shaping, and telling stories through visual means.
+
+        Creating is not something I do simply because I can; it is something I must do. It is woven into the fabric of who I am. Every frame I design, every narrative I craft, and every visual element I bring to life is infused with that same spirit of dedication and love for the craft that I witnessed in my father’s hands.
+
+        I am always eager to embrace the next creative challenge, whether it’s collaborating remotely or immersing myself in a new city and culture. I believe that great storytelling transcends boundaries and that the best work comes from a place of genuine passion and commitment. So, if you’re looking for someone who will pour heart, soul, and expertise into making something truly exceptional, let’s connect and create something remarkable together.
+    </p>
     </div>
   </div>
 </section>
@@ -746,7 +755,6 @@ Always looking for the next creative challenge—remote or in a new city—so le
 <section class="panel" id="contact">
   <div class="panel-inner contact">
     <div class="content">
-      <img src="harvey logo.png" alt="Harvey Logo" class="contact-logo">
       <h2>Get in Touch</h2>
       <div class="divider"></div>
 
