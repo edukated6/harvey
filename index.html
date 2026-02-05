@@ -629,13 +629,15 @@ footer {
   margin: 30px 0;
   opacity: 0;
   transform: translateY(80px) scale(0.6);
+  transition: opacity 420ms cubic-bezier(.2,.9,.3,1), transform 420ms cubic-bezier(.2,.9,.3,1);
 }
 
 .person-placeholder.visible {
   animation: popOutBehind 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.person-placeholder img {
+.person-placeholder img,
+.person-placeholder video {
   max-width: 200px;
   height: auto;
   object-fit: contain;
@@ -653,6 +655,10 @@ footer {
   
   .person-placeholder img {
     max-width: 160px;
+    .person-placeholder img,
+    .person-placeholder video {
+      max-width: 160px;
+    }
   }
 }
 </style>
@@ -798,7 +804,10 @@ footer {
     <div class="content">
       <!-- ANIMATED PERSON PLACEHOLDER -->
       <div class="person-placeholder">
-        <img src="harvey logo.png" alt="Ahmaad Harvey">
+        <video class="placeholder-video" autoplay muted loop playsinline aria-label="Ahmaad Harvey">
+          <source src="moving head.mov">
+          Your browser does not support the video tag.
+        </video>
       </div>
       
       <h2>About Ahmaad</h2>
