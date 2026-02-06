@@ -638,11 +638,12 @@ footer {
 
 .person-placeholder img,
 .person-placeholder video {
-  max-width: 200px;
+  max-width: 320px;
   height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 24px rgba(111, 78, 55, 0.25));
-  border-radius: 8px;
+  object-fit: cover;
+  filter: drop-shadow(0 16px 36px rgba(111, 78, 55, 0.28));
+  border-radius: 12px;
+  display: block;
 }
 
 /* =====================
@@ -653,12 +654,9 @@ footer {
     font-size: 2.2rem;
   }
   
-  .person-placeholder img {
-    max-width: 160px;
-    .person-placeholder img,
-    .person-placeholder video {
-      max-width: 160px;
-    }
+  .person-placeholder img,
+  .person-placeholder video {
+    max-width: 260px;
   }
 }
 </style>
