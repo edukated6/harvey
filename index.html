@@ -635,6 +635,13 @@ footer {
   background: transparent;
 }
 
+.person-placeholder, .person-placeholder img, .person-placeholder video, .placeholder-webp {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
 .person-placeholder.visible {
   animation: popOutBehind 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
@@ -660,6 +667,11 @@ footer {
   .person-placeholder img,
   .person-placeholder video {
     max-width: 260px;
+  }
+
+  /* Hide dividing line in about panel on small screens to avoid overlap artifact */
+  #about .divider {
+    display: none;
   }
 }
 </style>
