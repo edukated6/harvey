@@ -1,220 +1,319 @@
-// Navigation Bar Script
-const navBar = document.getElementById('navBar');
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const navItems = document.querySelectorAll('.nav-item');
-const sections = [
-  { id: 'header', navIndex: 0 },
-  { id: 'editing', navIndex: 1 },
-  { id: 'studio3', navIndex: 2 },
-  { id: 'today11', navIndex: 3 },
-  { id: 'commercials', navIndex: 4 },
-  { id: 'motionGraphics', navIndex: 5 },
-  { id: 'lifeArt', navIndex: 6 },
-  { id: 'about', navIndex: 7 },
-  { id: 'contact', navIndex: 8 }
-];
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealElements = document.querySelectorAll('.reveal-up');
+const videos = document.querySelectorAll('.media-frame video');
+const roleFilters = document.querySelectorAll('.role-filter');
+const mediaCards = document.querySelectorAll('.media-card');
+const filterStatus = document.getElementById('filterStatus');
+const openReelButton = document.getElementById('openReel');
+const closeReelButton = document.getElementById('closeReel');
+const reelModal = document.getElementById('reelModal');
+const reelVideo = document.getElementById('reelVideo');
+const heroVideo = document.querySelector('.hero-bg');
+const quickviewStage = document.querySelector('.quickview-stage');
+const heroSection = document.querySelector('.hero');
+const mobilePortraitQuery = window.matchMedia('(max-width: 960px), (hover: none) and (pointer: coarse)');
+const MAX_STORED_ANALYTICS_EVENTS = 100;
+const shouldDebugAnalytics = window.location.hostname === 'localhost' || window.location.search.includes('debugAnalytics=1');
+const prefersDataSaver = navigator.connection?.saveData === true;
 
-// Mobile menu toggle
-hamburgerBtn.addEventListener('click', () => {
-  navBar.classList.toggle('mobile-open');
-  // Hide/show the sticky logo when menu is toggled
-  const logoFixed = document.querySelector('.logo-fixed');
-  if (logoFixed) {
-    logoFixed.classList.toggle('hidden');
+let fadeDistanceCache = Math.max(window.innerHeight * 0.72, 420);
+let lastPortraitOpacity = '';
+let rafScheduled = false;
+let activePreviewVideo = null;
+
+function isMobilePortraitDisabled() {
+  return mobilePortraitQuery.matches;
+}
+
+function recalculateFadeDistance() {
+  fadeDistanceCache = heroSection
+    ? Math.max(heroSection.offsetHeight * 0.72, 420)
+    : Math.max(window.innerHeight * 0.72, 420);
+}
+
+function setPortraitOpacity(value) {
+  const nextValue = String(value);
+  if (!quickviewStage || nextValue === lastPortraitOpacity) return;
+  quickviewStage.style.setProperty('--portrait-scroll-opacity', nextValue);
+  lastPortraitOpacity = nextValue;
+}
+
+function trackEvent(eventName, payload = {}) {
+  const eventPayload = {
+    event: eventName,
+    timestamp: new Date().toISOString(),
+    ...payload,
+  };
+
+  if (window.dataLayer && typeof window.dataLayer.push === 'function') {
+    window.dataLayer.push(eventPayload);
   }
-  // Disable/enable body scroll when menu is open
-  document.body.style.overflow = navBar.classList.contains('mobile-open') ? 'hidden' : 'auto';
-});
 
-// Close mobile menu when a nav item is clicked
-navItems.forEach(item => {
-  item.addEventListener('click', () => {
-    navBar.classList.remove('mobile-open');
-    const logoFixed = document.querySelector('.logo-fixed');
-    if (logoFixed) {
-      logoFixed.classList.remove('hidden');
-    }
-    document.body.style.overflow = 'auto';
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, payload);
+  }
+
+  try {
+    const existing = JSON.parse(sessionStorage.getItem('harveyAnalytics') || '[]');
+    existing.push(eventPayload);
+    const bounded = existing.slice(-MAX_STORED_ANALYTICS_EVENTS);
+    sessionStorage.setItem('harveyAnalytics', JSON.stringify(bounded));
+  } catch (error) {
+    // Ignore storage issues in private mode.
+  }
+
+  if (shouldDebugAnalytics) {
+    console.info('analytics:event', eventPayload);
+  }
+}
+
+function restartTopPortraitAnimation() {
+  if (!quickviewStage || prefersReducedMotion || isMobilePortraitDisabled()) return;
+  quickviewStage.classList.remove('animate-portrait');
+  void quickviewStage.offsetWidth;
+  quickviewStage.classList.add('animate-portrait');
+}
+
+let portraitPrimed = false;
+
+function syncPortraitScrollFade() {
+  if (!quickviewStage) return;
+
+  if (isMobilePortraitDisabled()) {
+    setPortraitOpacity('0');
+    return;
+  }
+
+  const stageRect = quickviewStage.getBoundingClientRect();
+  const stageOffscreen = stageRect.bottom <= 0 || stageRect.top >= window.innerHeight;
+  if (stageOffscreen) {
+    setPortraitOpacity('0');
+    return;
+  }
+
+  const progress = Math.min(Math.max(window.scrollY / fadeDistanceCache, 0), 1);
+  const opacity = 1 - progress;
+  setPortraitOpacity(opacity.toFixed(3));
+}
+
+function syncTopHeroState() {
+  if (isMobilePortraitDisabled()) {
+    quickviewStage?.classList.remove('animate-portrait');
+    setPortraitOpacity('0');
+    return;
+  }
+
+  const atTop = window.scrollY <= 48;
+
+  if (atTop && !portraitPrimed) {
+    restartTopPortraitAnimation();
+    portraitPrimed = true;
+  }
+
+  syncPortraitScrollFade();
+}
+
+function requestSyncTopHeroState() {
+  if (rafScheduled) return;
+  rafScheduled = true;
+  window.requestAnimationFrame(() => {
+    rafScheduled = false;
+    syncTopHeroState();
   });
-});
+}
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-  const isMobile = window.innerWidth <= 768;
-  if (isMobile && !navBar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-    navBar.classList.remove('mobile-open');
-    const logoFixed = document.querySelector('.logo-fixed');
-    if (logoFixed) {
-      logoFixed.classList.remove('hidden');
+function pauseAllPreviewVideosExcept(exceptVideo = null) {
+  videos.forEach((video) => {
+    if (video !== exceptVideo && !video.paused) {
+      video.pause();
     }
-    document.body.style.overflow = 'auto';
-  }
-});
+  });
+}
 
-  // Show nav bar when scrolling down (desktop). Auto-hide after inactivity.
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    
-    // Show nav bar after scrolling past the header (only on desktop)
-    if (window.innerWidth > 768) {
-      if (scrollY > 200) {
-        showNavTemporary();
-      } else {
-        navBar.classList.remove('visible');
-      }
-    }
-
-    // Highlight active nav item
-    sections.forEach(section => {
-      const element = document.getElementById(section.id);
-      if (!element) return;
-      
-      const rect = element.getBoundingClientRect();
-      
-      if (rect.top <= 150 && rect.bottom >= 150) {
-        navItems.forEach(item => item.classList.remove('active'));
-        if (navItems[section.navIndex]) {
-          navItems[section.navIndex].classList.add('active');
+if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
         }
-      }
-    });
-  });
+      });
+    },
+    { threshold: 0.2 }
+  );
 
-// Smooth scroll for nav items
-navItems.forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetId = item.getAttribute('href').substring(1);
-    const targetElement = document.getElementById(targetId);
-    
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
-
-/* Auto-hide nav on desktop when idle
-   - showNavTemporary(): shows nav and sets a timeout to hide
-   - desktop only (window.innerWidth > 768)
-*/
-let navHideTimer = null;
-const NAV_HIDE_DELAY = 1500; // ms
-
-function userIsDesktop() {
-  return window.innerWidth > 768;
+  revealElements.forEach((element) => revealObserver.observe(element));
+} else {
+  revealElements.forEach((element) => element.classList.add('is-visible'));
 }
 
-function showNavTemporary() {
-  if (!userIsDesktop()) return;
-  navBar.classList.add('visible');
-  if (navHideTimer) clearTimeout(navHideTimer);
-  navHideTimer = setTimeout(() => {
-    navBar.classList.remove('visible');
-    navHideTimer = null;
-  }, NAV_HIDE_DELAY);
-}
+if ('IntersectionObserver' in window) {
+  const mediaObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.isIntersecting && !prefersReducedMotion && !prefersDataSaver) {
+          if (activePreviewVideo && activePreviewVideo !== video) {
+            activePreviewVideo.pause();
+          }
+          pauseAllPreviewVideosExcept(video);
+          activePreviewVideo = video;
+          video.play().catch(() => {});
+        } else {
+          if (activePreviewVideo === video) {
+            activePreviewVideo = null;
+          }
 
-// Reset/hide behavior on user input
-// Only wake nav when mouse is in the vicinity of the right-edge nav (desktop only)
-document.addEventListener('mousemove', (e) => {
-  if (!userIsDesktop()) return;
-  const thresholdX = 220; // px from right edge
-  const centerY = window.innerHeight / 2;
-  const thresholdY = Math.max(120, window.innerHeight * 0.35);
-  const nearRight = e.clientX >= (window.innerWidth - thresholdX);
-  const nearVert = Math.abs(e.clientY - centerY) <= thresholdY;
-  if (nearRight && nearVert) showNavTemporary();
-});
-document.addEventListener('keydown', () => { showNavTemporary(); });
-document.addEventListener('touchstart', () => { if (!userIsDesktop()) navBar.classList.add('visible'); });
-
-window.addEventListener('resize', () => {
-  if (!userIsDesktop()) {
-    navBar.classList.remove('visible');
-    if (navHideTimer) clearTimeout(navHideTimer);
-  } else {
-    // Restore scrolling when resizing to desktop
-    document.body.style.overflow = 'auto';
-    navBar.classList.remove('mobile-open');
-    const logoFixed = document.querySelector('.logo-fixed');
-    if (logoFixed) {
-      logoFixed.classList.remove('hidden');
-    }
-  }
-});
-
-navBar.addEventListener('mouseenter', () => {
-  if (!userIsDesktop()) return;
-  if (navHideTimer) clearTimeout(navHideTimer);
-  navBar.classList.add('visible');
-});
-
-navBar.addEventListener('mouseleave', () => {
-  if (!userIsDesktop()) return;
-  if (navHideTimer) clearTimeout(navHideTimer);
-  navHideTimer = setTimeout(() => navBar.classList.remove('visible'), NAV_HIDE_DELAY);
-});
-
-document.querySelectorAll(".media").forEach(media => {
-  const video = media.querySelector("video");
-  const button = media.querySelector(".mute-toggle");
-  if (!video || !button) return;
-
-  // autoplay when visible
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
+          if (!video.paused) {
+            video.pause();
+          }
+        }
+      });
     },
     { threshold: 0.6 }
   );
 
-  observer.observe(video);
+  videos.forEach((video) => {
+    video.muted = true;
+    video.preload = 'none';
+    mediaObserver.observe(video);
 
-  // set initial button state (🔇 = muted, 🔊 = unmuted)
-  const updateButton = () => {
-    const icon = video.muted ? "🔇" : "🔊";
-    button.textContent = icon;
-    const label = video.muted ? "Unmute video" : "Mute video";
-    button.setAttribute("aria-label", label);
-    button.setAttribute("title", label);
-    button.setAttribute("aria-pressed", String(!video.muted));
-  };
+    video.addEventListener('play', () => {
+      trackEvent('media_play', {
+        title: video.closest('.media-card')?.querySelector('h3')?.textContent || 'Unknown media',
+      });
+    });
+  });
+}
 
-  updateButton();
+function applyRoleFilter(role) {
+  let visibleCount = 0;
 
-  // toggle audio on user interaction
-  button.addEventListener("click", e => {
-    e.stopPropagation();
-    video.muted = !video.muted;
-
-    if (!video.muted) {
-      video.volume = 1;
-      video.play().catch(() => {});
+  mediaCards.forEach((card) => {
+    const roles = (card.dataset.roles || '').split(' ').filter(Boolean);
+    const shouldShow = role === 'all' || roles.includes(role);
+    card.classList.toggle('is-hidden', !shouldShow);
+    if (!shouldShow) {
+      const cardVideo = card.querySelector('video');
+      if (cardVideo && !cardVideo.paused) {
+        cardVideo.pause();
+      }
+      if (activePreviewVideo === cardVideo) {
+        activePreviewVideo = null;
+      }
     }
+    if (shouldShow) visibleCount += 1;
+  });
 
-    updateButton();
+  if (filterStatus) {
+    filterStatus.textContent = role === 'all'
+      ? `Showing all projects (${visibleCount})`
+      : `Showing ${role} projects (${visibleCount})`;
+  }
+}
+
+roleFilters.forEach((button) => {
+  button.addEventListener('click', () => {
+    const selectedRole = button.dataset.role || 'all';
+
+    roleFilters.forEach((item) => {
+      item.classList.remove('is-active');
+      item.setAttribute('aria-pressed', 'false');
+    });
+
+    button.classList.add('is-active');
+    button.setAttribute('aria-pressed', 'true');
+    applyRoleFilter(selectedRole);
+
+    trackEvent('role_filter_click', { role: selectedRole });
   });
 });
 
-// Scroll-triggered animation for person placeholder
-const personPlaceholder = document.querySelector('.person-placeholder');
-const aboutSection = document.querySelector('#about');
-
-if (personPlaceholder && aboutSection) {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        personPlaceholder.classList.add('visible');
-      } else {
-        personPlaceholder.classList.remove('visible');
-      }
-    },
-    { threshold: 0.1 }
-  );
-  
-  observer.observe(aboutSection);
+function openReelModal() {
+  if (!reelModal) return;
+  reelModal.classList.add('is-open');
+  reelModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  if (reelVideo) {
+    reelVideo.currentTime = 0;
+    reelVideo.play().catch(() => {});
+  }
+  trackEvent('reel_modal_open');
 }
+
+function closeReelModal() {
+  if (!reelModal) return;
+  reelModal.classList.remove('is-open');
+  reelModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  if (reelVideo) reelVideo.pause();
+  trackEvent('reel_modal_close');
+}
+
+if (openReelButton) {
+  openReelButton.addEventListener('click', openReelModal);
+}
+
+if (closeReelButton) {
+  closeReelButton.addEventListener('click', closeReelModal);
+}
+
+if (reelModal) {
+  reelModal.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.dataset.closeModal === 'true') {
+      closeReelModal();
+    }
+  });
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && reelModal?.classList.contains('is-open')) {
+    closeReelModal();
+  }
+});
+
+window.addEventListener('scroll', requestSyncTopHeroState, { passive: true });
+window.addEventListener('load', () => {
+  recalculateFadeDistance();
+  syncTopHeroState();
+});
+window.addEventListener('resize', () => {
+  recalculateFadeDistance();
+  requestSyncTopHeroState();
+});
+
+mobilePortraitQuery.addEventListener('change', () => {
+  recalculateFadeDistance();
+  syncTopHeroState();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') {
+    pauseAllPreviewVideosExcept(null);
+    activePreviewVideo = null;
+    heroVideo?.pause();
+    reelVideo?.pause();
+  } else if (!prefersReducedMotion && !prefersDataSaver && heroVideo && heroVideo.paused) {
+    heroVideo.play().catch(() => {});
+  }
+});
+
+if (prefersDataSaver) {
+  heroVideo?.pause();
+}
+
+document.querySelectorAll('a[href^="mailto:"], a[href*="linkedin.com"], a[data-cta="resume"]').forEach((link) => {
+  link.addEventListener('click', () => {
+    const href = link.getAttribute('href') || '';
+    trackEvent('contact_click', {
+      type: href.startsWith('mailto:') ? 'email' : (link.dataset.cta === 'resume' ? 'resume' : 'linkedin'),
+      target: href,
+    });
+  });
+});
+
+applyRoleFilter('all');
+recalculateFadeDistance();
+syncTopHeroState();
