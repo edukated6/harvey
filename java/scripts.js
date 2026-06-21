@@ -236,6 +236,9 @@ function openReelModal() {
   reelModal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
   if (reelVideo) {
+    reelVideo.defaultMuted = false;
+    reelVideo.muted = false;
+    reelVideo.volume = 1;
     reelVideo.currentTime = 0;
     reelVideo.play().catch(() => {});
   }
