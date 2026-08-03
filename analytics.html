@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Portfolio Analytics • Ahmaad Harvey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Analytics dashboard for portfolio views, clicks, and engagement.">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/owner-gate.js" defer></script>
+  <script src="./java/analytics-dashboard.js" defer></script>
+</head>
+<body class="analytics-page">
+  <main class="analytics-main" id="analyticsMain" data-owner-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8" data-api-base="" data-api-days="14" hidden>
+    <header class="analytics-header reveal-up is-visible">
+      <div>
+        <p class="analytics-kicker">Portfolio Intelligence</p>
+        <h1>Audience Analytics</h1>
+        <p class="analytics-subtitle">A real-time snapshot of who is viewing your work, what they click, and how deeply they engage.</p>
+      </div>
+      <div class="analytics-actions">
+        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+        <button class="btn btn-primary" id="clearAnalytics" type="button">Reset Local Data</button>
+      </div>
+    </header>
+
+    <section class="analytics-metrics" aria-label="Key metrics">
+      <article class="analytics-metric-card reveal-up is-visible">
+        <p>Total Views</p>
+        <h2 id="metricViews">0</h2>
+        <span id="metricViewsTrend">Last 14 days: 0</span>
+      </article>
+      <article class="analytics-metric-card reveal-up is-visible">
+        <p>Unique Viewers</p>
+        <h2 id="metricVisitors">0</h2>
+        <span id="metricVisitorTrend">Returning rate: 0%</span>
+      </article>
+      <article class="analytics-metric-card reveal-up is-visible">
+        <p>Total Clicks</p>
+        <h2 id="metricClicks">0</h2>
+        <span id="metricClickTrend">CTR: 0%</span>
+      </article>
+      <article class="analytics-metric-card reveal-up is-visible">
+        <p>Engagement Score</p>
+        <h2 id="metricEngagement">0</h2>
+        <span id="metricEngagementTrend">Avg time: 0s</span>
+      </article>
+    </section>
+
+    <section class="analytics-grid" aria-label="Detailed analytics">
+      <article class="analytics-panel reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>View Trend (14 Days)</h3>
+          <p id="trendSummary">No activity yet.</p>
+        </div>
+        <div class="analytics-bars" id="viewsTrendBars" aria-hidden="true"></div>
+      </article>
+
+      <article class="analytics-panel reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>Top Click Targets</h3>
+          <p>Most-selected actions on your portfolio</p>
+        </div>
+        <ol class="analytics-list" id="topClicksList"></ol>
+      </article>
+
+      <article class="analytics-panel reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>Viewer Snapshot</h3>
+          <p>Anonymous audience and device mix</p>
+        </div>
+        <ul class="analytics-list" id="viewerSnapshot"></ul>
+      </article>
+
+      <article class="analytics-panel reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>Top Sources</h3>
+          <p>Where portfolio traffic is coming from</p>
+        </div>
+        <ol class="analytics-list" id="topSourcesList"></ol>
+      </article>
+
+      <article class="analytics-panel reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>UTM Campaigns</h3>
+          <p>Campaign performance by views and clicks</p>
+        </div>
+        <ol class="analytics-list" id="utmCampaignsList"></ol>
+      </article>
+
+      <article class="analytics-panel analytics-panel-wide reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>Recent Activity</h3>
+          <p>Latest tracked events from your portfolio</p>
+        </div>
+        <div class="analytics-activity" id="recentActivity"></div>
+      </article>
+    </section>
+  </main>
+
+  <section class="analytics-gate" id="analyticsGate" aria-label="Owner authentication gate">
+    <div class="analytics-gate-card">
+      <p class="analytics-kicker">Private Access</p>
+      <h1>Owner Login</h1>
+      <p class="analytics-subtitle">This analytics dashboard is private. Enter your owner passcode to unlock.</p>
+      <label class="analytics-gate-label" for="ownerPasscode">Owner passcode</label>
+      <input class="analytics-gate-input" id="ownerPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
+
+      <label class="analytics-gate-label" for="ownerApiKey">API admin key (optional, enables cloud data)</label>
+      <input class="analytics-gate-input" id="ownerApiKey" type="password" autocomplete="off" placeholder="Paste HARVEY_ANALYTICS_ADMIN_KEY">
+
+      <div class="analytics-actions">
+        <button class="btn btn-primary" id="unlockAnalytics" type="button">Unlock Analytics</button>
+        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+      </div>
+      <p id="gateMessage" class="analytics-gate-message">Access is restricted to the portfolio owner.</p>
+    </div>
+  </section>
+
+  <footer>
+    Analytics uses anonymous browser identifiers and a private owner gate.
+  </footer>
+</body>
+</html>

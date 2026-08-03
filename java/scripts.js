@@ -12,14 +12,110 @@ const heroVideo = document.querySelector('.hero-bg');
 const quickviewStage = document.querySelector('.quickview-stage');
 const heroSection = document.querySelector('.hero');
 const mobilePortraitQuery = window.matchMedia('(max-width: 960px), (hover: none) and (pointer: coarse)');
-const MAX_STORED_ANALYTICS_EVENTS = 100;
+const ANALYTICS_STORAGE_KEY = 'harveyAnalyticsEvents';
+const ANALYTICS_VISITOR_KEY = 'harveyAnalyticsVisitor';
+const ANALYTICS_SESSION_KEY = 'harveyAnalyticsSession';
+const MAX_STORED_ANALYTICS_EVENTS = 600;
 const shouldDebugAnalytics = window.location.hostname === 'localhost' || window.location.search.includes('debugAnalytics=1');
 const prefersDataSaver = navigator.connection?.saveData === true;
+const analyticsEndpoint = window.HARVEY_ANALYTICS_ENDPOINT || '';
+const scrollMilestones = [25, 50, 75, 100];
+const recordedMilestones = new Set();
+const pageVisitStartedAt = Date.now();
+const visitorId = getOrCreateStorageId(localStorage, ANALYTICS_VISITOR_KEY, 'visitor');
+const sessionId = getOrCreateStorageId(sessionStorage, ANALYTICS_SESSION_KEY, 'session');
+const trafficContext = getTrafficContext();
 
 let fadeDistanceCache = Math.max(window.innerHeight * 0.72, 420);
 let lastPortraitOpacity = '';
 let rafScheduled = false;
 let activePreviewVideo = null;
+
+function getOrCreateStorageId(storage, key, label) {
+  try {
+    const existingId = storage.getItem(key);
+    if (existingId) return existingId;
+
+    const randomPart = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+    const nextId = `${label}_${randomPart}`;
+    storage.setItem(key, nextId);
+    return nextId;
+  } catch (error) {
+    return `${label}_unavailable`;
+  }
+}
+
+function getDeviceType() {
+  const width = window.innerWidth;
+  if (width <= 768) return 'mobile';
+  if (width <= 1100) return 'tablet';
+  return 'desktop';
+}
+
+function readAnalyticsEvents() {
+  try {
+    return JSON.parse(localStorage.getItem(ANALYTICS_STORAGE_KEY) || '[]');
+  } catch (error) {
+    return [];
+  }
+}
+
+function sanitizeQueryValue(value) {
+  return (value || '').trim().slice(0, 160);
+}
+
+function detectSourceType(sourceName) {
+  if (!sourceName || sourceName === 'direct') return 'direct';
+  const normalized = sourceName.toLowerCase();
+  const socialHosts = ['instagram', 'facebook', 'linkedin', 'tiktok', 'x.com', 'twitter', 'youtube'];
+  const searchHosts = ['google', 'bing', 'duckduckgo', 'yahoo'];
+
+  if (socialHosts.some((host) => normalized.includes(host))) return 'social';
+  if (searchHosts.some((host) => normalized.includes(host))) return 'search';
+  return 'referral';
+}
+
+function getTrafficContext() {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+
+  const utmSource = sanitizeQueryValue(params.get('utm_source'));
+  const utmMedium = sanitizeQueryValue(params.get('utm_medium'));
+  const utmCampaign = sanitizeQueryValue(params.get('utm_campaign'));
+  const utmContent = sanitizeQueryValue(params.get('utm_content'));
+  const utmTerm = sanitizeQueryValue(params.get('utm_term'));
+
+  let sourceName = 'direct';
+  if (utmSource) {
+    sourceName = utmSource;
+  } else if (document.referrer) {
+    try {
+      sourceName = new URL(document.referrer).hostname.replace(/^www\./, '');
+    } catch (error) {
+      sourceName = 'referral';
+    }
+  }
+
+  return {
+    sourceType: detectSourceType(sourceName),
+    sourceName,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    utmContent,
+    utmTerm,
+  };
+}
+
+function writeAnalyticsEvents(events) {
+  try {
+    localStorage.setItem(ANALYTICS_STORAGE_KEY, JSON.stringify(events.slice(-MAX_STORED_ANALYTICS_EVENTS)));
+  } catch (error) {
+    // Ignore storage issues in private mode.
+  }
+}
 
 function isMobilePortraitDisabled() {
   return mobilePortraitQuery.matches;
@@ -42,6 +138,18 @@ function trackEvent(eventName, payload = {}) {
   const eventPayload = {
     event: eventName,
     timestamp: new Date().toISOString(),
+    visitorId,
+    sessionId,
+    page: window.location.pathname,
+    pageTitle: document.title,
+    device: getDeviceType(),
+    sourceType: trafficContext.sourceType,
+    sourceName: trafficContext.sourceName,
+    utmSource: trafficContext.utmSource,
+    utmMedium: trafficContext.utmMedium,
+    utmCampaign: trafficContext.utmCampaign,
+    utmContent: trafficContext.utmContent,
+    utmTerm: trafficContext.utmTerm,
     ...payload,
   };
 
@@ -53,18 +161,67 @@ function trackEvent(eventName, payload = {}) {
     window.gtag('event', eventName, payload);
   }
 
-  try {
-    const existing = JSON.parse(sessionStorage.getItem('harveyAnalytics') || '[]');
-    existing.push(eventPayload);
-    const bounded = existing.slice(-MAX_STORED_ANALYTICS_EVENTS);
-    sessionStorage.setItem('harveyAnalytics', JSON.stringify(bounded));
-  } catch (error) {
-    // Ignore storage issues in private mode.
+  const existing = readAnalyticsEvents();
+  existing.push(eventPayload);
+  writeAnalyticsEvents(existing);
+
+  if (analyticsEndpoint) {
+    try {
+      const body = JSON.stringify(eventPayload);
+      if (typeof navigator.sendBeacon === 'function') {
+        const beaconBlob = new Blob([body], { type: 'application/json' });
+        navigator.sendBeacon(analyticsEndpoint, beaconBlob);
+      } else {
+        fetch(analyticsEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } catch (error) {
+      // Ignore network/reporting errors to avoid UI disruptions.
+    }
   }
 
   if (shouldDebugAnalytics) {
     console.info('analytics:event', eventPayload);
   }
+}
+
+function trackPageView() {
+  trackEvent('page_view', {
+    referrer: document.referrer || 'direct',
+    query: window.location.search || '',
+    sourceType: trafficContext.sourceType,
+    sourceName: trafficContext.sourceName,
+    utmSource: trafficContext.utmSource,
+    utmMedium: trafficContext.utmMedium,
+    utmCampaign: trafficContext.utmCampaign,
+    utmContent: trafficContext.utmContent,
+    utmTerm: trafficContext.utmTerm,
+  });
+}
+
+function trackScrollDepthMilestones() {
+  const totalScrollable = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+  const scrolled = Math.max(window.scrollY, 0);
+  const depth = Math.round((scrolled / totalScrollable) * 100);
+
+  scrollMilestones.forEach((milestone) => {
+    if (depth >= milestone && !recordedMilestones.has(milestone)) {
+      recordedMilestones.add(milestone);
+      trackEvent('scroll_depth', { milestone });
+    }
+  });
+}
+
+function trackPageEngagement(reason = 'exit') {
+  const elapsedSeconds = Math.max(1, Math.round((Date.now() - pageVisitStartedAt) / 1000));
+  trackEvent('engagement_time', {
+    reason,
+    seconds: elapsedSeconds,
+  });
 }
 
 function restartTopPortraitAnimation() {
@@ -184,6 +341,25 @@ if ('IntersectionObserver' in window) {
         title: video.closest('.media-card')?.querySelector('h3')?.textContent || 'Unknown media',
       });
     });
+
+    video.addEventListener('timeupdate', () => {
+      if (!video.duration || Number.isNaN(video.duration)) return;
+      const title = video.closest('.media-card')?.querySelector('h3')?.textContent || 'Unknown media';
+      const progress = Math.floor((video.currentTime / video.duration) * 100);
+
+      [25, 50, 75].forEach((mark) => {
+        const markerKey = `tracked${mark}`;
+        if (progress >= mark && !video.dataset[markerKey]) {
+          video.dataset[markerKey] = '1';
+          trackEvent('media_progress', { title, progress: mark });
+        }
+      });
+    });
+
+    video.addEventListener('ended', () => {
+      const title = video.closest('.media-card')?.querySelector('h3')?.textContent || 'Unknown media';
+      trackEvent('media_complete', { title });
+    });
   });
 }
 
@@ -277,10 +453,14 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-window.addEventListener('scroll', requestSyncTopHeroState, { passive: true });
+window.addEventListener('scroll', () => {
+  requestSyncTopHeroState();
+  trackScrollDepthMilestones();
+}, { passive: true });
 window.addEventListener('load', () => {
   recalculateFadeDistance();
   syncTopHeroState();
+  trackScrollDepthMilestones();
 });
 window.addEventListener('resize', () => {
   recalculateFadeDistance();
@@ -298,9 +478,14 @@ document.addEventListener('visibilitychange', () => {
     activePreviewVideo = null;
     heroVideo?.pause();
     reelVideo?.pause();
+    trackPageEngagement('hidden');
   } else if (!prefersReducedMotion && !prefersDataSaver && heroVideo && heroVideo.paused) {
     heroVideo.play().catch(() => {});
   }
+});
+
+window.addEventListener('pagehide', () => {
+  trackPageEngagement('pagehide');
 });
 
 if (prefersDataSaver) {
@@ -317,6 +502,15 @@ document.querySelectorAll('a[href^="mailto:"], a[href*="linkedin.com"], a[data-c
   });
 });
 
+document.querySelectorAll('[data-analytics]').forEach((element) => {
+  element.addEventListener('click', () => {
+    const eventName = element.getAttribute('data-analytics') || 'custom_click';
+    const eventLabel = element.getAttribute('data-analytics-label') || element.textContent?.trim() || 'Unknown';
+    trackEvent(eventName, { label: eventLabel });
+  });
+});
+
 applyRoleFilter('all');
 recalculateFadeDistance();
 syncTopHeroState();
+trackPageView();

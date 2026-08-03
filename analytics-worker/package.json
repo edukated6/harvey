@@ -1,0 +1,15 @@
+{
+  "name": "harvey-analytics-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "d1:create": "wrangler d1 create harvey-analytics",
+    "d1:migrate": "wrangler d1 execute harvey-analytics --remote --file ./schema.sql",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^4.29.0"
+  }
+}

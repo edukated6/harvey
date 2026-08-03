@@ -1,0 +1,4 @@
+analytics-worker/node_modules/
+analytics-worker/.wrangler/
+analytics-worker/.dev.vars
+analytics-worker/.env

@@ -1,0 +1,11 @@
+name = "harvey-analytics-api"
+main = "src/index.js"
+compatibility_date = "2026-08-02"
+
+[vars]
+ALLOWED_ORIGIN = "https://theharveyeffect.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "harvey-analytics"
+database_id = "8bcfdaee-957a-4b38-8bc6-e4d8c0d33f39"
