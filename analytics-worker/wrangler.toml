@@ -4,7 +4,7 @@ compatibility_date = "2026-08-02"
 
 [vars]
 ALLOWED_ORIGIN = "https://theharveyeffect.com"
-STRIPE_SERVICE_PRICES = '{"short-form-editing:short-form-edit":"price_1U3nSPEUt9h2ALU66F6k2cZC","long-form-editing:long-form-edit":"price_1U3nwlEUt9h2ALU6fL4A8Ntv","show-producing:show-produced":"price_1U3nyREUt9h2ALU6EUwlJ0A7","build-show-podcast-package:show-podcast-package":"price_1U3o2WEUt9h2ALU6fu3gqHwL","motion-graphics:visual-identity-system":"price_1U3o3zEUt9h2ALU6zhJhMF1C","motion-graphics:2d-opener":"price_1U3o6bEUt9h2ALU6dMs3l44h","motion-graphics:lower-third-mogrt":"price_1U3o97EUt9h2ALU6Y6OuKUcW","motion-graphics:2d-transition":"price_1U3oDOEUt9h2ALU6yc6cQr7G"}'
+STRIPE_SERVICE_PRICES = '{"short-form-editing:short-form-edit":"price_1U3nSPEUt9h2ALU66F6k2cZC","long-form-editing:long-form-edit":"price_1U3nwlEUt9h2ALU6fL4A8Ntv","show-producing:show-produced":"price_1U3nyREUt9h2ALU6EUwlJ0A7","build-show-podcast-package:show-podcast-package":"price_1U3o2WEUt9h2ALU6fu3gqHwL","motion-graphics:visual-identity-system":"price_1U3o3zEUt9h2ALU6zhJhMF1C","motion-graphics:2d-opener":"price_1U3o6bEUt9h2ALU6dMs3l44h","motion-graphics:lower-third-mogrt":"price_1U3o97EUt9h2ALU6Y6OuKUcW","motion-graphics:2d-transition":"price_1U3oDOEUt9h2ALU6yc6cQr7G","captions":"price_1U3oeCEUt9h2ALU6U4nBWCwl","revision":"price_1U3ogcEUt9h2ALU6PICY1kbU"}'
 STRIPE_SUCCESS_URL = "https://theharveyeffect.com/?checkout=success"
 STRIPE_CANCEL_URL = "https://theharveyeffect.com/?checkout=cancelled"
 
