@@ -24,6 +24,10 @@ export default {
       return createCheckoutSession(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/webhook/stripe') {
+      return handleStripeWebhook(request, env, corsHeaders);
+    }
+
     if (request.method === 'GET' && url.pathname === '/summary') {
       if (!isAuthorized(request, env)) {
         return json({ error: 'Unauthorized' }, 401, corsHeaders);
@@ -88,6 +92,18 @@ function parsePriceMap(env) {
   } catch {
     return {};
   }
+}
+
+function compactSummary(items, fallback = 'None selected') {
+  if (!Array.isArray(items) || !items.length) return fallback;
+  return items
+    .map((item) => {
+      const label = item.name || item.id || 'Service';
+      const quantity = Number(item.quantity || item.qty || 1);
+      return quantity > 1 ? `${label} x${quantity}` : label;
+    })
+    .join(', ')
+    .slice(0, 300);
 }
 
 function normalizeQuantity(value) {
@@ -163,6 +179,9 @@ async function createCheckoutSession(request, env, headers) {
   const successUrl = (env.STRIPE_SUCCESS_URL || 'https://theharveyeffect.com/?checkout=success').trim();
   const cancelUrl = (env.STRIPE_CANCEL_URL || 'https://theharveyeffect.com/?checkout=cancelled').trim();
 
+  const serviceSummary = compactSummary(selectedServices, 'No services selected');
+  const addOnSummary = compactSummary(selectedAddOns, 'No add-ons selected');
+
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     line_items: lineItems,
@@ -171,12 +190,97 @@ async function createCheckoutSession(request, env, headers) {
     metadata: {
       projectName: asString(payload?.projectName, 200),
       timeline: asString(payload?.timeline, 80),
-      details: asString(payload?.details, 1000),
+      details: asString(payload?.details, 300),
+      serviceSummary,
+      addOnSummary,
       source: 'portfolio-builder',
     },
   });
 
   return json({ url: session.url }, 200, headers);
+}
+
+async function handleStripeWebhook(request, env, headers) {
+  const stripe = getStripeClient(env);
+  if (!stripe) {
+    return json({ error: 'Stripe webhook is not configured on the server.' }, 500, headers);
+  }
+
+  const webhookSecret = (env.STRIPE_WEBHOOK_SECRET || '').trim();
+  if (!webhookSecret) {
+    return json({ error: 'Stripe webhook secret is not configured.' }, 500, headers);
+  }
+
+  const signature = request.headers.get('Stripe-Signature') || '';
+  const rawBody = await request.text();
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+  } catch (error) {
+    return json({ error: 'Invalid Stripe webhook signature.' }, 400, headers);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object || {};
+    const customerEmail = session.customer_details?.email || session.customer_email || env.EMAIL_TO || 'ahmaadharvey@pm.me';
+    const projectName = asString(session.metadata?.projectName, 200) || 'Untitled project';
+    const timeline = asString(session.metadata?.timeline, 80) || 'standard';
+    const details = asString(session.metadata?.details, 300) || 'No additional notes were provided.';
+    const serviceSummary = asString(session.metadata?.serviceSummary, 300) || 'No services selected';
+    const addOnSummary = asString(session.metadata?.addOnSummary, 300) || 'No add-ons selected';
+
+    const subject = `New booking: ${projectName}`;
+    const html = `
+      <h2>New service purchase</h2>
+      <p><strong>Project:</strong> ${escapeHtml(projectName)}</p>
+      <p><strong>Timeline:</strong> ${escapeHtml(timeline)}</p>
+      <p><strong>Services:</strong> ${escapeHtml(serviceSummary)}</p>
+      <p><strong>Add-ons:</strong> ${escapeHtml(addOnSummary)}</p>
+      <p><strong>Project details:</strong> ${escapeHtml(details)}</p>
+      <p><strong>Customer email:</strong> ${escapeHtml(customerEmail)}</p>
+    `;
+
+    await sendProjectBriefEmail(env, customerEmail, subject, html);
+  }
+
+  return json({ received: true }, 200, headers);
+}
+
+async function sendProjectBriefEmail(env, customerEmail, subject, htmlBody) {
+  const apiKey = (env.RESEND_API_KEY || '').trim();
+  const from = (env.RESEND_FROM || 'onboarding@resend.dev').trim();
+  const to = (env.EMAIL_TO || 'ahmaadharvey@pm.me').trim();
+
+  if (!apiKey) {
+    return false;
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      reply_to: customerEmail,
+      subject,
+      html: htmlBody,
+    }),
+  });
+
+  return response.ok;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 async function ingestEvent(request, env, headers) {

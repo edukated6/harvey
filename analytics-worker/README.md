@@ -27,6 +27,14 @@ Set the Stripe secret used by the dynamic checkout route:
 
 - `wrangler secret put STRIPE_SECRET_KEY`
 
+Set the Stripe webhook secret used by the purchase email automation:
+
+- `wrangler secret put STRIPE_WEBHOOK_SECRET`
+
+Set the Resend API key used to send the project brief after purchase:
+
+- `wrangler secret put RESEND_API_KEY`
+
 Optional, set explicit site origin used by CORS checks:
 
 - `wrangler secret put ALLOWED_ORIGIN` is not required because [analytics-worker/wrangler.toml](analytics-worker/wrangler.toml) already sets `ALLOWED_ORIGIN` in `[vars]`.
