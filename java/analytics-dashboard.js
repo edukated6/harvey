@@ -123,7 +123,13 @@ function renderSimpleList(listId, rows, emptyText, formatter) {
 function renderTopClicks(events) {
   const clickCounts = new Map();
   events
-    .filter((event) => event.event === 'contact_click' || event.event === 'analytics_page_open')
+    .filter((event) => (
+      event.event === 'contact_click'
+      || event.event === 'analytics_page_open'
+      || event.event === 'service_checkout_click'
+      || event.event === 'service_brief_send_click'
+      || event.event === 'service_checkout_intent'
+    ))
     .forEach((event) => {
       const key = event.target || event.label || event.type || 'Unknown target';
       clickCounts.set(key, (clickCounts.get(key) || 0) + 1);
@@ -149,6 +155,35 @@ function renderUtmCampaigns(campaignRows) {
     'No campaign-tagged traffic yet.',
     (row) => `<strong>${formatNumber(row.views)}</strong> views • ${formatNumber(row.clicks)} clicks • ${row.campaign}`
   );
+}
+
+function renderServiceFunnel(events) {
+  const pageViews = events.filter((event) => event.event === 'page_view').length;
+  const builderStarts = events.filter((event) => event.event === 'service_builder_start').length;
+  const serviceAdds = events.filter((event) => event.event === 'service_toggle_click' && event.selected === true).length;
+  const addOnAdds = events.filter((event) => event.event === 'addon_toggle_click' && event.selected === true).length;
+  const checkoutIntents = events.filter((event) => event.event === 'service_checkout_intent').length;
+  const secureCheckoutIntents = events.filter(
+    (event) => event.event === 'service_checkout_intent' && event.route === 'secure_checkout'
+  ).length;
+  const proposalIntents = events.filter(
+    (event) => event.event === 'service_checkout_intent' && event.route === 'proposal_request'
+  ).length;
+  const briefSends = events.filter((event) => event.event === 'service_brief_send_click').length;
+
+  const viewToBuilder = pageViews > 0 ? (builderStarts / pageViews) * 100 : 0;
+  const builderToCheckout = builderStarts > 0 ? (checkoutIntents / builderStarts) * 100 : 0;
+
+  const rows = [
+    `Views: ${formatNumber(pageViews)}`,
+    `Package Builder Starts: ${formatNumber(builderStarts)} (${formatPct(viewToBuilder)} of views)`,
+    `Service Adds: ${formatNumber(serviceAdds)} • Add-On Adds: ${formatNumber(addOnAdds)}`,
+    `Checkout Intents: ${formatNumber(checkoutIntents)} (${formatPct(builderToCheckout)} of builder starts)`,
+    `Intent Route Mix: ${formatNumber(secureCheckoutIntents)} secure • ${formatNumber(proposalIntents)} proposal`,
+    `Project Brief Sends: ${formatNumber(briefSends)}`,
+  ];
+
+  renderSimpleList('serviceFunnelList', rows, 'No service funnel activity tracked yet.', (row) => row);
 }
 
 function renderViewerSnapshot(events) {
@@ -386,6 +421,7 @@ async function renderDashboard() {
   renderViewerSnapshot(events);
   renderTopSources(remote?.summary?.sources || summarizeSourcesFromLocal(events));
   renderUtmCampaigns(remote?.summary?.campaigns || summarizeCampaignsFromLocal(events));
+  renderServiceFunnel(events);
 
   const remoteRows = remote?.recent?.rows || [];
   const localRows = [...events].reverse().slice(0, MAX_ROWS);

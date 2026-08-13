@@ -1,3 +1,5 @@
+import Stripe from 'stripe';
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
@@ -16,6 +18,10 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/events') {
       return ingestEvent(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/checkout') {
+      return createCheckoutSession(request, env, corsHeaders);
     }
 
     if (request.method === 'GET' && url.pathname === '/summary') {
@@ -63,6 +69,114 @@ function isAuthorized(request, env) {
   const provided = bearer || headerKey;
   const expected = env.HARVEY_ANALYTICS_ADMIN_KEY || '';
   return Boolean(expected) && provided === expected;
+}
+
+function getStripeClient(env) {
+  const secretKey = (env.STRIPE_SECRET_KEY || '').trim();
+  if (!secretKey) return null;
+
+  return new Stripe(secretKey, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
+
+function parsePriceMap(env) {
+  try {
+    const raw = env.STRIPE_SERVICE_PRICES || '{}';
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function normalizeQuantity(value) {
+  const quantity = Number(value);
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.max(1, Math.min(99, Math.round(quantity)));
+}
+
+function resolveStripePriceId(service, priceMap) {
+  if (!service || typeof service !== 'object') return null;
+
+  const keys = [
+    `${service.id || ''}:${service.variant || ''}`,
+    `${service.id || ''}`,
+    `${service.id || ''}:${service.option || ''}`,
+  ].filter(Boolean);
+
+  for (const key of keys) {
+    if (priceMap[key]) return String(priceMap[key]);
+  }
+
+  return null;
+}
+
+async function createCheckoutSession(request, env, headers) {
+  const stripe = getStripeClient(env);
+  if (!stripe) {
+    return json({ error: 'Stripe checkout is not configured on the server.' }, 500, headers);
+  }
+
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const priceMap = parsePriceMap(env);
+  const selectedServices = Array.isArray(payload?.selectedServices) ? payload.selectedServices : [];
+  const selectedAddOns = Array.isArray(payload?.selectedAddOns) ? payload.selectedAddOns : [];
+
+  const lineItems = [];
+
+  selectedServices.forEach((service) => {
+    const priceId = resolveStripePriceId(service, priceMap);
+    if (!priceId) return;
+
+    lineItems.push({
+      price: priceId,
+      quantity: normalizeQuantity(service.quantity),
+    });
+  });
+
+  selectedAddOns.forEach((addon) => {
+    const priceId = resolveStripePriceId(addon, priceMap);
+    if (!priceId) return;
+
+    lineItems.push({
+      price: priceId,
+      quantity: normalizeQuantity(addon.quantity || 1),
+    });
+  });
+
+  if (!lineItems.length) {
+    return json({ error: 'No valid Stripe line items were found for this checkout request.' }, 400, headers);
+  }
+
+  const total = lineItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  if (!total) {
+    return json({ error: 'Checkout total is invalid.' }, 400, headers);
+  }
+
+  const successUrl = (env.STRIPE_SUCCESS_URL || 'https://theharveyeffect.com/?checkout=success').trim();
+  const cancelUrl = (env.STRIPE_CANCEL_URL || 'https://theharveyeffect.com/?checkout=cancelled').trim();
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    line_items: lineItems,
+    success_url: `${successUrl}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: cancelUrl,
+    metadata: {
+      projectName: asString(payload?.projectName, 200),
+      timeline: asString(payload?.timeline, 80),
+      details: asString(payload?.details, 1000),
+      source: 'portfolio-builder',
+    },
+  });
+
+  return json({ url: session.url }, 200, headers);
 }
 
 async function ingestEvent(request, env, headers) {

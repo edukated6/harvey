@@ -23,11 +23,23 @@ Set a worker secret that is required for owner dashboard API reads:
 
 - `wrangler secret put HARVEY_ANALYTICS_ADMIN_KEY`
 
+Set the Stripe secret used by the dynamic checkout route:
+
+- `wrangler secret put STRIPE_SECRET_KEY`
+
 Optional, set explicit site origin used by CORS checks:
 
 - `wrangler secret put ALLOWED_ORIGIN` is not required because [analytics-worker/wrangler.toml](analytics-worker/wrangler.toml) already sets `ALLOWED_ORIGIN` in `[vars]`.
 
-## 3) Deploy
+## 3) Configure Stripe Prices
+
+For the dynamic checkout route, map the service keys to Stripe Price IDs in [analytics-worker/wrangler.toml](analytics-worker/wrangler.toml):
+
+- `STRIPE_SERVICE_PRICES = '{"short-form-editing:short-form-edit":"price_...","long-form-editing:long-form-edit":"price_...","motion-graphics:2d-opener":"price_...","motion-graphics:lower-third-mogrt":"price_...","motion-graphics:2d-transition":"price_..."}'`
+
+Use the exact option values from the service dropdowns and the service IDs from the booking builder.
+
+## 4) Deploy
 
 - `npm run deploy`
 

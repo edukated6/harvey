@@ -4,6 +4,24 @@ const videos = document.querySelectorAll('.media-frame video');
 const roleFilters = document.querySelectorAll('.role-filter');
 const mediaCards = document.querySelectorAll('.media-card');
 const filterStatus = document.getElementById('filterStatus');
+const serviceFilterButtons = document.querySelectorAll('.service-filter');
+const serviceCards = document.querySelectorAll('.service-card');
+const serviceFilterStatus = document.getElementById('serviceFilterStatus');
+const serviceToggleButtons = document.querySelectorAll('.service-toggle');
+const serviceVariantSelects = document.querySelectorAll('.service-variant-select');
+const serviceQuantityInputs = document.querySelectorAll('.service-quantity-input');
+const serviceQuantityButtons = document.querySelectorAll('.service-quantity-btn');
+const addonToggleInputs = document.querySelectorAll('.addon-toggle');
+const bookingSelectedList = document.getElementById('bookingSelectedList');
+const bookingAddonsList = document.getElementById('bookingAddonsList');
+const bookingTotal = document.getElementById('bookingTotal');
+const bookingCheckout = document.getElementById('bookingCheckout');
+const bookingSendBrief = document.getElementById('bookingSendBrief');
+const checkoutModeHint = document.getElementById('checkoutModeHint');
+const clearBookingBrief = document.getElementById('clearBookingBrief');
+const briefProjectInput = document.getElementById('briefProject');
+const briefTimelineInput = document.getElementById('briefTimeline');
+const briefDetailsInput = document.getElementById('briefDetails');
 const openReelButton = document.getElementById('openReel');
 const closeReelButton = document.getElementById('closeReel');
 const reelModal = document.getElementById('reelModal');
@@ -30,6 +48,16 @@ let fadeDistanceCache = Math.max(window.innerHeight * 0.72, 420);
 let lastPortraitOpacity = '';
 let rafScheduled = false;
 let activePreviewVideo = null;
+const selectedServiceIds = new Set();
+const selectedAddOnIds = new Set();
+const checkoutLinksConfig = window.HARVEY_CHECKOUT_LINKS || {};
+let packageBuilderStarted = false;
+
+const timelineMultipliers = {
+  standard: 1,
+  priority: 1.2,
+  rush: 1.4,
+};
 
 function getOrCreateStorageId(storage, key, label) {
   try {
@@ -224,6 +252,14 @@ function trackPageEngagement(reason = 'exit') {
   });
 }
 
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
 function restartTopPortraitAnimation() {
   if (!quickviewStage || prefersReducedMotion || isMobilePortraitDisabled()) return;
   quickviewStage.classList.remove('animate-portrait');
@@ -406,6 +442,486 @@ roleFilters.forEach((button) => {
   });
 });
 
+function applyServiceFilter(category) {
+  let visibleCount = 0;
+
+  serviceCards.forEach((card) => {
+    const serviceCategory = card.dataset.serviceCategory || 'all';
+    const shouldShow = category === 'all' || serviceCategory === category;
+    card.classList.toggle('is-hidden', !shouldShow);
+    if (shouldShow) visibleCount += 1;
+  });
+
+  if (serviceFilterStatus) {
+    serviceFilterStatus.textContent = category === 'all'
+      ? `Showing all services (${visibleCount})`
+      : `Showing ${category} services (${visibleCount})`;
+  }
+}
+
+function getTimelineMultiplier() {
+  const timeline = briefTimelineInput?.value || 'standard';
+  return timelineMultipliers[timeline] || 1;
+}
+
+function syncCardQuantityAvailability(card) {
+  const select = card.querySelector('.service-variant-select');
+  const selectedOption = select ? select.selectedOptions[0] : null;
+  const quantityAllowed = selectedOption?.dataset.quantityAllowed !== 'false';
+  const quantityLabel = card.querySelector('.service-quantity-label');
+  const quantityControl = card.querySelector('.service-quantity-control');
+  const quantityInput = card.querySelector('.service-quantity-input');
+  const quantityButtons = card.querySelectorAll('.service-quantity-btn');
+
+  if (quantityLabel) quantityLabel.hidden = !quantityAllowed;
+  if (quantityControl) quantityControl.hidden = !quantityAllowed;
+
+  if (quantityInput) {
+    quantityInput.disabled = !quantityAllowed;
+    if (!quantityAllowed) {
+      quantityInput.value = '1';
+    }
+  }
+
+  quantityButtons.forEach((button) => {
+    button.disabled = !quantityAllowed;
+  });
+}
+
+function getCardServiceSelection(card) {
+  const select = card.querySelector('.service-variant-select');
+  const quantityInput = card.querySelector('.service-quantity-input');
+  const selectedOption = select ? select.selectedOptions[0] : null;
+  const serviceId = card.dataset.serviceId || '';
+  const serviceName = selectedOption?.dataset.variantName || card.dataset.serviceName || 'Service';
+  const unitPrice = Number(selectedOption?.dataset.price || card.dataset.servicePrice || 0);
+  const isQuantityAllowed = selectedOption?.dataset.quantityAllowed !== 'false';
+  const quantity = isQuantityAllowed ? Number(quantityInput?.value || 1) : 1;
+  const normalizedQuantity = isQuantityAllowed ? (Number.isFinite(quantity) && quantity > 0 ? quantity : 1) : 1;
+  const lineTotal = unitPrice * normalizedQuantity;
+
+  return {
+    id: serviceId,
+    name: serviceName,
+    price: unitPrice,
+    variant: selectedOption?.value || '',
+    option: selectedOption?.value || '',
+    quantity: normalizedQuantity,
+    lineTotal,
+  };
+}
+
+function collectSelectedServices() {
+  const selectedServices = [];
+
+  serviceCards.forEach((card) => {
+    const service = getCardServiceSelection(card);
+    if (!selectedServiceIds.has(service.id)) return;
+    selectedServices.push(service);
+  });
+
+  return selectedServices;
+}
+
+function collectSelectedAddOns() {
+  const selectedAddOns = [];
+
+  addonToggleInputs.forEach((input) => {
+    const addOnId = input.dataset.addonId || '';
+    if (!selectedAddOnIds.has(addOnId)) return;
+    selectedAddOns.push({
+      id: addOnId,
+      name: input.dataset.addonName || 'Add-on',
+      price: Number(input.dataset.addonPrice || 0),
+    });
+  });
+
+  return selectedAddOns;
+}
+
+function createBookingMailto(selectedServices, selectedAddOns, estimatedTotal) {
+  const selectedText = selectedServices.length
+    ? selectedServices.map((service) => {
+        const quantityText = service.quantity > 1 ? ` x${service.quantity}` : '';
+        const lineTotal = service.lineTotal || (service.price * (service.quantity || 1));
+        return `- ${service.name}${quantityText} (${formatCurrency(lineTotal)})`;
+      }).join('\n')
+    : '- None selected yet';
+
+  const addOnText = selectedAddOns.length
+    ? selectedAddOns.map((addOn) => `- ${addOn.name} (${formatCurrency(addOn.price)})`).join('\n')
+    : '- No add-ons selected';
+
+  const projectName = (briefProjectInput?.value || 'Untitled project').trim();
+  const timeline = briefTimelineInput?.value || 'standard';
+  const details = (briefDetailsInput?.value || 'No additional details provided').trim();
+  const total = formatCurrency(estimatedTotal);
+
+  const subject = 'Service Booking Request - The Harvey Effect';
+  const body = [
+    'Hi Ahmaad,',
+    '',
+    'I want to book your services. Here is my project brief:',
+    '',
+    `Project Name: ${projectName}`,
+    `Timeline: ${timeline}`,
+    '',
+    'Selected Services:',
+    selectedText,
+    '',
+    'Selected Add-Ons:',
+    addOnText,
+    '',
+    `Estimated Starting Total: ${total}`,
+    '',
+    `Project Notes: ${details}`,
+  ].join('\n');
+
+  return `mailto:ahmaadharvey@pm.me?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function createCheckoutBundleKey(serviceIds) {
+  return [...serviceIds].sort().join('+');
+}
+
+function getCheckoutLink(selectedServices) {
+  if (!selectedServices.length) return '';
+
+  const bundleKey = createCheckoutBundleKey(selectedServices.map((service) => service.id));
+  const servicesMap = checkoutLinksConfig.services || {};
+  const bundlesMap = checkoutLinksConfig.bundles || {};
+
+  let link = bundlesMap[bundleKey] || '';
+  if (!link && selectedServices.length === 1) {
+    link = servicesMap[selectedServices[0].id] || '';
+  }
+  if (!link) {
+    link = checkoutLinksConfig.default || '';
+  }
+
+  const trimmed = String(link || '').trim();
+  return /^https?:\/\//i.test(trimmed) ? trimmed : '';
+}
+
+function markPackageBuilderStart() {
+  if (packageBuilderStarted) return;
+  packageBuilderStarted = true;
+  trackEvent('service_builder_start');
+}
+
+function renderBookingList(targetList, rows, emptyLabel) {
+  if (!targetList) return;
+  targetList.innerHTML = '';
+
+  if (!rows.length) {
+    const emptyState = document.createElement('li');
+    emptyState.textContent = emptyLabel;
+    targetList.appendChild(emptyState);
+    return;
+  }
+
+  rows.forEach((row) => {
+    const item = document.createElement('li');
+    const quantity = Number(row.quantity || 1);
+    const lineTotal = Number(row.lineTotal || (row.price * quantity));
+    const quantityText = quantity > 1 ? ` x${quantity}` : '';
+    item.textContent = `${row.name}${quantityText} - ${formatCurrency(lineTotal)}`;
+    targetList.appendChild(item);
+  });
+}
+
+function updateCheckoutActions(selectedServices, selectedAddOns, estimatedTotal) {
+  const mailtoHref = createBookingMailto(selectedServices, selectedAddOns, estimatedTotal);
+  const checkoutLink = getCheckoutLink(selectedServices);
+
+  if (bookingSendBrief) {
+    bookingSendBrief.setAttribute('href', mailtoHref);
+  }
+
+  if (!bookingCheckout) return;
+
+  const checkoutApiBase = (window.HARVEY_CHECKOUT_API_BASE || window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+  const isServerCheckoutEnabled = Boolean(checkoutApiBase);
+
+  if (checkoutLink && !isServerCheckoutEnabled) {
+    bookingCheckout.setAttribute('href', checkoutLink);
+    bookingCheckout.setAttribute('target', '_blank');
+    bookingCheckout.setAttribute('rel', 'noopener noreferrer');
+    bookingCheckout.textContent = 'Continue to Secure Checkout';
+    if (checkoutModeHint) {
+      checkoutModeHint.textContent = 'Checkout mode: Live secure payment link enabled';
+    }
+  } else {
+    bookingCheckout.setAttribute('href', mailtoHref);
+    bookingCheckout.removeAttribute('target');
+    bookingCheckout.removeAttribute('rel');
+    bookingCheckout.textContent = isServerCheckoutEnabled ? 'Continue to Secure Checkout' : 'Start Checkout Request';
+    if (checkoutModeHint) {
+      checkoutModeHint.textContent = isServerCheckoutEnabled
+        ? 'Checkout mode: Dynamic Stripe secure session'
+        : 'Checkout mode: Custom proposal request';
+    }
+  }
+}
+
+function updateBookingSummary() {
+  const selectedServices = collectSelectedServices();
+  const selectedAddOns = collectSelectedAddOns();
+  const baseServicesTotal = selectedServices.reduce((sum, service) => sum + (service.lineTotal || (service.price * (service.quantity || 1))), 0);
+  const addOnsTotal = selectedAddOns.reduce((sum, addOn) => sum + addOn.price, 0);
+  const estimatedTotal = Math.round((baseServicesTotal + addOnsTotal) * getTimelineMultiplier());
+
+  renderBookingList(bookingSelectedList, selectedServices, 'No services selected yet');
+  renderBookingList(bookingAddonsList, selectedAddOns, 'No add-ons selected');
+
+  if (bookingTotal) {
+    bookingTotal.textContent = formatCurrency(estimatedTotal);
+  }
+
+  updateCheckoutActions(selectedServices, selectedAddOns, estimatedTotal);
+}
+
+serviceFilterButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const filter = button.dataset.serviceFilter || 'all';
+
+    serviceFilterButtons.forEach((item) => {
+      item.classList.remove('is-active');
+      item.setAttribute('aria-pressed', 'false');
+    });
+
+    button.classList.add('is-active');
+    button.setAttribute('aria-pressed', 'true');
+    applyServiceFilter(filter);
+    trackEvent('service_filter_click', { category: filter });
+  });
+});
+
+serviceToggleButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const serviceId = button.dataset.serviceToggle || '';
+    const card = button.closest('.service-card');
+    const serviceSelection = card ? getCardServiceSelection(card) : null;
+    const serviceName = serviceSelection?.name || card?.dataset.serviceName || serviceId;
+
+    if (!serviceId || !card) return;
+
+    const isSelected = selectedServiceIds.has(serviceId);
+    if (isSelected) {
+      selectedServiceIds.delete(serviceId);
+      button.textContent = 'Add to Package';
+      button.classList.remove('is-selected');
+      button.setAttribute('aria-pressed', 'false');
+      card.classList.remove('is-selected');
+    } else {
+      selectedServiceIds.add(serviceId);
+      button.textContent = 'Added to Package';
+      button.classList.add('is-selected');
+      button.setAttribute('aria-pressed', 'true');
+      card.classList.add('is-selected');
+    }
+
+    updateBookingSummary();
+    if (selectedServiceIds.size > 0) {
+      markPackageBuilderStart();
+    }
+    trackEvent('service_toggle_click', {
+      serviceId,
+      serviceName,
+      selected: !isSelected,
+      price: serviceSelection?.price || Number(card.dataset.servicePrice || 0),
+    });
+  });
+});
+
+serviceVariantSelects.forEach((select) => {
+  select.addEventListener('change', () => {
+    const card = select.closest('.service-card');
+    if (!card) return;
+
+    syncCardQuantityAvailability(card);
+    updateBookingSummary();
+
+    if (selectedServiceIds.has(card.dataset.serviceId || '')) {
+      const selectedVariant = getCardServiceSelection(card);
+      trackEvent('service_variant_change', {
+        serviceId: card.dataset.serviceId || '',
+        serviceName: selectedVariant.name,
+        price: selectedVariant.price,
+      });
+    }
+  });
+});
+
+serviceCards.forEach((card) => {
+  syncCardQuantityAvailability(card);
+});
+
+function normalizeServiceQuantity(value) {
+  const numericValue = Number(value || 1);
+  if (!Number.isFinite(numericValue)) return 1;
+  return Math.min(10, Math.max(1, Math.round(numericValue)));
+}
+
+serviceQuantityInputs.forEach((input) => {
+  input.addEventListener('input', () => {
+    const card = input.closest('.service-card');
+    const safeValue = normalizeServiceQuantity(input.value);
+    input.value = String(safeValue);
+
+    if (card && selectedServiceIds.has(card.dataset.serviceId || '')) {
+      updateBookingSummary();
+      trackEvent('service_quantity_change', {
+        serviceId: card.dataset.serviceId || '',
+        quantity: safeValue,
+      });
+    }
+  });
+});
+
+serviceQuantityButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const input = button.parentElement?.querySelector('.service-quantity-input');
+    if (!input) return;
+
+    const action = button.dataset.quantityAction || 'increase';
+    const change = action === 'decrease' ? -1 : 1;
+    const nextValue = normalizeServiceQuantity(Number(input.value || 1) + change);
+    input.value = String(nextValue);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+});
+
+addonToggleInputs.forEach((input) => {
+  input.addEventListener('change', () => {
+    const addOnId = input.dataset.addonId || '';
+    const addOnName = input.dataset.addonName || addOnId;
+    const selected = input.checked;
+
+    if (!addOnId) return;
+
+    if (selected) {
+      selectedAddOnIds.add(addOnId);
+      markPackageBuilderStart();
+    } else {
+      selectedAddOnIds.delete(addOnId);
+    }
+
+    updateBookingSummary();
+    trackEvent('addon_toggle_click', {
+      addOnId,
+      addOnName,
+      selected,
+    });
+  });
+});
+
+[briefProjectInput, briefTimelineInput, briefDetailsInput].forEach((field) => {
+  if (!field) return;
+  field.addEventListener('input', () => {
+    if ((briefProjectInput?.value || '').trim() || (briefDetailsInput?.value || '').trim()) {
+      markPackageBuilderStart();
+    }
+    updateBookingSummary();
+  });
+});
+
+if (briefTimelineInput) {
+  briefTimelineInput.addEventListener('change', () => {
+    updateBookingSummary();
+    trackEvent('booking_timeline_change', { timeline: briefTimelineInput.value || 'standard' });
+  });
+}
+
+if (clearBookingBrief) {
+  clearBookingBrief.addEventListener('click', () => {
+    selectedServiceIds.clear();
+    selectedAddOnIds.clear();
+
+    serviceToggleButtons.forEach((button) => {
+      button.textContent = 'Add to Package';
+      button.classList.remove('is-selected');
+      button.setAttribute('aria-pressed', 'false');
+    });
+
+    serviceCards.forEach((card) => {
+      card.classList.remove('is-selected');
+    });
+
+    addonToggleInputs.forEach((input) => {
+      input.checked = false;
+    });
+
+    if (briefProjectInput) briefProjectInput.value = '';
+    if (briefTimelineInput) briefTimelineInput.value = 'standard';
+    if (briefDetailsInput) briefDetailsInput.value = '';
+    packageBuilderStarted = false;
+
+    updateBookingSummary();
+    trackEvent('booking_brief_clear');
+  });
+}
+
+if (bookingCheckout) {
+  bookingCheckout.addEventListener('click', async (event) => {
+    const selectedServices = collectSelectedServices();
+    const selectedAddOns = collectSelectedAddOns();
+    const checkoutLink = getCheckoutLink(selectedServices);
+    const checkoutApiBase = (window.HARVEY_CHECKOUT_API_BASE || window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+    const route = checkoutLink && !checkoutApiBase ? 'secure_checkout' : 'proposal_request';
+    const estimatedTotal = Number((bookingTotal?.textContent || '').replace(/[^\d]/g, '')) || 0;
+
+    trackEvent('service_checkout_intent', {
+      route,
+      selectedServices: selectedServices.length,
+      selectedAddOns: selectedAddOns.length,
+      estimatedTotal,
+    });
+
+    if (!checkoutApiBase || !selectedServices.length) {
+      return;
+    }
+
+    event.preventDefault();
+
+    try {
+      const response = await fetch(`${checkoutApiBase}/checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selectedServices,
+          selectedAddOns,
+          projectName: briefProjectInput?.value || '',
+          timeline: briefTimelineInput?.value || 'standard',
+          details: briefDetailsInput?.value || '',
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.url) {
+        window.open(data.url, '_blank', 'noopener,noreferrer');
+        return;
+      }
+    } catch (error) {
+      // Fall back to mailto request if server checkout is unavailable.
+    }
+
+    const mailtoHref = createBookingMailto(selectedServices, selectedAddOns, estimatedTotal);
+    window.location.href = mailtoHref;
+  });
+}
+
+if (bookingSendBrief) {
+  bookingSendBrief.addEventListener('click', () => {
+    const selectedServices = collectSelectedServices();
+    const selectedAddOns = collectSelectedAddOns();
+    trackEvent('service_brief_send_click', {
+      selectedServices: selectedServices.length,
+      selectedAddOns: selectedAddOns.length,
+    });
+  });
+}
+
 function openReelModal() {
   if (!reelModal) return;
   reelModal.classList.add('is-open');
@@ -511,6 +1027,8 @@ document.querySelectorAll('[data-analytics]').forEach((element) => {
 });
 
 applyRoleFilter('all');
+applyServiceFilter('all');
+updateBookingSummary();
 recalculateFadeDistance();
 syncTopHeroState();
 trackPageView();
