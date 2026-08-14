@@ -86,8 +86,9 @@ function bindLoginActions() {
 
 function bootstrapLogin() {
   const unlocked = sessionStorage.getItem(LOGIN_UNLOCKED_KEY) === '1';
+  const sessionToken = sessionStorage.getItem(LOGIN_SESSION_STORAGE) || '';
 
-  if (unlocked) {
+  if (unlocked && sessionToken) {
     const redirectTarget = getRedirectTarget();
     window.location.replace(`./${redirectTarget || 'analytics'}`);
     return;
