@@ -18,7 +18,9 @@
 <body class="analytics-page">
   <section class="analytics-gate" id="loginGateSection" aria-label="Owner login" data-user-hash="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" data-owner-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8">
     <div class="analytics-gate-card">
-      <h1>Login</h1>
+      <p class="analytics-kicker">Private Access</p>
+      <h1>Owner Login</h1>
+      <p class="analytics-subtitle">Log in to manage your analytics dashboard and blog posts.</p>
 
       <label class="analytics-gate-label" for="loginUsername">Username</label>
       <input class="analytics-gate-input" id="loginUsername" type="text" autocomplete="username" placeholder="Enter username">
@@ -26,15 +28,47 @@
       <label class="analytics-gate-label" for="loginPasscode">Passcode</label>
       <input class="analytics-gate-input" id="loginPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
 
-      <label class="analytics-gate-label" for="loginApiKey">API admin key</label>
-      <input class="analytics-gate-input" id="loginApiKey" type="password" autocomplete="off">
+      <label class="analytics-gate-label" for="loginApiKey">API admin key (required to manage posts/comments)</label>
+      <input class="analytics-gate-input" id="loginApiKey" type="password" autocomplete="off" placeholder="Paste HARVEY_ANALYTICS_ADMIN_KEY">
 
       <div class="analytics-actions">
         <button class="btn btn-primary" id="loginSubmit" type="button">Log In</button>
-        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+        <a class="btn btn-ghost" href="./index">Back to Portfolio</a>
       </div>
+      <p id="loginMessage" class="analytics-gate-message">Access is restricted to the portfolio owner.</p>
     </div>
   </section>
+
+  <main class="analytics-main" id="loginHub" hidden>
+    <header class="analytics-header reveal-up is-visible">
+      <div>
+        <p class="analytics-kicker">Owner Dashboard</p>
+        <h1>Welcome Back</h1>
+        <p class="analytics-subtitle">Choose where you want to go.</p>
+      </div>
+      <div class="analytics-actions">
+        <button class="btn btn-ghost" id="logoutButton" type="button">Log Out</button>
+      </div>
+    </header>
+
+    <section class="analytics-grid" aria-label="Dashboard links">
+      <a class="analytics-panel reveal-up is-visible dashboard-link-card" href="./analytics">
+        <div class="analytics-panel-head">
+          <h3>Analytics</h3>
+          <p>View audience traffic, engagement, and funnel performance.</p>
+        </div>
+      </a>
+      <a class="analytics-panel reveal-up is-visible dashboard-link-card" href="./admin">
+        <div class="analytics-panel-head">
+          <h3>Blog Admin</h3>
+          <p>Write, publish, and moderate blog posts and comments.</p>
+        </div>
+      </a>
+    </section>
   </main>
+
+  <footer>
+    Login uses a local owner passcode check; no credentials are sent anywhere.
+  </footer>
 </body>
 </html>

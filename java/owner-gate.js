@@ -34,8 +34,8 @@ function bootstrapGate() {
   }
 
   // Analytics and admin are only reachable through the shared login page.
-  const redirectTarget = window.location.pathname.split('/').pop() || 'index.html';
-  window.location.replace(`./login.html?redirect=${encodeURIComponent(redirectTarget)}`);
+  const redirectTarget = (window.location.pathname.split('/').pop() || 'index').replace(/\.html$/, '');
+  window.location.replace(`./login?redirect=${encodeURIComponent(redirectTarget)}`);
 }
 
 document.addEventListener('DOMContentLoaded', bootstrapGate);

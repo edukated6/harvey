@@ -1,6 +1,6 @@
 const LOGIN_UNLOCKED_KEY = 'harveyAnalyticsOwnerUnlocked';
 const LOGIN_API_KEY_STORAGE = 'harveyAnalyticsOwnerApiKey';
-const ALLOWED_REDIRECT_PAGES = ['analytics.html', 'admin.html'];
+const ALLOWED_REDIRECT_PAGES = ['analytics', 'admin'];
 
 function getRedirectTarget() {
   const requested = new URLSearchParams(window.location.search).get('redirect') || '';

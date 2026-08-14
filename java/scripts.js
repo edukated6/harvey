@@ -1100,7 +1100,7 @@ function renderBlogPosts(posts) {
   posts.forEach((post) => {
     const card = document.createElement('a');
     card.className = 'blog-card reveal-up is-visible';
-    card.href = `./blog-post.html?slug=${encodeURIComponent(post.slug)}`;
+    card.href = `./blog-post?slug=${encodeURIComponent(post.slug)}`;
     card.dataset.category = (post.category || '').toLowerCase();
     card.setAttribute('data-analytics', 'blog_post_click');
     card.setAttribute('data-analytics-label', post.title);
@@ -1213,7 +1213,7 @@ function renderRecentComments(comments) {
     const item = document.createElement('li');
     const link = document.createElement('a');
     link.className = 'recent-comment-item';
-    link.href = `./blog-post.html?slug=${encodeURIComponent(comment.postSlug)}#comments`;
+    link.href = `./blog-post?slug=${encodeURIComponent(comment.postSlug)}#comments`;
 
     link.innerHTML = `
       <p class="recent-comment-author">${escapeHtml(comment.authorName)}</p>

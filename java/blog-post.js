@@ -54,7 +54,7 @@ function renderPost(post) {
     : '';
 
   const relatedCtaHtml = post.relatedServiceId
-    ? `<div class="section-cta"><a class="btn btn-primary" href="./services.html">Book This Service</a></div>`
+    ? `<div class="section-cta"><a class="btn btn-primary" href="./services">Book This Service</a></div>`
     : '';
 
   postArticle.innerHTML = `
@@ -74,7 +74,7 @@ function renderNotFound() {
   if (!postArticle) return;
   postArticle.innerHTML = `
     <p class="blog-empty">This post could not be found. It may have been unpublished or the link is incorrect.</p>
-    <div class="section-cta"><a class="btn btn-ghost" href="./blog.html">Back to Blog</a></div>
+    <div class="section-cta"><a class="btn btn-ghost" href="./blog">Back to Blog</a></div>
   `;
   if (commentForm) commentForm.hidden = true;
 }
