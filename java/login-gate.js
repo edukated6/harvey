@@ -1,5 +1,5 @@
 const LOGIN_UNLOCKED_KEY = 'harveyAnalyticsOwnerUnlocked';
-const LOGIN_API_KEY_STORAGE = 'harveyAnalyticsOwnerApiKey';
+const LOGIN_SESSION_STORAGE = 'harveyAdminSessionToken';
 const ALLOWED_REDIRECT_PAGES = ['analytics', 'admin'];
 
 function getRedirectTarget() {
@@ -9,12 +9,6 @@ function getRedirectTarget() {
 
 function toHex(buffer) {
   return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function hashText(value) {
-  const bytes = new TextEncoder().encode(value);
-  const digest = await crypto.subtle.digest('SHA-256', bytes);
-  return toHex(digest);
 }
 
 function getGateSection() {
@@ -32,17 +26,8 @@ async function attemptLogin() {
   const gate = getGateSection();
   if (!gate) return;
 
-  const expectedUserHash = String(gate.dataset.userHash || '').trim().toLowerCase();
-  const expectedPassHash = String(gate.dataset.ownerHash || '').trim().toLowerCase();
   const usernameInput = document.getElementById('loginUsername');
   const passcodeInput = document.getElementById('loginPasscode');
-  const apiKeyInput = document.getElementById('loginApiKey');
-
-  if (expectedUserHash.length !== 64 || expectedPassHash.length !== 64) {
-    setLoginMessage('Login is not configured. Update data-user-hash / data-owner-hash in login.html.', true);
-    return;
-  }
-
   const username = String(usernameInput?.value || '');
   const passcode = String(passcodeInput?.value || '');
   if (!username || !passcode) {
@@ -50,21 +35,27 @@ async function attemptLogin() {
     return;
   }
 
-  const [candidateUserHash, candidatePassHash] = await Promise.all([hashText(username), hashText(passcode)]);
-  if (candidateUserHash !== expectedUserHash || candidatePassHash !== expectedPassHash) {
-    setLoginMessage('Invalid username or passcode.', true);
+  const apiBase = (window.HARVEY_ANALYTICS_API_BASE || 'https://harvey-analytics-api.harvey-analytics-worker.workers.dev').replace(/\/$/, '');
+  let response;
+  try {
+    response = await fetch(`${apiBase}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password: passcode }),
+    });
+  } catch {
+    setLoginMessage('Unable to reach the login service. Check the site connection and try again.', true);
     return;
   }
 
-  sessionStorage.setItem(LOGIN_UNLOCKED_KEY, '1');
-
-  const apiKey = String(apiKeyInput?.value || '').trim();
-  if (apiKey) {
-    sessionStorage.setItem(LOGIN_API_KEY_STORAGE, apiKey);
-    window.HARVEY_ANALYTICS_OWNER_KEY = apiKey;
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.token) {
+    setLoginMessage(data.error || 'Invalid username or passcode.', true);
+    return;
   }
 
-  setLoginMessage('Login successful.');
+  sessionStorage.setItem(LOGIN_SESSION_STORAGE, data.token);
+  sessionStorage.setItem(LOGIN_UNLOCKED_KEY, '1');
 
   const redirectTarget = getRedirectTarget();
   window.location.replace(`./${redirectTarget || 'analytics'}`);
@@ -95,7 +86,6 @@ function bindLoginActions() {
 
 function bootstrapLogin() {
   const unlocked = sessionStorage.getItem(LOGIN_UNLOCKED_KEY) === '1';
-  window.HARVEY_ANALYTICS_OWNER_KEY = sessionStorage.getItem(LOGIN_API_KEY_STORAGE) || '';
 
   if (unlocked) {
     const redirectTarget = getRedirectTarget();

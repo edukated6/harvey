@@ -1,5 +1,5 @@
 const OWNER_UNLOCKED_KEY = 'harveyAnalyticsOwnerUnlocked';
-const OWNER_API_KEY_STORAGE = 'harveyAnalyticsOwnerApiKey';
+const OWNER_SESSION_STORAGE = 'harveyAdminSessionToken';
 
 function getMainRoot() {
   return document.getElementById('analyticsMain');
@@ -26,7 +26,7 @@ function unlockDashboard() {
 
 function bootstrapGate() {
   const unlocked = sessionStorage.getItem(OWNER_UNLOCKED_KEY) === '1';
-  window.HARVEY_ANALYTICS_OWNER_KEY = sessionStorage.getItem(OWNER_API_KEY_STORAGE) || '';
+  window.HARVEY_ANALYTICS_OWNER_KEY = sessionStorage.getItem(OWNER_SESSION_STORAGE) || '';
 
   if (unlocked) {
     unlockDashboard();

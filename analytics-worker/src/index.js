@@ -16,6 +16,10 @@ export default {
 
     const url = new URL(request.url);
 
+    if (request.method === 'POST' && url.pathname === '/auth/login') {
+      return loginAdmin(request, env, corsHeaders);
+    }
+
     if (request.method === 'POST' && url.pathname === '/events') {
       return ingestEvent(request, env, corsHeaders);
     }
@@ -29,14 +33,14 @@ export default {
     }
 
     if (request.method === 'GET' && url.pathname === '/summary') {
-      if (!isAuthorized(request, env)) {
+      if (!(await isAuthorized(request, env))) {
         return json({ error: 'Unauthorized' }, 401, corsHeaders);
       }
       return getSummary(request, env, corsHeaders);
     }
 
     if (request.method === 'GET' && url.pathname === '/recent') {
-      if (!isAuthorized(request, env)) {
+      if (!(await isAuthorized(request, env))) {
         return json({ error: 'Unauthorized' }, 401, corsHeaders);
       }
       return getRecent(request, env, corsHeaders);
@@ -63,7 +67,7 @@ export default {
     }
 
     if (url.pathname === '/admin/posts' || url.pathname.startsWith('/admin/posts/')) {
-      if (!isAuthorized(request, env)) {
+      if (!(await isAuthorized(request, env))) {
         return json({ error: 'Unauthorized' }, 401, corsHeaders);
       }
       if (request.method === 'GET' && url.pathname === '/admin/posts') {
@@ -82,7 +86,7 @@ export default {
     }
 
     if (url.pathname === '/admin/comments' || url.pathname.startsWith('/admin/comments/')) {
-      if (!isAuthorized(request, env)) {
+      if (!(await isAuthorized(request, env))) {
         return json({ error: 'Unauthorized' }, 401, corsHeaders);
       }
       if (request.method === 'GET' && url.pathname === '/admin/comments') {
@@ -131,13 +135,49 @@ function getCorsHeaders(origin, env) {
   };
 }
 
-function isAuthorized(request, env) {
+async function isAuthorized(request, env) {
   const authHeader = request.headers.get('Authorization') || '';
   const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-  const headerKey = request.headers.get('X-Analytics-Key') || '';
-  const provided = bearer || headerKey;
-  const expected = env.HARVEY_ANALYTICS_ADMIN_KEY || '';
-  return Boolean(expected) && provided === expected;
+  if (!bearer || !env.DB) return false;
+
+  const tokenHash = await hashToken(bearer);
+  const session = await env.DB
+    .prepare(`SELECT id FROM admin_sessions WHERE token_hash = ? AND expires_at > datetime('now')`)
+    .bind(tokenHash)
+    .first();
+  return Boolean(session);
+}
+
+async function hashToken(value) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function loginAdmin(request, env, headers) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const username = asString(payload?.username, 120);
+  const password = asString(payload?.password, 500);
+  const expectedUsername = asString(env.HARVEY_ADMIN_USERNAME, 120);
+  const expectedPassword = asString(env.HARVEY_ADMIN_PASSWORD, 500);
+
+  if (!expectedUsername || !expectedPassword || username !== expectedUsername || password !== expectedPassword) {
+    return json({ error: 'Invalid username or passcode' }, 401, headers);
+  }
+
+  const token = `${crypto.randomUUID()}${crypto.randomUUID()}`;
+  const tokenHash = await hashToken(token);
+  await env.DB
+    .prepare(`INSERT INTO admin_sessions (token_hash, expires_at) VALUES (?, datetime('now', '+8 hours'))`)
+    .bind(tokenHash)
+    .run();
+
+  return json({ token, expiresIn: 8 * 60 * 60 }, 200, headers);
 }
 
 function getStripeClient(env) {

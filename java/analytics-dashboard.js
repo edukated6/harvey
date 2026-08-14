@@ -362,7 +362,7 @@ async function renderDashboard() {
   const root = document.getElementById('analyticsMain');
   const days = Number(root?.dataset.apiDays || DEFAULT_DAYS) || DEFAULT_DAYS;
   const apiBase = String(root?.dataset.apiBase || window.HARVEY_ANALYTICS_API_BASE || '').trim();
-  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || '').trim();
+  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '').trim();
 
   let events = readEvents();
   events = trackDashboardView(events);

@@ -16,8 +16,7 @@ function slugify(value) {
 }
 
 function getOwnerKey() {
-  const enteredKey = document.getElementById('adminApiKey')?.value?.trim() || '';
-  return enteredKey || window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAnalyticsOwnerApiKey') || '';
+  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '';
 }
 
 async function adminFetch(path, options = {}) {
@@ -43,7 +42,7 @@ async function adminFetch(path, options = {}) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     if (response.status === 401) {
-      throw new Error('The API admin key was rejected. Re-enter the current HARVEY_ANALYTICS_ADMIN_KEY on the login page.');
+      throw new Error('Your admin session has expired. Return to Login and sign in again.');
     }
     throw new Error(data.error || `Request failed (${response.status})`);
   }
@@ -67,25 +66,7 @@ const resetPostFormButton = document.getElementById('resetPostForm');
 const adminPostsList = document.getElementById('adminPostsList');
 const adminCommentsList = document.getElementById('adminCommentsList');
 const commentFilterButtons = document.querySelectorAll('[data-comment-filter]');
-const adminApiKeyInput = document.getElementById('adminApiKey');
-const setAdminApiKeyButton = document.getElementById('setAdminApiKey');
-
 let activeCommentFilter = 'pending';
-
-if (setAdminApiKeyButton) {
-  setAdminApiKeyButton.addEventListener('click', () => {
-    const apiKey = String(adminApiKeyInput?.value || '').trim();
-    if (!apiKey) {
-      setPostFormMessage('Paste the current API admin key first.', true);
-      return;
-    }
-    sessionStorage.setItem('harveyAnalyticsOwnerApiKey', apiKey);
-    window.HARVEY_ANALYTICS_OWNER_KEY = apiKey;
-    setPostFormMessage(`API key stored for this session (${apiKey.length} characters).`);
-    loadPosts();
-    loadComments();
-  });
-}
 
 function setPostFormMessage(message, isError = false) {
   if (!postFormMessage) return;
