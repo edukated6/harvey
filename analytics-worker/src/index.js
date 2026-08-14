@@ -115,6 +115,7 @@ function getCorsHeaders(origin, env) {
   const configuredOrigins = [
     env.ALLOWED_ORIGIN || '',
     env.ALLOWED_ORIGINS || '',
+    'https://www.theharveyeffect.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
   ]

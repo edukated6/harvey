@@ -25,17 +25,25 @@ async function adminFetch(path, options = {}) {
     throw new Error('Missing API admin key. Re-enter it on the owner login screen.');
   }
 
-  const response = await fetch(`${apiBase}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${ownerKey}`,
-      ...(options.headers || {}),
-    },
-  });
+  let response;
+  try {
+    response = await fetch(`${apiBase}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${ownerKey}`,
+        ...(options.headers || {}),
+      },
+    });
+  } catch (error) {
+    throw new Error('The admin API could not be reached. Check the deployed site origin and Worker CORS settings.');
+  }
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('The API admin key was rejected. Re-enter the current HARVEY_ANALYTICS_ADMIN_KEY on the login page.');
+    }
     throw new Error(data.error || `Request failed (${response.status})`);
   }
   return data;
