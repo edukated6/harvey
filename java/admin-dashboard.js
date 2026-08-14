@@ -16,7 +16,8 @@ function slugify(value) {
 }
 
 function getOwnerKey() {
-  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAnalyticsOwnerApiKey') || '';
+  const enteredKey = document.getElementById('adminApiKey')?.value?.trim() || '';
+  return enteredKey || window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAnalyticsOwnerApiKey') || '';
 }
 
 async function adminFetch(path, options = {}) {
