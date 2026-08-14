@@ -42,6 +42,61 @@ export default {
       return getRecent(request, env, corsHeaders);
     }
 
+    if (request.method === 'GET' && url.pathname === '/posts') {
+      return listPublishedPosts(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname.startsWith('/posts/')) {
+      return getPostBySlug(request, env, corsHeaders, url.pathname.slice('/posts/'.length));
+    }
+
+    if (request.method === 'GET' && url.pathname === '/comments') {
+      return listApprovedComments(request, env, corsHeaders);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/comments/recent') {
+      return listRecentApprovedComments(request, env, corsHeaders);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/comments') {
+      return createComment(request, env, corsHeaders);
+    }
+
+    if (url.pathname === '/admin/posts' || url.pathname.startsWith('/admin/posts/')) {
+      if (!isAuthorized(request, env)) {
+        return json({ error: 'Unauthorized' }, 401, corsHeaders);
+      }
+      if (request.method === 'GET' && url.pathname === '/admin/posts') {
+        return listAllPosts(request, env, corsHeaders);
+      }
+      if (request.method === 'POST' && url.pathname === '/admin/posts') {
+        return createPost(request, env, corsHeaders);
+      }
+      const postIdMatch = url.pathname.match(/^\/admin\/posts\/(\d+)$/);
+      if (postIdMatch && request.method === 'PUT') {
+        return updatePost(request, env, corsHeaders, Number(postIdMatch[1]));
+      }
+      if (postIdMatch && request.method === 'DELETE') {
+        return deletePost(request, env, corsHeaders, Number(postIdMatch[1]));
+      }
+    }
+
+    if (url.pathname === '/admin/comments' || url.pathname.startsWith('/admin/comments/')) {
+      if (!isAuthorized(request, env)) {
+        return json({ error: 'Unauthorized' }, 401, corsHeaders);
+      }
+      if (request.method === 'GET' && url.pathname === '/admin/comments') {
+        return listAllComments(request, env, corsHeaders);
+      }
+      const commentIdMatch = url.pathname.match(/^\/admin\/comments\/(\d+)$/);
+      if (commentIdMatch && request.method === 'PUT') {
+        return updateCommentStatus(request, env, corsHeaders, Number(commentIdMatch[1]));
+      }
+      if (commentIdMatch && request.method === 'DELETE') {
+        return deleteComment(request, env, corsHeaders, Number(commentIdMatch[1]));
+      }
+    }
+
     return json({ error: 'Not found' }, 404, corsHeaders);
   },
 };
@@ -472,4 +527,308 @@ function safeJson(payload) {
   } catch {
     return '{}';
   }
+}
+
+function slugify(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+}
+
+function serializePost(row) {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    excerpt: row.excerpt,
+    bodyMd: row.body_md,
+    coverImage: row.cover_image,
+    category: row.category,
+    tags: row.tags ? String(row.tags).split(',').map((t) => t.trim()).filter(Boolean) : [],
+    relatedServiceId: row.related_service_id,
+    status: row.status,
+    publishedAt: row.published_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+async function listPublishedPosts(request, env, headers) {
+  const url = new URL(request.url);
+  const limit = clamp(asInt(url.searchParams.get('limit'), 20), 1, 50);
+
+  const rows = await env.DB
+    .prepare(
+      `SELECT id, slug, title, excerpt, cover_image, category, tags, related_service_id, published_at
+       FROM posts
+       WHERE status = 'published'
+       ORDER BY published_at DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all();
+
+  return json({ posts: (rows.results || []).map(serializePost) }, 200, headers);
+}
+
+async function getPostBySlug(request, env, headers, slug) {
+  const cleanSlug = asString(decodeURIComponent(slug || ''), 120);
+  if (!cleanSlug) {
+    return json({ error: 'Missing slug' }, 400, headers);
+  }
+
+  const row = await env.DB
+    .prepare(`SELECT * FROM posts WHERE slug = ? AND status = 'published'`)
+    .bind(cleanSlug)
+    .first();
+
+  if (!row) {
+    return json({ error: 'Post not found' }, 404, headers);
+  }
+
+  return json({ post: serializePost(row) }, 200, headers);
+}
+
+async function listAllPosts(request, env, headers) {
+  const rows = await env.DB.prepare(`SELECT * FROM posts ORDER BY created_at DESC`).all();
+  return json({ posts: (rows.results || []).map(serializePost) }, 200, headers);
+}
+
+async function createPost(request, env, headers) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const title = asString(payload?.title, 200);
+  const bodyMd = asString(payload?.bodyMd, 20000);
+  if (!title || !bodyMd) {
+    return json({ error: 'Title and body are required' }, 400, headers);
+  }
+
+  const slug = asString(payload?.slug, 120) ? slugify(payload.slug) : slugify(title);
+  if (!slug) {
+    return json({ error: 'Unable to derive a slug from the title' }, 400, headers);
+  }
+
+  const status = payload?.status === 'published' ? 'published' : 'draft';
+  const publishedAt = status === 'published' ? normalizeTimestamp(payload?.publishedAt) : null;
+  const tags = Array.isArray(payload?.tags) ? payload.tags.join(',') : asString(payload?.tags, 300);
+
+  try {
+    const result = await env.DB
+      .prepare(
+        `INSERT INTO posts (slug, title, excerpt, body_md, cover_image, category, tags, related_service_id, status, published_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+      )
+      .bind(
+        slug,
+        title,
+        asString(payload?.excerpt, 400),
+        bodyMd,
+        asString(payload?.coverImage, 400),
+        asString(payload?.category, 80),
+        tags,
+        asString(payload?.relatedServiceId, 120),
+        status,
+        publishedAt
+      )
+      .run();
+
+    return json({ ok: true, id: result.meta?.last_row_id }, 201, headers);
+  } catch (error) {
+    return json({ error: 'A post with that slug already exists.' }, 409, headers);
+  }
+}
+
+async function updatePost(request, env, headers, id) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const existing = await env.DB.prepare(`SELECT * FROM posts WHERE id = ?`).bind(id).first();
+  if (!existing) {
+    return json({ error: 'Post not found' }, 404, headers);
+  }
+
+  const title = asString(payload?.title, 200) || existing.title;
+  const slug = payload?.slug ? slugify(payload.slug) : existing.slug;
+  const status = payload?.status === 'published' || payload?.status === 'draft' ? payload.status : existing.status;
+  const wasPublished = existing.status === 'published';
+  const publishedAt = status === 'published' ? existing.published_at || normalizeTimestamp() : null;
+  const tags = Array.isArray(payload?.tags) ? payload.tags.join(',') : asString(payload?.tags, 300) || existing.tags;
+
+  await env.DB
+    .prepare(
+      `UPDATE posts SET
+         slug = ?, title = ?, excerpt = ?, body_md = ?, cover_image = ?, category = ?, tags = ?,
+         related_service_id = ?, status = ?, published_at = ?, updated_at = datetime('now')
+       WHERE id = ?`
+    )
+    .bind(
+      slug,
+      title,
+      asString(payload?.excerpt, 400) || existing.excerpt,
+      asString(payload?.bodyMd, 20000) || existing.body_md,
+      asString(payload?.coverImage, 400) || existing.cover_image,
+      asString(payload?.category, 80) || existing.category,
+      tags,
+      asString(payload?.relatedServiceId, 120) || existing.related_service_id,
+      status,
+      status === 'published' && !wasPublished ? normalizeTimestamp() : publishedAt,
+      id
+    )
+    .run();
+
+  return json({ ok: true }, 200, headers);
+}
+
+async function deletePost(request, env, headers, id) {
+  await env.DB.prepare(`DELETE FROM comments WHERE post_id = ?`).bind(id).run();
+  await env.DB.prepare(`DELETE FROM posts WHERE id = ?`).bind(id).run();
+  return json({ ok: true }, 200, headers);
+}
+
+function serializeComment(row) {
+  return {
+    id: row.id,
+    postId: row.post_id,
+    parentId: row.parent_id,
+    authorName: row.author_name,
+    body: row.body,
+    status: row.status,
+    createdAt: row.created_at,
+  };
+}
+
+async function listApprovedComments(request, env, headers) {
+  const url = new URL(request.url);
+  const postId = asInt(url.searchParams.get('postId'), 0);
+  if (!postId) {
+    return json({ error: 'Missing postId' }, 400, headers);
+  }
+
+  const rows = await env.DB
+    .prepare(`SELECT * FROM comments WHERE post_id = ? AND status = 'approved' ORDER BY created_at ASC`)
+    .bind(postId)
+    .all();
+
+  return json({ comments: (rows.results || []).map(serializeComment) }, 200, headers);
+}
+
+async function listRecentApprovedComments(request, env, headers) {
+  const url = new URL(request.url);
+  const limit = clamp(asInt(url.searchParams.get('limit'), 6), 1, 20);
+
+  const rows = await env.DB
+    .prepare(
+      `SELECT comments.*, posts.slug AS post_slug, posts.title AS post_title
+       FROM comments
+       JOIN posts ON posts.id = comments.post_id
+       WHERE comments.status = 'approved' AND posts.status = 'published'
+       ORDER BY comments.created_at DESC
+       LIMIT ?`
+    )
+    .bind(limit)
+    .all();
+
+  const comments = (rows.results || []).map((row) => ({
+    ...serializeComment(row),
+    postSlug: row.post_slug,
+    postTitle: row.post_title,
+  }));
+
+  return json({ comments }, 200, headers);
+}
+
+async function createComment(request, env, headers) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const postId = asInt(payload?.postId, 0);
+  const authorName = asString(payload?.authorName, 80).trim();
+  const body = asString(payload?.body, 2000).trim();
+  const honeypot = asString(payload?.website, 200);
+
+  if (honeypot) {
+    return json({ ok: true }, 202, headers);
+  }
+
+  if (!postId || !authorName || !body) {
+    return json({ error: 'postId, authorName, and body are required' }, 400, headers);
+  }
+
+  const post = await env.DB.prepare(`SELECT id FROM posts WHERE id = ? AND status = 'published'`).bind(postId).first();
+  if (!post) {
+    return json({ error: 'Post not found' }, 404, headers);
+  }
+
+  const visitorId = asString(payload?.visitorId, 120);
+  if (visitorId) {
+    const recent = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS count FROM comments
+         WHERE visitor_id = ? AND created_at >= datetime('now', '-1 minute')`
+      )
+      .bind(visitorId)
+      .first();
+    if (asInt(recent?.count) >= 3) {
+      return json({ error: 'You are commenting too quickly. Please wait a moment.' }, 429, headers);
+    }
+  }
+
+  await env.DB
+    .prepare(
+      `INSERT INTO comments (post_id, parent_id, author_name, body, visitor_id, status)
+       VALUES (?, ?, ?, ?, ?, 'pending')`
+    )
+    .bind(postId, asInt(payload?.parentId, 0) || null, authorName, body, visitorId)
+    .run();
+
+  return json({ ok: true, message: 'Comment submitted for review.' }, 202, headers);
+}
+
+async function listAllComments(request, env, headers) {
+  const url = new URL(request.url);
+  const status = asString(url.searchParams.get('status'), 20);
+
+  const rows = status
+    ? await env.DB.prepare(`SELECT * FROM comments WHERE status = ? ORDER BY created_at DESC`).bind(status).all()
+    : await env.DB.prepare(`SELECT * FROM comments ORDER BY created_at DESC`).all();
+
+  return json({ comments: (rows.results || []).map(serializeComment) }, 200, headers);
+}
+
+async function updateCommentStatus(request, env, headers, id) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const status = payload?.status;
+  if (!['approved', 'rejected', 'pending'].includes(status)) {
+    return json({ error: 'Invalid status' }, 400, headers);
+  }
+
+  await env.DB.prepare(`UPDATE comments SET status = ? WHERE id = ?`).bind(status, id).run();
+  return json({ ok: true }, 200, headers);
+}
+
+async function deleteComment(request, env, headers, id) {
+  await env.DB.prepare(`DELETE FROM comments WHERE id = ?`).bind(id).run();
+  return json({ ok: true }, 200, headers);
 }

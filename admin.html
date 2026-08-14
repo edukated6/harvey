@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Blog Admin • Ahmaad Harvey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Private admin panel for managing blog posts and comments.">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/owner-gate.js" defer></script>
+  <script src="./java/admin-dashboard.js" defer></script>
+</head>
+<body class="analytics-page">
+  <main class="analytics-main" id="analyticsMain" data-owner-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8" hidden>
+    <header class="analytics-header reveal-up is-visible">
+      <div>
+        <p class="analytics-kicker">Content Management</p>
+        <h1>Blog Admin</h1>
+        <p class="analytics-subtitle">Write, publish, and moderate everything that shows up on the blog.</p>
+      </div>
+      <div class="analytics-actions">
+        <a class="btn btn-ghost" href="./blog.html">View Blog</a>
+        <a class="btn btn-ghost" href="./login.html">Dashboard Home</a>
+        <a class="btn btn-ghost" href="./analytics.html">Analytics</a>
+        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+      </div>
+    </header>
+
+    <section class="analytics-panel reveal-up is-visible" aria-label="Post editor">
+      <div class="analytics-panel-head">
+        <h3 id="postFormTitle">New Post</h3>
+        <p>Fill this out and publish when it's ready to go live.</p>
+      </div>
+
+      <form id="postForm">
+        <input type="hidden" id="postId" value="">
+
+        <label class="brief-label" for="postTitle">Title</label>
+        <input class="brief-input" id="postTitle" type="text" placeholder="How I Cut a 3-Camera Live Show" required>
+
+        <label class="brief-label" for="postSlug">Slug (optional, auto-generated from title)</label>
+        <input class="brief-input" id="postSlug" type="text" placeholder="how-i-cut-a-3-camera-live-show">
+
+        <label class="brief-label" for="postExcerpt">Excerpt</label>
+        <textarea class="brief-input brief-textarea" id="postExcerpt" rows="2" placeholder="A short teaser shown on the blog cards"></textarea>
+
+        <label class="brief-label" for="postCoverImage">Cover Image URL (optional)</label>
+        <input class="brief-input" id="postCoverImage" type="text" placeholder="./assets/images/optimized/example.jpg">
+
+        <label class="brief-label" for="postCategory">Category</label>
+        <input class="brief-input" id="postCategory" type="text" placeholder="Editing, Producing, Motion Graphics...">
+
+        <label class="brief-label" for="postTags">Tags (comma separated)</label>
+        <input class="brief-input" id="postTags" type="text" placeholder="editing, podcast, workflow">
+
+        <label class="brief-label" for="postRelatedService">Related Service ID (optional)</label>
+        <input class="brief-input" id="postRelatedService" type="text" placeholder="short-form-editing">
+
+        <label class="brief-label" for="postBody">Body (Markdown)</label>
+        <textarea class="brief-input brief-textarea" id="postBody" rows="10" placeholder="Write the full post here..." required></textarea>
+
+        <label class="brief-label" for="postStatus">Status</label>
+        <select class="brief-input" id="postStatus">
+          <option value="draft" selected>Draft</option>
+          <option value="published">Published</option>
+        </select>
+
+        <div class="booking-actions">
+          <button class="btn btn-primary" id="savePostButton" type="submit">Save Post</button>
+          <button class="btn btn-ghost" id="resetPostForm" type="button">Clear / New Post</button>
+        </div>
+        <p id="postFormMessage" class="analytics-gate-message"></p>
+      </form>
+    </section>
+
+    <section class="analytics-panel reveal-up is-visible" aria-label="All posts">
+      <div class="analytics-panel-head">
+        <h3>All Posts</h3>
+        <p>Edit, publish, or delete existing posts</p>
+      </div>
+      <div class="analytics-activity" id="adminPostsList"></div>
+    </section>
+
+    <section class="analytics-panel reveal-up is-visible" aria-label="Comment moderation">
+      <div class="analytics-panel-head">
+        <h3>Comment Moderation</h3>
+        <p>Approve or reject comments before they show up publicly</p>
+      </div>
+      <div class="analytics-actions" style="justify-content: flex-start; margin-bottom: 0.8rem;">
+        <button class="btn btn-ghost is-active" type="button" data-comment-filter="pending">Pending</button>
+        <button class="btn btn-ghost" type="button" data-comment-filter="approved">Approved</button>
+        <button class="btn btn-ghost" type="button" data-comment-filter="rejected">Rejected</button>
+      </div>
+      <div class="analytics-activity" id="adminCommentsList"></div>
+    </section>
+  </main>
+
+  <section class="analytics-gate" id="analyticsGate" aria-label="Owner authentication gate">
+    <div class="analytics-gate-card">
+      <p class="analytics-kicker">Private Access</p>
+      <h1>Redirecting...</h1>
+      <p class="analytics-subtitle">This admin panel is only reachable through the owner login page.</p>
+      <div class="analytics-actions">
+        <a class="btn btn-primary" href="./login.html?redirect=admin.html">Go to Login</a>
+        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Admin panel uses the same owner passcode as analytics, plus your Cloudflare Worker admin key.
+  </footer>
+</body>
+</html>

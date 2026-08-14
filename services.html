@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Services & Booking &#8226; The Harvey Effect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book Ahmaad Harvey's television, editing, and motion graphics production services.">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+</head>
+
+<body>
+  <nav class="site-nav reveal-up" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./index.html" data-nav-link>Home</a>
+      <a href="./work.html" data-nav-link>Work</a>
+      <a href="./blog.html" data-nav-link>Blog</a>
+      <a href="./services.html" data-nav-link class="is-active" aria-current="page">Services</a>
+      <a href="./contact.html" data-nav-link>Contact</a>
+      <a href="./login.html" data-nav-link>Login</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="services-shop page-section-first" id="services-shop" aria-label="Services and booking">
+      <div class="section-heading reveal-up">
+        <p>Book My Creative Services</p>
+        <h2>Build Your Production Package</h2>
+      </div>
+
+      <p class="services-intro reveal-up">
+        Pick the services you need, shape your project brief, and send a ready-to-produce booking request.
+      </p>
+
+      <div class="service-filters reveal-up" role="group" aria-label="Filter services by category">
+        <button class="service-filter is-active" type="button" data-service-filter="all" aria-pressed="true">All Services</button>
+        <button class="service-filter" type="button" data-service-filter="motion" aria-pressed="false">Motion Graphics</button>
+        <button class="service-filter" type="button" data-service-filter="editing" aria-pressed="false">Video Editing</button>
+        <button class="service-filter" type="button" data-service-filter="producing" aria-pressed="false">Shows/Podcasts</button>
+      </div>
+
+      <p class="filter-status service-filter-status" id="serviceFilterStatus" aria-live="polite">Showing all services</p>
+
+      <div class="services-layout">
+        <div class="service-grid" id="serviceGrid">
+          <article class="service-card is-premium reveal-up" data-service-category="producing" data-service-id="build-show-podcast-package" data-service-name="Build A Show or Podcast Package" data-service-price="3000">
+            <p class="service-badge">Signature Package</p>
+            <p class="service-kicker">Premium Launch System</p>
+            <h3>Build A Show or Podcast</h3>
+            <p class="service-price">Starting at $3,000</p>
+            <p class="service-description">A premium identity and production system for a show or podcast that is built to launch with clarity, consistency and audience pull.</p>
+            <ul class="service-includes" aria-label="Premium show or podcast package deliverables">
+              <li>Premium show/podcast main opener</li>
+              <li>2 custom lower thirds</li>
+              <li>Brand-consistent show transition</li>
+              <li>Rundown system with sponsor placement flow</li>
+              <li>Name + purpose guidance for the show</li>
+              <li>Guest strategy and invite direction</li>
+              <li>Call sheet system for team and guests</li>
+            </ul>
+            <label class="service-choice-label" for="build-show-podcast-option">Choose option</label>
+            <select class="service-variant-select" id="build-show-podcast-option" aria-label="Choose premium show or podcast package option">
+              <option value="show-podcast-package" data-variant-name="Build A Show or Podcast Package" data-price="3000">Build A Show or Podcast Package — $3,000</option>
+            </select>
+            <label class="service-choice-label" for="build-show-podcast-qty">Quantity</label>
+            <div class="service-quantity-control" aria-label="Premium show or podcast package quantity selector">
+              <button class="service-quantity-btn" type="button" data-quantity-action="decrease" aria-label="Decrease premium package quantity">−</button>
+              <input class="service-quantity-input" id="build-show-podcast-qty" type="number" min="1" max="10" step="1" value="1" aria-label="Premium show or podcast package quantity">
+              <button class="service-quantity-btn" type="button" data-quantity-action="increase" aria-label="Increase premium package quantity">+</button>
+            </div>
+            <button class="service-toggle" type="button" data-service-toggle="build-show-podcast-package" aria-pressed="false">Add to Package</button>
+          </article>
+
+          <article class="service-card reveal-up" data-service-category="motion" data-service-id="motion-graphics" data-service-name="Motion Graphics" data-service-price="650">
+            <p class="service-kicker">Visual Identity System</p>
+            <h3>Motion Graphics</h3>
+            <p class="service-price">Choose your option</p>
+            <p class="service-description">Animated open, 2 Lower Thirds and Transition made for broadcast, podcast and social.</p>
+            <ul class="service-includes" aria-label="Motion graphics deliverables">
+              <li>Styleframes + animation direction</li>
+              <li>Render-ready packages for Premiere</li>
+              <li>1 revision pass included</li>
+            </ul>
+            <label class="service-choice-label" for="motion-graphics-option">Choose option</label>
+            <select class="service-variant-select" id="motion-graphics-option" aria-label="Choose motion graphics option">
+              <option value="visual-identity-system" data-variant-name="Visual Identity System" data-price="650" data-quantity-allowed="false">Visual Identity System — $650</option>
+              <option value="2d-opener" data-variant-name="2D Opener" data-price="250" data-quantity-allowed="true">2D Opener — $250</option>
+              <option value="lower-third-mogrt" data-variant-name="Lower Third MOGRT" data-price="150" data-quantity-allowed="true">Lower Third MOGRT — $150</option>
+              <option value="2d-transition" data-variant-name="2D Transition" data-price="100" data-quantity-allowed="true">2D Transition — $100</option>
+            </select>
+            <label class="service-choice-label service-quantity-label" for="motion-graphics-qty">Quantity</label>
+            <div class="service-quantity-control" aria-label="Motion graphics quantity selector">
+              <button class="service-quantity-btn" type="button" data-quantity-action="decrease" aria-label="Decrease motion graphics quantity">−</button>
+              <input class="service-quantity-input" id="motion-graphics-qty" type="number" min="1" max="10" step="1" value="1" aria-label="Motion graphics quantity">
+              <button class="service-quantity-btn" type="button" data-quantity-action="increase" aria-label="Increase motion graphics quantity">+</button>
+            </div>
+            <button class="service-toggle" type="button" data-service-toggle="motion-graphics" aria-pressed="false">Add to Package</button>
+          </article>
+
+          <article class="service-card reveal-up" data-service-category="editing" data-service-id="short-form-editing" data-service-name="Short-Form Content Editing" data-service-price="45">
+            <p class="service-kicker">Fast Platform Cuts</p>
+            <h3>Short-Form Content Editing</h3>
+            <p class="service-price">Starting at $45</p>
+            <p class="service-description">High-retention edits for reels, shorts and social clips built for speed, hook and replay value.</p>
+            <ul class="service-includes" aria-label="Short-form editing deliverables">
+              <li>Hook-first pacing and rhythm</li>
+              <li>Aspect ratio versions for socials</li>
+              <li>Platform-ready exports</li>
+            </ul>
+            <label class="service-choice-label" for="short-form-editing-option">Choose option</label>
+            <select class="service-variant-select" id="short-form-editing-option" aria-label="Choose short-form editing option">
+              <option value="short-form-edit" data-variant-name="1 Short Form Edit" data-price="45">1 Short Form Edit — $45</option>
+            </select>
+            <label class="service-choice-label" for="short-form-editing-qty">Quantity</label>
+            <div class="service-quantity-control" aria-label="Short-form editing quantity selector">
+              <button class="service-quantity-btn" type="button" data-quantity-action="decrease" aria-label="Decrease short-form editing quantity">−</button>
+              <input class="service-quantity-input" id="short-form-editing-qty" type="number" min="1" max="10" step="1" value="1" aria-label="Short-form editing quantity">
+              <button class="service-quantity-btn" type="button" data-quantity-action="increase" aria-label="Increase short-form editing quantity">+</button>
+            </div>
+            <button class="service-toggle" type="button" data-service-toggle="short-form-editing" aria-pressed="false">Add to Package</button>
+          </article>
+
+          <article class="service-card reveal-up" data-service-category="editing" data-service-id="long-form-editing" data-service-name="Long-Form Content Editing" data-service-price="500">
+            <p class="service-kicker">Story + Structure</p>
+            <h3>Long-Form Content Editing</h3>
+            <p class="service-price">Starting at $500</p>
+            <p class="service-description">Full-length edits for episodes, interviews and documentary-style content with polished narrative flow.</p>
+            <ul class="service-includes" aria-label="Long-form editing deliverables">
+              <li>Story assembly and final polish</li>
+              <li>Color and audio balancing</li>
+              <li>Delivery master and archival export</li>
+            </ul>
+            <label class="service-choice-label" for="long-form-editing-option">Choose option</label>
+            <select class="service-variant-select" id="long-form-editing-option" aria-label="Choose long-form editing option">
+              <option value="long-form-edit" data-variant-name="1 Long Form Edit" data-price="500">1 Long Form Edit — $500</option>
+            </select>
+            <label class="service-choice-label" for="long-form-editing-qty">Quantity</label>
+            <div class="service-quantity-control" aria-label="Long-form editing quantity selector">
+              <button class="service-quantity-btn" type="button" data-quantity-action="decrease" aria-label="Decrease long-form editing quantity">−</button>
+              <input class="service-quantity-input" id="long-form-editing-qty" type="number" min="1" max="10" step="1" value="1" aria-label="Long-form editing quantity">
+              <button class="service-quantity-btn" type="button" data-quantity-action="increase" aria-label="Increase long-form editing quantity">+</button>
+            </div>
+            <button class="service-toggle" type="button" data-service-toggle="long-form-editing" aria-pressed="false">Add to Package</button>
+          </article>
+
+          <article class="service-card reveal-up" data-service-category="producing" data-service-id="show-producing" data-service-name="Show/Podcast Producing" data-service-price="600">
+            <p class="service-kicker">End-to-End Leadership</p>
+            <h3>Producing Shows/Podcasts</h3>
+            <p class="service-price">Starting at $600</p>
+            <p class="service-description">From concept and rundown to recording and final delivery for recurring shows or special episodes.</p>
+            <ul class="service-includes" aria-label="Producing deliverables">
+              <li>Creative direction + production planning</li>
+              <li>Talent/segment workflow support</li>
+              <li>Publishing handoff checklist</li>
+            </ul>
+            <label class="service-choice-label" for="show-producing-option">Choose option</label>
+            <select class="service-variant-select" id="show-producing-option" aria-label="Choose production option">
+              <option value="show-produced" data-variant-name="1 Show/Podcast Produced" data-price="600">1 Show/Podcast Produced — $600</option>
+            </select>
+            <label class="service-choice-label" for="show-producing-qty">Quantity</label>
+            <div class="service-quantity-control" aria-label="Show or podcast production quantity selector">
+              <button class="service-quantity-btn" type="button" data-quantity-action="decrease" aria-label="Decrease production quantity">−</button>
+              <input class="service-quantity-input" id="show-producing-qty" type="number" min="1" max="10" step="1" value="1" aria-label="Show or podcast production quantity">
+              <button class="service-quantity-btn" type="button" data-quantity-action="increase" aria-label="Increase production quantity">+</button>
+            </div>
+            <button class="service-toggle" type="button" data-service-toggle="show-producing" aria-pressed="false">Add to Package</button>
+          </article>
+        </div>
+
+        <aside class="booking-brief reveal-up" aria-label="Live booking brief">
+          <p class="booking-kicker">Booking</p>
+          <p class="booking-note">This is a project-based estimate. Final quote depends on timeline, scope, and assets. Email me for any additional inquiries.</p>
+
+          <label class="brief-label" for="briefProject">Project Name</label>
+          <input class="brief-input" id="briefProject" type="text" placeholder="Example: New show opener + social cutdowns">
+
+          <label class="brief-label" for="briefTimeline">Timeline</label>
+          <select class="brief-input" id="briefTimeline">
+            <option value="standard" selected>Standard (7 to 14 days)</option>
+            <option value="priority">Priority (3 to 5 days) +20%</option>
+            <option value="rush">Rush (under 72 hours) +40%</option>
+          </select>
+
+          <label class="brief-label" for="briefDetails">What are you producing?</label>
+          <textarea class="brief-input brief-textarea" id="briefDetails" rows="4" placeholder="Share goals, platforms, episode length, and references."></textarea>
+
+          <div class="booking-addons" aria-label="Optional add-ons">
+            <p class="booking-summary-title">Optional Add-Ons</p>
+            <label class="addon-option" for="addon-captions">
+              <input id="addon-captions" class="addon-toggle" type="checkbox" data-addon-id="captions" data-addon-name="Captions + Burn-ins" data-addon-price="120">
+              <span>Captions + Burn-ins</span>
+              <strong>+$120</strong>
+            </label>
+            <label class="addon-option" for="addon-revision">
+              <input id="addon-revision" class="addon-toggle" type="checkbox" data-addon-id="revision" data-addon-name="Extra Revision Round" data-addon-price="50">
+              <span>Extra Revision Round</span>
+              <strong>+$50</strong>
+            </label>
+          </div>
+
+          <div class="booking-summary" aria-live="polite">
+            <p class="booking-summary-title">Selected Services</p>
+            <ul id="bookingSelectedList" class="booking-selected-list">
+              <li>No services selected yet</li>
+            </ul>
+            <p class="booking-summary-title booking-summary-subtitle">Selected Add-Ons</p>
+            <ul id="bookingAddonsList" class="booking-selected-list">
+              <li>No add-ons selected</li>
+            </ul>
+            <p class="booking-total">Estimated Starting Total: <strong id="bookingTotal">$0</strong></p>
+          </div>
+
+          <div class="booking-actions">
+            <a class="btn btn-primary" id="bookingCheckout" href="mailto:ahmaadharvey@pm.me?subject=Service%20Booking%20Request&body=Hi%20Ahmaad%2C%20I%20want%20to%20book%20your%20services." data-analytics="service_checkout_click" data-analytics-label="Service checkout request">
+              Continue to Secure Checkout
+            </a>
+            <a class="btn btn-reel" id="bookingSendBrief" href="mailto:ahmaadharvey@pm.me?subject=Service%20Booking%20Request&body=Hi%20Ahmaad%2C%20I%20want%20to%20book%20your%20services.">
+              Send Project Brief
+            </a>
+            <button class="btn btn-ghost" id="clearBookingBrief" type="button">Clear Selection</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+</body>
+</html>

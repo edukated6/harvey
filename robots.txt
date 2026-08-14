@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /analytics.html
+Disallow: /admin.html
+Disallow: /login.html

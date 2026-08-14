@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Login • Ahmaad Harvey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Private owner login for analytics and blog management.">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/login-gate.js" defer></script>
+</head>
+<body class="analytics-page">
+  <section class="analytics-gate" id="loginGateSection" aria-label="Owner login" data-user-hash="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" data-owner-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8">
+    <div class="analytics-gate-card">
+      <h1>Login</h1>
+
+      <label class="analytics-gate-label" for="loginUsername">Username</label>
+      <input class="analytics-gate-input" id="loginUsername" type="text" autocomplete="username" placeholder="Enter username">
+
+      <label class="analytics-gate-label" for="loginPasscode">Passcode</label>
+      <input class="analytics-gate-input" id="loginPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
+
+      <label class="analytics-gate-label" for="loginApiKey">API admin key</label>
+      <input class="analytics-gate-input" id="loginApiKey" type="password" autocomplete="off">
+
+      <div class="analytics-actions">
+        <button class="btn btn-primary" id="loginSubmit" type="button">Log In</button>
+        <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+      </div>
+      <p id="loginMessage" class="analytics-gate-message">Access is restricted to the portfolio owner.</p>
+    </div>
+  </section>
+  </main>
+</body>
+</html>

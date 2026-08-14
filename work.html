@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>My Work &#8226; The Harvey Effect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Selected television, editing, and motion graphics work from Ahmaad Harvey.">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+</head>
+
+<body>
+  <nav class="site-nav reveal-up" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./index.html" data-nav-link>Home</a>
+      <a href="./work.html" data-nav-link class="is-active" aria-current="page">Work</a>
+      <a href="./blog.html" data-nav-link>Blog</a>
+      <a href="./services.html" data-nav-link>Services</a>
+      <a href="./contact.html" data-nav-link>Contact</a>
+      <a href="./login.html" data-nav-link>Login</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-hero reveal-up">
+      <div class="section-heading">
+        <p>Selected Work</p>
+        <h2>My Works</h2>
+      </div>
+      <p class="page-intro">Producer, editor, and motion design work built to hold attention and hit air-ready standards.</p>
+      <div class="hero-actions">
+        <button class="btn btn-reel" id="openReel" type="button" aria-haspopup="dialog" aria-controls="reelModal">Watch A Quick Reel</button>
+      </div>
+    </header>
+
+    <section class="media-wall" id="media-wall">
+      <div class="role-filters reveal-up" role="group" aria-label="Filter work by role">
+        <button class="role-filter is-active" type="button" data-role="all" aria-pressed="true">All Roles</button>
+        <button class="role-filter" type="button" data-role="producer" aria-pressed="false">Producer</button>
+        <button class="role-filter" type="button" data-role="editor" aria-pressed="false">Editor</button>
+        <button class="role-filter" type="button" data-role="motion" aria-pressed="false">Motion Designer</button>
+      </div>
+
+      <p class="filter-status" id="filterStatus" aria-live="polite">Showing all projects</p>
+
+      <div class="media-grid" id="mediaGrid">
+        <article class="media-card reveal-up" data-roles="editor">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/Writing and editing.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Storycraft</p>
+            <h3>Writing, Shooting, Editing</h3>
+            <p>From pitch to post, I shape stories that are clear, emotional, and ready for air.</p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="producer">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/For Studio 3.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Lifestyle</p>
+            <h3>Studio 3</h3>
+            <p>Broadcast-focused segments with clean pacing, visual rhythm, and high production standards.</p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="producer">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/For T11.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Daily News</p>
+            <h3>Today at 11</h3>
+            <p>Urgent, polished edits built for high-viewership programming and strict deadlines.</p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="editor">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/Commercials.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Brand Work</p>
+            <h3>Commercial Spots</h3>
+            <p>Audience-first edits that translate messaging into visuals that convert and stick.</p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="editor">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/Reels.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Social Media</p>
+            <h3>Reels/Shorts</h3>
+            <p>Popular shorts/reels editing with extensive knowledge of correct dimensions and flow of content. </p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="motion">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/MOGRTs.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Motion Graphic Templates</p>
+            <h3>MOGRTs</h3>
+            <p>Advanced knowledge of creating Motion Graphic Templates in After Effects.</p>
+          </div>
+        </article>
+
+        <article class="media-card reveal-up" data-roles="motion">
+          <div class="media-frame">
+            <video poster="./assets/images/Harvey poster.png" muted loop playsinline preload="none" controls>
+              <source src="./assets/images/Opens.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="media-copy">
+            <p class="media-kicker">Motion Design</p>
+            <h3>Openers and Graphics</h3>
+            <p>High-energy animated systems made to establish tone and elevate on-air identity.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="section-cta reveal-up">
+        <a class="btn btn-primary" href="./services.html">Ready to work together? Book a service</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="reel-modal" id="reelModal" aria-hidden="true" role="dialog" aria-labelledby="reelTitle">
+    <div class="reel-modal-backdrop" data-close-modal="true"></div>
+    <div class="reel-modal-panel" role="document">
+      <button class="reel-close" id="closeReel" type="button" aria-label="Close reel">Close</button>
+      <p class="reel-label">Featured Reel</p>
+      <h2 id="reelTitle">The Harvey Effect</h2>
+      <div class="reel-video-wrap">
+        <video id="reelVideo" poster="./assets/images/Harvey poster.png" controls preload="none" playsinline>
+          <source src="./assets/images/Quick Resume 7.18.26.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+</body>
+</html>

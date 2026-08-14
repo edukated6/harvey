@@ -1028,6 +1028,218 @@ document.querySelectorAll('[data-analytics]').forEach((element) => {
 
 applyRoleFilter('all');
 applyServiceFilter('all');
+
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+if (navToggle && navLinks) {
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navLinks.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+
+const navLinkElements = document.querySelectorAll('.nav-links a[data-nav-link]');
+const navSpySections = Array.from(navLinkElements)
+  .filter((link) => (link.getAttribute('href') || '').startsWith('#'))
+  .map((link) => document.querySelector(link.getAttribute('href')))
+  .filter(Boolean);
+
+if ('IntersectionObserver' in window && navSpySections.length) {
+  const navSpyObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const activeId = `#${entry.target.id}`;
+        navLinkElements.forEach((link) => {
+          link.classList.toggle('is-active', link.getAttribute('href') === activeId);
+        });
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
+  );
+
+  navSpySections.forEach((section) => navSpyObserver.observe(section));
+}
+
+const blogGrid = document.getElementById('blogGrid');
+const blogEmptyState = document.getElementById('blogEmptyState');
+const blogFiltersContainer = document.getElementById('blogFilters');
+const blogApiBase = (window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+let allBlogPosts = [];
+
+function formatBlogDate(isoString) {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function escapeHtml(value) {
+  const div = document.createElement('div');
+  div.textContent = value == null ? '' : String(value);
+  return div.innerHTML;
+}
+
+function renderBlogPosts(posts) {
+  if (!blogGrid) return;
+
+  if (!posts.length) {
+    blogGrid.innerHTML = '<p class="blog-empty">New posts are on the way. Check back soon for production insights and behind-the-scenes breakdowns.</p>';
+    return;
+  }
+
+  blogGrid.innerHTML = '';
+  posts.forEach((post) => {
+    const card = document.createElement('a');
+    card.className = 'blog-card reveal-up is-visible';
+    card.href = `./blog-post.html?slug=${encodeURIComponent(post.slug)}`;
+    card.dataset.category = (post.category || '').toLowerCase();
+    card.setAttribute('data-analytics', 'blog_post_click');
+    card.setAttribute('data-analytics-label', post.title);
+
+    const coverHtml = post.coverImage
+      ? `<div class="blog-card-cover"><img src="${escapeHtml(post.coverImage)}" alt="" loading="lazy" decoding="async"></div>`
+      : '';
+
+    card.innerHTML = `
+      ${coverHtml}
+      <div class="blog-card-body">
+        <p class="blog-card-kicker">${escapeHtml(post.category || 'Insight')}</p>
+        <h3>${escapeHtml(post.title)}</h3>
+        <p>${escapeHtml(post.excerpt || '')}</p>
+        <p class="blog-card-meta">${formatBlogDate(post.publishedAt)}</p>
+      </div>
+    `;
+    blogGrid.appendChild(card);
+  });
+}
+
+function applyBlogFilter(category) {
+  const filtered = category === 'all'
+    ? allBlogPosts
+    : allBlogPosts.filter((post) => (post.category || '').toLowerCase() === category);
+  renderBlogPosts(filtered);
+}
+
+function renderBlogFilters(posts) {
+  if (!blogFiltersContainer) return;
+  const categories = Array.from(new Set(posts.map((post) => post.category).filter(Boolean)));
+  if (!categories.length) {
+    blogFiltersContainer.hidden = true;
+    return;
+  }
+
+  blogFiltersContainer.hidden = false;
+  blogFiltersContainer.innerHTML = '';
+
+  const buildButton = (label, value, isActive) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `role-filter${isActive ? ' is-active' : ''}`;
+    button.textContent = label;
+    button.dataset.category = value;
+    button.setAttribute('aria-pressed', String(isActive));
+    button.addEventListener('click', () => {
+      blogFiltersContainer.querySelectorAll('.role-filter').forEach((btn) => {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      button.classList.add('is-active');
+      button.setAttribute('aria-pressed', 'true');
+      applyBlogFilter(value);
+    });
+    return button;
+  };
+
+  blogFiltersContainer.appendChild(buildButton('All Posts', 'all', true));
+  categories.forEach((category) => {
+    blogFiltersContainer.appendChild(buildButton(category, category.toLowerCase(), false));
+  });
+}
+
+async function loadBlogPosts() {
+  if (!blogGrid) return;
+
+  const limit = Number(blogGrid.dataset.limit) || 6;
+
+  if (!blogApiBase) {
+    renderBlogPosts([]);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${blogApiBase}/posts?limit=${limit}`);
+    if (!response.ok) throw new Error('Unable to load posts');
+    const data = await response.json();
+    allBlogPosts = Array.isArray(data.posts) ? data.posts : [];
+    renderBlogFilters(allBlogPosts);
+    renderBlogPosts(allBlogPosts);
+  } catch (error) {
+    if (blogEmptyState) {
+      blogEmptyState.textContent = 'New posts are on the way. Check back soon for production insights and behind-the-scenes breakdowns.';
+    }
+  }
+}
+
+loadBlogPosts();
+
+const recentCommentsList = document.getElementById('recentCommentsList');
+
+function formatRecentCommentDate(isoString) {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function renderRecentComments(comments) {
+  if (!recentCommentsList) return;
+
+  if (!comments.length) {
+    recentCommentsList.innerHTML = '<li class="recent-comments-empty">No comments yet. Be the first to join the conversation.</li>';
+    return;
+  }
+
+  recentCommentsList.innerHTML = '';
+  comments.forEach((comment) => {
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.className = 'recent-comment-item';
+    link.href = `./blog-post.html?slug=${encodeURIComponent(comment.postSlug)}#comments`;
+
+    link.innerHTML = `
+      <p class="recent-comment-author">${escapeHtml(comment.authorName)}</p>
+      <p class="recent-comment-body">${escapeHtml(comment.body)}</p>
+      <p class="recent-comment-meta">on ${escapeHtml(comment.postTitle)} &middot; ${formatRecentCommentDate(comment.createdAt)}</p>
+    `;
+
+    item.appendChild(link);
+    recentCommentsList.appendChild(item);
+  });
+}
+
+async function loadRecentComments() {
+  if (!recentCommentsList || !blogApiBase) return;
+
+  try {
+    const response = await fetch(`${blogApiBase}/comments/recent?limit=6`);
+    if (!response.ok) throw new Error('Unable to load recent comments');
+    const data = await response.json();
+    renderRecentComments(Array.isArray(data.comments) ? data.comments : []);
+  } catch (error) {
+    // Leave the default empty-state message in place.
+  }
+}
+
+loadRecentComments();
 updateBookingSummary();
 recalculateFadeDistance();
 syncTopHeroState();

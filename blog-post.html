@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Post &#8226; The Harvey Effect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Behind-the-scenes breakdowns, TV/podcast production tips, and lessons from the field, from Ahmaad Harvey.">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer crossorigin="anonymous"></script>
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+  <script src="./java/blog-post.js" defer></script>
+</head>
+
+<body>
+  <nav class="site-nav reveal-up" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./index.html" data-nav-link>Home</a>
+      <a href="./work.html" data-nav-link>Work</a>
+      <a href="./blog.html" data-nav-link class="is-active" aria-current="page">Blog</a>
+      <a href="./services.html" data-nav-link>Services</a>
+      <a href="./contact.html" data-nav-link>Contact</a>
+      <a href="./login.html" data-nav-link>Login</a>
+    </div>
+  </nav>
+
+  <main>
+    <article class="post-article page-section-first" id="postArticle" aria-live="polite">
+      <p class="blog-empty" id="postLoadingState">Loading post&hellip;</p>
+    </article>
+
+    <section class="comments-section" id="comments" aria-label="Comments">
+      <div class="section-heading reveal-up">
+        <p>Join The Conversation</p>
+        <h2 id="commentsHeading">Comments</h2>
+      </div>
+
+      <form class="comment-form reveal-up" id="commentForm">
+        <label class="brief-label" for="commentAuthorName">Name</label>
+        <input class="brief-input" id="commentAuthorName" type="text" maxlength="80" placeholder="Your name" required>
+
+        <label class="brief-label" for="commentBody">Comment</label>
+        <textarea class="brief-input brief-textarea" id="commentBody" rows="4" maxlength="2000" placeholder="Share your thoughts..." required></textarea>
+
+        <input type="text" id="commentWebsite" name="website" autocomplete="off" tabindex="-1" class="comment-honeypot" aria-hidden="true">
+
+        <div class="booking-actions">
+          <button class="btn btn-primary" type="submit">Post Comment</button>
+        </div>
+        <p id="commentFormMessage" class="analytics-gate-message"></p>
+      </form>
+
+      <div class="comment-list" id="commentList" aria-live="polite">
+        <p class="blog-empty" id="commentsEmptyState">Loading comments&hellip;</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+</body>
+</html>

@@ -26,6 +26,8 @@
       </div>
       <div class="analytics-actions">
         <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
+        <a class="btn btn-ghost" href="./login.html">Dashboard Home</a>
+        <a class="btn btn-ghost" href="./admin.html">Manage Blog</a>
         <button class="btn btn-primary" id="clearAnalytics" type="button">Reset Local Data</button>
       </div>
     </header>
@@ -115,19 +117,12 @@
   <section class="analytics-gate" id="analyticsGate" aria-label="Owner authentication gate">
     <div class="analytics-gate-card">
       <p class="analytics-kicker">Private Access</p>
-      <h1>Owner Login</h1>
-      <p class="analytics-subtitle">This analytics dashboard is private. Enter your owner passcode to unlock.</p>
-      <label class="analytics-gate-label" for="ownerPasscode">Owner passcode</label>
-      <input class="analytics-gate-input" id="ownerPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
-
-      <label class="analytics-gate-label" for="ownerApiKey">API admin key (optional, enables cloud data)</label>
-      <input class="analytics-gate-input" id="ownerApiKey" type="password" autocomplete="off" placeholder="Paste HARVEY_ANALYTICS_ADMIN_KEY">
-
+      <h1>Redirecting...</h1>
+      <p class="analytics-subtitle">This analytics dashboard is only reachable through the owner login page.</p>
       <div class="analytics-actions">
-        <button class="btn btn-primary" id="unlockAnalytics" type="button">Unlock Analytics</button>
+        <a class="btn btn-primary" href="./login.html?redirect=analytics.html">Go to Login</a>
         <a class="btn btn-ghost" href="./index.html">Back to Portfolio</a>
       </div>
-      <p id="gateMessage" class="analytics-gate-message">Access is restricted to the portfolio owner.</p>
     </div>
   </section>
 

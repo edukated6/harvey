@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Blog &#8226; The Harvey Effect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Behind-the-scenes breakdowns, TV/podcast production tips, and lessons from the field, from Ahmaad Harvey.">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+</head>
+
+<body>
+  <nav class="site-nav reveal-up" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./index.html" data-nav-link>Home</a>
+      <a href="./work.html" data-nav-link>Work</a>
+      <a href="./blog.html" data-nav-link class="is-active" aria-current="page">Blog</a>
+      <a href="./services.html" data-nav-link>Services</a>
+      <a href="./contact.html" data-nav-link>Contact</a>
+      <a href="./login.html" data-nav-link>Login</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-hero reveal-up">
+      <div class="section-heading">
+        <p>The Effect Blog</p>
+        <h2>Insights From the Edit Bay</h2>
+      </div>
+      <p class="page-intro">Behind-the-scenes breakdowns, TV/podcast production tips, and lessons from the field. New posts drop regularly, drop a comment and join the conversation.</p>
+    </header>
+
+    <section class="blog-teaser" aria-label="All blog posts">
+      <div class="blog-filters reveal-up" role="group" aria-label="Filter posts by category" id="blogFilters" hidden></div>
+
+      <div class="blog-grid reveal-up" id="blogGrid" data-limit="50" aria-live="polite">
+        <p class="blog-empty" id="blogEmptyState">Loading the latest posts&hellip;</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+</body>
+</html>
