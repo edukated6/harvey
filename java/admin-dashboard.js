@@ -42,6 +42,9 @@ async function adminFetch(path, options = {}) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     if (response.status === 401) {
+      sessionStorage.removeItem('harveyAnalyticsOwnerUnlocked');
+      sessionStorage.removeItem('harveyAdminSessionToken');
+      window.location.replace('./login?redirect=admin');
       throw new Error('Your admin session has expired. Return to Login and sign in again.');
     }
     throw new Error(data.error || `Request failed (${response.status})`);
