@@ -36,7 +36,7 @@ async function adminFetch(path, options = {}) {
       },
     });
   } catch (error) {
-    throw new Error('The admin API could not be reached. Check the deployed site origin and Worker CORS settings.');
+    throw new Error('Your admin session could not be verified. Return to Login and sign in again.');
   }
 
   const data = await response.json().catch(() => ({}));
