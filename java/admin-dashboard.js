@@ -1,4 +1,4 @@
-const apiBase = (window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+const apiBase = (window.HARVEY_ANALYTICS_API_BASE || 'https://harvey-analytics-api.harvey-analytics-worker.workers.dev').replace(/\/$/, '');
 
 function escapeHtml(value) {
   const div = document.createElement('div');
@@ -16,7 +16,7 @@ function slugify(value) {
 }
 
 function getOwnerKey() {
-  return window.HARVEY_ANALYTICS_OWNER_KEY || '';
+  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAnalyticsOwnerApiKey') || '';
 }
 
 async function adminFetch(path, options = {}) {
