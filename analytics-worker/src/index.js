@@ -112,11 +112,20 @@ function json(body, status = 200, headers = {}) {
 }
 
 function getCorsHeaders(origin, env) {
-  const allowedOrigin = env.ALLOWED_ORIGIN || '';
-  const originAllowed = origin && allowedOrigin && origin.toLowerCase() === allowedOrigin.toLowerCase();
+  const configuredOrigins = [
+    env.ALLOWED_ORIGIN || '',
+    env.ALLOWED_ORIGINS || '',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+  ]
+    .join(',')
+    .split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  const originAllowed = origin && configuredOrigins.includes(origin.toLowerCase());
 
   return {
-    'Access-Control-Allow-Origin': originAllowed ? origin : allowedOrigin || '*',
+    'Access-Control-Allow-Origin': originAllowed ? origin : configuredOrigins[0] || '*',
     Vary: 'Origin',
   };
 }
