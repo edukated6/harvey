@@ -21,29 +21,11 @@ function getGateSection() {
   return document.getElementById('loginGateSection');
 }
 
-function getHubSection() {
-  return document.getElementById('loginHub');
-}
-
 function setLoginMessage(message, isError = false) {
   const element = document.getElementById('loginMessage');
   if (!element) return;
   element.textContent = message;
   element.style.color = isError ? '#ffc7c7' : '';
-}
-
-function showHub() {
-  const gate = getGateSection();
-  const hub = getHubSection();
-  if (gate) gate.hidden = true;
-  if (hub) hub.hidden = false;
-}
-
-function showGate() {
-  const gate = getGateSection();
-  const hub = getHubSection();
-  if (gate) gate.hidden = false;
-  if (hub) hub.hidden = true;
 }
 
 async function attemptLogin() {
@@ -85,26 +67,12 @@ async function attemptLogin() {
   setLoginMessage('Login successful.');
 
   const redirectTarget = getRedirectTarget();
-  if (redirectTarget) {
-    window.location.replace(`./${redirectTarget}`);
-    return;
-  }
-
-  showHub();
-}
-
-function logout() {
-  sessionStorage.removeItem(LOGIN_UNLOCKED_KEY);
-  sessionStorage.removeItem(LOGIN_API_KEY_STORAGE);
-  window.HARVEY_ANALYTICS_OWNER_KEY = '';
-  showGate();
+  window.location.replace(`./${redirectTarget || 'analytics'}`);
 }
 
 function bindLoginActions() {
   const loginButton = document.getElementById('loginSubmit');
   const passcodeInput = document.getElementById('loginPasscode');
-  const logoutButton = document.getElementById('logoutButton');
-
   if (loginButton) {
     loginButton.addEventListener('click', () => {
       attemptLogin().catch(() => {
@@ -123,9 +91,6 @@ function bindLoginActions() {
     });
   }
 
-  if (logoutButton) {
-    logoutButton.addEventListener('click', logout);
-  }
 }
 
 function bootstrapLogin() {
@@ -134,11 +99,8 @@ function bootstrapLogin() {
 
   if (unlocked) {
     const redirectTarget = getRedirectTarget();
-    if (redirectTarget) {
-      window.location.replace(`./${redirectTarget}`);
-      return;
-    }
-    showHub();
+    window.location.replace(`./${redirectTarget || 'analytics'}`);
+    return;
   }
 
   bindLoginActions();
