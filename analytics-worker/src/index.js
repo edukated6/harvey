@@ -163,10 +163,9 @@ async function loginAdmin(request, env, headers) {
 
   const username = asString(payload?.username, 120);
   const password = asString(payload?.password, 500);
-  const expectedUsername = asString(env.HARVEY_ADMIN_USERNAME, 120);
   const expectedPassword = asString(env.HARVEY_ADMIN_PASSWORD, 500);
 
-  if (!expectedUsername || !expectedPassword || username !== expectedUsername || password !== expectedPassword) {
+  if (!expectedPassword || username !== 'admin' || password !== expectedPassword) {
     return json({ error: 'Invalid username or passcode' }, 401, headers);
   }
 
