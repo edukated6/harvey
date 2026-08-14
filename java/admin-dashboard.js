@@ -22,7 +22,7 @@ function getOwnerKey() {
 async function adminFetch(path, options = {}) {
   const ownerKey = getOwnerKey();
   if (!ownerKey) {
-    throw new Error('Missing API admin key. Re-enter it on the owner login screen.');
+    throw new Error('No active admin session was found. Return to Login and sign in again.');
   }
 
   let response;
