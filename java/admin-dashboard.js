@@ -61,6 +61,14 @@ const postCategoryInput = document.getElementById('postCategory');
 const postTagsInput = document.getElementById('postTags');
 const postRelatedServiceInput = document.getElementById('postRelatedService');
 const postBodyInput = document.getElementById('postBody');
+const postBodyEditor = postBodyInput && window.EasyMDE ? new EasyMDE({
+  element: postBodyInput,
+  autofocus: false,
+  spellChecker: true,
+  status: ['lines', 'words', 'cursor'],
+  toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
+  minHeight: '260px',
+}) : null;
 const postStatusInput = document.getElementById('postStatus');
 const postFormTitle = document.getElementById('postFormTitle');
 const postFormMessage = document.getElementById('postFormMessage');
@@ -196,13 +204,15 @@ function fillPostForm(post) {
   postCategoryInput.value = post.category || '';
   postTagsInput.value = Array.isArray(post.tags) ? post.tags.join(', ') : '';
   postRelatedServiceInput.value = post.relatedServiceId || '';
-  postBodyInput.value = post.bodyMd || '';
+  if (postBodyEditor) postBodyEditor.value(post.bodyMd || '');
+  else postBodyInput.value = post.bodyMd || '';
   postStatusInput.value = post.status || 'draft';
   postFormTitle.textContent = `Editing: ${post.title}`;
 }
 
 function clearPostForm() {
   postForm.reset();
+  if (postBodyEditor) postBodyEditor.value('');
   postIdInput.value = '';
   postFormTitle.textContent = 'New Post';
   setPostFormMessage('');
@@ -359,6 +369,8 @@ commentFilterButtons.forEach((button) => {
 if (postForm) {
   postForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    if (postBodyEditor) postBodyEditor.codemirror.save();
 
     const id = postIdInput.value;
     const payload = {

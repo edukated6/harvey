@@ -1261,6 +1261,35 @@ footer,
   min-height: 110px;
 }
 
+.editor-helper {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: -0.35rem 0 0.6rem;
+}
+
+.EasyMDEContainer .CodeMirror,
+.EasyMDEContainer .editor-preview,
+.EasyMDEContainer .editor-preview-side {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+.EasyMDEContainer .editor-toolbar {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.EasyMDEContainer .editor-toolbar button {
+  color: var(--text);
+}
+
+.EasyMDEContainer .editor-toolbar button:hover,
+.EasyMDEContainer .editor-toolbar button.active {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: transparent;
+}
+
 .thumb-dropzone {
   width: 100%;
   border: 1px dashed rgba(255, 255, 255, 0.28);
