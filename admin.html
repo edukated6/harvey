@@ -13,11 +13,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/styles.css?v=20260815">
   <script src="./java/analytics-config.js" defer></script>
-  <script src="./java/owner-gate.js?v=20260814-3" defer></script>
-  <script src="./java/admin-dashboard.js?v=20260814-11" defer></script>
+  <script src="./java/admin-dashboard.js?v=20260815-1" defer></script>
 </head>
 <body class="analytics-page">
-  <main class="analytics-main" id="analyticsMain" data-owner-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8" hidden>
+  <main class="analytics-main" id="analyticsMain">
     <header class="analytics-header reveal-up is-visible">
       <div>
         <p class="analytics-kicker">Content Management</p>
@@ -26,7 +25,6 @@
       </div>
       <div class="analytics-actions">
         <a class="btn btn-ghost" href="./blog">View Blog</a>
-        <a class="btn btn-ghost" href="./login">Dashboard Home</a>
         <a class="btn btn-ghost" href="./analytics">Analytics</a>
         <a class="btn btn-ghost" href="./index">Back to Portfolio</a>
       </div>
@@ -100,18 +98,6 @@
       <div class="analytics-activity" id="adminCommentsList"></div>
     </section>
   </main>
-
-  <section class="analytics-gate" id="analyticsGate" aria-label="Owner authentication gate">
-    <div class="analytics-gate-card">
-      <p class="analytics-kicker">Private Access</p>
-      <h1>Redirecting...</h1>
-      <p class="analytics-subtitle">This admin panel is only reachable through the owner login page.</p>
-      <div class="analytics-actions">
-        <a class="btn btn-primary" href="./login?redirect=admin">Go to Login</a>
-        <a class="btn btn-ghost" href="./index">Back to Portfolio</a>
-      </div>
-    </div>
-  </section>
 
 </body>
 </html>

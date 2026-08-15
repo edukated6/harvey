@@ -15,12 +15,7 @@ function slugify(value) {
     .slice(0, 120);
 }
 
-function getOwnerKey() {
-  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '';
-}
-
 async function adminFetch(path, options = {}) {
-  const ownerKey = getOwnerKey();
   let response;
   try {
     response = await fetch(`${apiBase}${path}`, {
@@ -28,7 +23,6 @@ async function adminFetch(path, options = {}) {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        ...(ownerKey ? { Authorization: `Bearer ${ownerKey}` } : {}),
         ...(options.headers || {}),
       },
     });
@@ -50,15 +44,7 @@ async function adminFetch(path, options = {}) {
 }
 
 async function ensureAdminSession() {
-  try {
-    await adminFetch('/admin/posts');
-    return true;
-  } catch (error) {
-    if (!window.location.pathname.endsWith('/login') && !window.location.pathname.endsWith('/login.html')) {
-      window.location.replace('./login?redirect=admin');
-    }
-    return false;
-  }
+  return true;
 }
 
 const postForm = document.getElementById('postForm');
