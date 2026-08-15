@@ -1280,7 +1280,6 @@ footer,
 }
 
 .toastui-editor-toolbar,
-.toastui-editor-toolbar-icons,
 .toastui-editor-main,
 .toastui-editor-ww-container {
   background: #0d121f !important;
@@ -1292,7 +1291,7 @@ footer,
 }
 
 .toastui-editor-toolbar button {
-  background: #f3f4f6 !important;
+  background-color: #f3f4f6 !important;
   border: 1px solid #8993a3 !important;
   border-radius: 4px;
   opacity: 1 !important;
@@ -1300,7 +1299,7 @@ footer,
 
 .toastui-editor-toolbar button:hover,
 .toastui-editor-toolbar button.active {
-  background: #ffffff !important;
+  background-color: #ffffff !important;
   border-color: #90f6ff !important;
 }
 
