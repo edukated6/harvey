@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./css/styles.css">
   <script src="./java/analytics-config.js" defer></script>
   <script src="./java/scripts.js" defer></script>
+  <script src="./java/contact-form.js" defer></script>
 </head>
 
 <body>
@@ -34,18 +35,42 @@
   <main>
     <section class="contact-panel reveal-up page-section-first" id="contact">
       <div class="contact-card">
-        <a class="contact-photo-link" href="./login" aria-label="Open owner login" data-analytics="analytics_page_open" data-analytics-label="Open owner login from headshot">
-          <img src="./assets/images/Harvey Pic.png" alt="Ahmaad Harvey portrait" width="960" height="1280" loading="lazy" decoding="async">
-        </a>
         <div class="contact-copy">
           <p>Open for opportunities</p>
           <h2>Let’s Build Media That Commands Attention</h2>
-          <a class="contact-email" href="mailto:ahmaadharvey@pm.me">ahmaadharvey@pm.me</a>
-          <a class="linkedin-link" href="https://linkedin.com/in/ahmaadharvey63" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a>
-          <a class="resume-link" href="./assets/docs/Ahmaad Harvey Television Resume 7.9.26.pdf" target="_blank" rel="noopener noreferrer" data-cta="resume">
-            View or Download Resume
-          </a>
-          <p class="contact-signature" aria-label="Signature">- Ahmaad Harvey</p>
+          <p class="contact-intro">Send a message through the form and I’ll get back to you by email. Your details are used only to respond to this inquiry.</p>
+          <form class="contact-form" id="contactForm">
+            <div class="contact-form-grid">
+              <label>
+                Name
+                <input type="text" name="name" autocomplete="name" maxlength="120" required>
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" autocomplete="email" maxlength="254" required>
+              </label>
+            </div>
+            <label>
+              What can I help with?
+              <select name="projectType">
+                <option value="">Select a project type</option>
+                <option>Editing</option>
+                <option>Motion graphics</option>
+                <option>Show producing</option>
+                <option>Something else</option>
+              </select>
+            </label>
+            <label>
+              Message
+              <textarea name="message" rows="6" maxlength="4000" required></textarea>
+            </label>
+            <label class="contact-form-trap" aria-hidden="true">
+              Website
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
+            <button class="btn btn-primary" type="submit">Send message</button>
+            <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>
     </section>

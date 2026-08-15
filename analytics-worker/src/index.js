@@ -24,6 +24,13 @@ export default {
       return ingestEvent(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/contact') {
+      if (origin && !isAllowedOrigin(origin, env)) {
+        return json({ error: 'Origin is not allowed.' }, 403, corsHeaders);
+      }
+      return submitContactForm(request, env, corsHeaders);
+    }
+
     if (request.method === 'POST' && url.pathname === '/checkout') {
       return createCheckoutSession(request, env, corsHeaders);
     }
@@ -116,7 +123,18 @@ function json(body, status = 200, headers = {}) {
 }
 
 function getCorsHeaders(origin, env) {
-  const configuredOrigins = [
+  const configuredOrigins = getConfiguredOrigins(env);
+  const originAllowed = origin && configuredOrigins.includes(origin.toLowerCase());
+
+  return {
+    'Access-Control-Allow-Origin': originAllowed ? origin : configuredOrigins[0] || '*',
+    'Access-Control-Allow-Credentials': 'true',
+    Vary: 'Origin',
+  };
+}
+
+function getConfiguredOrigins(env) {
+  return [
     env.ALLOWED_ORIGIN || '',
     env.ALLOWED_ORIGINS || '',
     'https://www.theharveyeffect.com',
@@ -127,13 +145,10 @@ function getCorsHeaders(origin, env) {
     .split(',')
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
-  const originAllowed = origin && configuredOrigins.includes(origin.toLowerCase());
+}
 
-  return {
-    'Access-Control-Allow-Origin': originAllowed ? origin : configuredOrigins[0] || '*',
-    'Access-Control-Allow-Credentials': 'true',
-    Vary: 'Origin',
-  };
+function isAllowedOrigin(origin, env) {
+  return getConfiguredOrigins(env).includes(origin.toLowerCase());
 }
 
 async function isAuthorized(request, env) {
@@ -459,6 +474,49 @@ async function ingestEvent(request, env, headers) {
     );
 
   await bind.run();
+
+  return json({ ok: true }, 202, headers);
+}
+
+async function submitContactForm(request, env, headers) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  if (asString(payload?.website, 120)) {
+    return json({ ok: true }, 202, headers);
+  }
+
+  const name = asString(payload?.name, 120).trim();
+  const email = asString(payload?.email, 254).trim();
+  const projectType = asString(payload?.projectType, 120).trim();
+  const message = asString(payload?.message, 4000).trim();
+
+  if (!name || !email || !message) {
+    return json({ error: 'Name, email, and message are required.' }, 400, headers);
+  }
+
+  if (!/^\S+@\S+\.\S+$/.test(email)) {
+    return json({ error: 'Please provide a valid email address.' }, 400, headers);
+  }
+
+  const subject = `New contact form message from ${name}`;
+  const html = `
+    <h2>New contact form message</h2>
+    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+    <p><strong>Reply email:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Project type:</strong> ${escapeHtml(projectType || 'Not specified')}</p>
+    <p><strong>Message:</strong></p>
+    <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
+  `;
+
+  const sent = await sendProjectBriefEmail(env, email, subject, html);
+  if (!sent) {
+    return json({ error: 'Messages are temporarily unavailable. Please try again later.' }, 503, headers);
+  }
 
   return json({ ok: true }, 202, headers);
 }
