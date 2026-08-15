@@ -26,10 +26,9 @@ function unlockDashboard() {
 
 function bootstrapGate() {
   const unlocked = sessionStorage.getItem(OWNER_UNLOCKED_KEY) === '1';
-  const sessionToken = sessionStorage.getItem(OWNER_SESSION_STORAGE) || '';
-  window.HARVEY_ANALYTICS_OWNER_KEY = sessionToken;
+  window.HARVEY_ANALYTICS_OWNER_KEY = '';
 
-  if (unlocked && sessionToken) {
+  if (unlocked) {
     unlockDashboard();
     return;
   }

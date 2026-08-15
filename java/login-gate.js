@@ -40,6 +40,7 @@ async function attemptLogin() {
   try {
     response = await fetch(`${apiBase}/auth/login`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password: passcode }),
     });
@@ -49,12 +50,11 @@ async function attemptLogin() {
   }
 
   const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.token) {
+  if (!response.ok || !data.ok) {
     setLoginMessage(data.error || 'Invalid username or passcode.', true);
     return;
   }
 
-  sessionStorage.setItem(LOGIN_SESSION_STORAGE, data.token);
   sessionStorage.setItem(LOGIN_UNLOCKED_KEY, '1');
 
   const redirectTarget = getRedirectTarget();
@@ -86,9 +86,8 @@ function bindLoginActions() {
 
 function bootstrapLogin() {
   const unlocked = sessionStorage.getItem(LOGIN_UNLOCKED_KEY) === '1';
-  const sessionToken = sessionStorage.getItem(LOGIN_SESSION_STORAGE) || '';
 
-  if (unlocked && sessionToken) {
+  if (unlocked) {
     const redirectTarget = getRedirectTarget();
     window.location.replace(`./${redirectTarget || 'analytics'}`);
     return;

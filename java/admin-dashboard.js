@@ -16,22 +16,18 @@ function slugify(value) {
 }
 
 function getOwnerKey() {
-  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '';
+  return window.HARVEY_ANALYTICS_OWNER_KEY || '';
 }
 
 async function adminFetch(path, options = {}) {
   const ownerKey = getOwnerKey();
-  if (!ownerKey) {
-    throw new Error('No active admin session was found. Return to Login and sign in again.');
-  }
-
   let response;
   try {
     response = await fetch(`${apiBase}${path}`, {
       ...options,
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${ownerKey}`,
         ...(options.headers || {}),
       },
     });

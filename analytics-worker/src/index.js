@@ -131,6 +131,7 @@ function getCorsHeaders(origin, env) {
 
   return {
     'Access-Control-Allow-Origin': originAllowed ? origin : configuredOrigins[0] || '*',
+    'Access-Control-Allow-Credentials': 'true',
     Vary: 'Origin',
   };
 }
@@ -138,9 +139,11 @@ function getCorsHeaders(origin, env) {
 async function isAuthorized(request, env) {
   const authHeader = request.headers.get('Authorization') || '';
   const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-  if (!bearer || !env.DB) return false;
+  const cookieToken = getCookie(request, 'harvey_admin_session');
+  const token = cookieToken || bearer;
+  if (!token || !env.DB) return false;
 
-  const tokenHash = await hashToken(bearer);
+  const tokenHash = await hashToken(token);
   const session = await env.DB
     .prepare(`SELECT id FROM admin_sessions WHERE token_hash = ? AND expires_at > datetime('now')`)
     .bind(tokenHash)
@@ -176,7 +179,20 @@ async function loginAdmin(request, env, headers) {
     .bind(tokenHash)
     .run();
 
-  return json({ token, expiresIn: 8 * 60 * 60 }, 200, headers);
+  return new Response(JSON.stringify({ ok: true, expiresIn: 8 * 60 * 60 }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      ...headers,
+      'Set-Cookie': `harvey_admin_session=${token}; Max-Age=28800; Path=/; Secure; HttpOnly; SameSite=None`,
+    },
+  });
+}
+
+function getCookie(request, name) {
+  const cookieHeader = request.headers.get('Cookie') || '';
+  const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[1]) : '';
 }
 
 function getStripeClient(env) {

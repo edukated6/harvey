@@ -323,17 +323,17 @@ function summarizeCampaignsFromLocal(events) {
   return [...rows.values()].sort((a, b) => b.views - a.views).slice(0, 10);
 }
 
-async function fetchRemote(apiBase, ownerKey, days) {
-  if (!apiBase || !ownerKey) return null;
+async function fetchRemote(apiBase, days) {
+  if (!apiBase) return null;
 
   const summaryUrl = `${apiBase.replace(/\/$/, '')}/summary?days=${days}`;
   const recentUrl = `${apiBase.replace(/\/$/, '')}/recent?limit=${MAX_ROWS}`;
-  const headers = { Authorization: `Bearer ${ownerKey}` };
+  const headers = {};
 
   try {
     const [summaryRes, recentRes] = await Promise.all([
-      fetch(summaryUrl, { headers }),
-      fetch(recentUrl, { headers }),
+      fetch(summaryUrl, { headers, credentials: 'include' }),
+      fetch(recentUrl, { headers, credentials: 'include' }),
     ]);
 
     if (!summaryRes.ok || !recentRes.ok) {
@@ -362,7 +362,6 @@ async function renderDashboard() {
   const root = document.getElementById('analyticsMain');
   const days = Number(root?.dataset.apiDays || DEFAULT_DAYS) || DEFAULT_DAYS;
   const apiBase = String(root?.dataset.apiBase || window.HARVEY_ANALYTICS_API_BASE || '').trim();
-  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '').trim();
 
   let events = readEvents();
   events = trackDashboardView(events);
@@ -370,7 +369,7 @@ async function renderDashboard() {
   const localMetrics = computeMetrics(events);
   const dayLabels = getLastNDays(days);
 
-  const remote = await fetchRemote(apiBase, ownerKey, days);
+  const remote = await fetchRemote(apiBase, days);
 
   const metrics = remote
     ? {
