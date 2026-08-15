@@ -8,10 +8,9 @@ ALLOWED_ORIGINS = "http://localhost:8000,http://127.0.0.1:8000"
 STRIPE_SERVICE_PRICES = '{"short-form-editing:short-form-edit":"price_1U3nSPEUt9h2ALU66F6k2cZC","long-form-editing:long-form-edit":"price_1U3nwlEUt9h2ALU6fL4A8Ntv","show-producing:show-produced":"price_1U3nyREUt9h2ALU6EUwlJ0A7","build-show-podcast-package:show-podcast-package":"price_1U3o2WEUt9h2ALU6fu3gqHwL","motion-graphics:visual-identity-system":"price_1U3o3zEUt9h2ALU6zhJhMF1C","motion-graphics:2d-opener":"price_1U3o6bEUt9h2ALU6dMs3l44h","motion-graphics:lower-third-mogrt":"price_1U3o97EUt9h2ALU6Y6OuKUcW","motion-graphics:2d-transition":"price_1U3oDOEUt9h2ALU6yc6cQr7G","captions":"price_1U3oeCEUt9h2ALU6U4nBWCwl","revision":"price_1U3ogcEUt9h2ALU6PICY1kbU"}'
 STRIPE_SUCCESS_URL = "https://theharveyeffect.com/?checkout=success"
 STRIPE_CANCEL_URL = "https://theharveyeffect.com/?checkout=cancelled"
-# TEMP: Resend's shared testing sender (onboarding@resend.dev) can only deliver to the account owner's own address.
-# Verify a domain at resend.com/domains, then restore EMAIL_TO/RESEND_FROM to your real domain address.
-RESEND_FROM = "onboarding@resend.dev"
-EMAIL_TO = "edukateyourself@proton.me"
+# Verified domain in Resend — sends from theharveyeffect.com.
+RESEND_FROM = "contact@theharveyeffect.com"
+EMAIL_TO = "ahmaadharvey@pm.me"
 
 [[d1_databases]]
 binding = "DB"
