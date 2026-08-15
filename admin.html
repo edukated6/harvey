@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/styles.css?v=20260815">
+  <link rel="stylesheet" href="./css/styles.css?v=20260815-2">
   <script src="./java/analytics-config.js" defer></script>
-  <script src="./java/admin-dashboard.js?v=20260815-2" defer></script>
+  <script src="./java/admin-dashboard.js?v=20260815-3" defer></script>
   <script src="./java/local-gate.js?v=20260815-2" defer></script>
 </head>
 <body class="analytics-page">
@@ -49,7 +49,16 @@
         <label class="brief-label" for="postExcerpt">Excerpt</label>
         <textarea class="brief-input brief-textarea" id="postExcerpt" rows="2" placeholder="A short teaser shown on the blog cards"></textarea>
 
-        <label class="brief-label" for="postCoverImage">Cover Image URL (optional)</label>
+        <label class="brief-label" for="postCoverImage">Cover Image (optional)</label>
+        <div class="thumb-dropzone" id="thumbDropzone" tabindex="0" role="button" aria-label="Drag and drop a thumbnail image, or click to choose a file">
+          <img class="thumb-preview" id="thumbPreview" alt="" hidden>
+          <p class="thumb-dropzone-text" id="thumbDropzoneText">Drag &amp; drop an image here, or click to choose a file</p>
+        </div>
+        <input class="thumb-file-input" id="postCoverImageFile" type="file" accept="image/*" hidden>
+        <div class="booking-actions" style="margin-top: 0.5rem;">
+          <button class="btn btn-ghost" id="removeThumbButton" type="button" hidden>Remove Image</button>
+        </div>
+        <label class="brief-label" for="postCoverImage">Or paste an image URL</label>
         <input class="brief-input" id="postCoverImage" type="text" placeholder="./assets/images/optimized/example.jpg">
 
         <label class="brief-label" for="postCategory">Category</label>

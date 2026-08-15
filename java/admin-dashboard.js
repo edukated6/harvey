@@ -46,6 +46,11 @@ const postTitleInput = document.getElementById('postTitle');
 const postSlugInput = document.getElementById('postSlug');
 const postExcerptInput = document.getElementById('postExcerpt');
 const postCoverImageInput = document.getElementById('postCoverImage');
+const thumbDropzone = document.getElementById('thumbDropzone');
+const thumbDropzoneText = document.getElementById('thumbDropzoneText');
+const thumbPreview = document.getElementById('thumbPreview');
+const postCoverImageFileInput = document.getElementById('postCoverImageFile');
+const removeThumbButton = document.getElementById('removeThumbButton');
 const postCategoryInput = document.getElementById('postCategory');
 const postTagsInput = document.getElementById('postTags');
 const postRelatedServiceInput = document.getElementById('postRelatedService');
@@ -65,12 +70,123 @@ function setPostFormMessage(message, isError = false) {
   postFormMessage.style.color = isError ? '#ffc7c7' : '';
 }
 
+const THUMB_MAX_DIMENSION = 1280;
+const THUMB_JPEG_QUALITY = 0.78;
+
+function showThumbPreview(src) {
+  if (!thumbPreview) return;
+  if (src) {
+    thumbPreview.src = src;
+    thumbPreview.hidden = false;
+    if (thumbDropzoneText) thumbDropzoneText.hidden = true;
+    if (removeThumbButton) removeThumbButton.hidden = false;
+  } else {
+    thumbPreview.hidden = true;
+    thumbPreview.removeAttribute('src');
+    if (thumbDropzoneText) thumbDropzoneText.hidden = false;
+    if (removeThumbButton) removeThumbButton.hidden = true;
+  }
+}
+
+function setThumbFromValue(value) {
+  postCoverImageInput.value = value || '';
+  showThumbPreview(value || '');
+}
+
+function readImageAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Could not read the selected file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+// Resizes/compresses the image client-side so it stores compactly as a data URL.
+function resizeImageDataUrl(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > THUMB_MAX_DIMENSION || height > THUMB_MAX_DIMENSION) {
+        const scale = THUMB_MAX_DIMENSION / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', THUMB_JPEG_QUALITY));
+    };
+    img.onerror = () => reject(new Error('That file could not be loaded as an image.'));
+    img.src = dataUrl;
+  });
+}
+
+async function handleThumbFile(file) {
+  if (!file || !file.type.startsWith('image/')) {
+    setPostFormMessage('Please choose an image file.', true);
+    return;
+  }
+  try {
+    const rawDataUrl = await readImageAsDataUrl(file);
+    const resizedDataUrl = await resizeImageDataUrl(rawDataUrl);
+    setThumbFromValue(resizedDataUrl);
+  } catch (error) {
+    setPostFormMessage(error.message, true);
+  }
+}
+
+if (thumbDropzone) {
+  thumbDropzone.addEventListener('click', () => postCoverImageFileInput?.click());
+  thumbDropzone.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      postCoverImageFileInput?.click();
+    }
+  });
+  ['dragenter', 'dragover'].forEach((eventName) => {
+    thumbDropzone.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      thumbDropzone.classList.add('is-dragover');
+    });
+  });
+  ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
+    thumbDropzone.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      thumbDropzone.classList.remove('is-dragover');
+    });
+  });
+  thumbDropzone.addEventListener('drop', (event) => {
+    const file = event.dataTransfer?.files?.[0];
+    if (file) handleThumbFile(file);
+  });
+}
+
+if (postCoverImageFileInput) {
+  postCoverImageFileInput.addEventListener('change', () => {
+    const file = postCoverImageFileInput.files?.[0];
+    if (file) handleThumbFile(file);
+    postCoverImageFileInput.value = '';
+  });
+}
+
+if (removeThumbButton) {
+  removeThumbButton.addEventListener('click', () => setThumbFromValue(''));
+}
+
+if (postCoverImageInput) {
+  postCoverImageInput.addEventListener('input', () => showThumbPreview(postCoverImageInput.value.trim()));
+}
+
 function fillPostForm(post) {
   postIdInput.value = post.id;
   postTitleInput.value = post.title || '';
   postSlugInput.value = post.slug || '';
   postExcerptInput.value = post.excerpt || '';
-  postCoverImageInput.value = post.coverImage || '';
+  setThumbFromValue(post.coverImage || '');
   postCategoryInput.value = post.category || '';
   postTagsInput.value = Array.isArray(post.tags) ? post.tags.join(', ') : '';
   postRelatedServiceInput.value = post.relatedServiceId || '';
@@ -84,6 +200,7 @@ function clearPostForm() {
   postIdInput.value = '';
   postFormTitle.textContent = 'New Post';
   setPostFormMessage('');
+  showThumbPreview('');
 }
 
 function formatAdminDate(isoString) {
