@@ -11,11 +11,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/styles.css?v=20260815-2">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/styles.css?v=20260815-3">
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js" defer></script>
   <script src="./java/analytics-config.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.js" defer crossorigin="anonymous"></script>
-  <script src="./java/admin-dashboard.js?v=20260815-8" defer></script>
+  <script src="./java/admin-dashboard.js?v=20260815-9" defer></script>
   <script src="./java/local-gate.js?v=20260815-4" defer></script>
 </head>
 <body class="analytics-page">
@@ -75,7 +75,8 @@
 
         <label class="brief-label" for="postBody">Body</label>
         <p class="editor-helper">Use the toolbar for headings, links, images, lists, quotes, and code. The post is saved as Markdown.</p>
-        <textarea class="brief-input brief-textarea" id="postBody" rows="10" placeholder="Write the full post here..." required></textarea>
+        <div class="toast-editor-shell" id="postBodyEditor" aria-label="Blog post body editor"></div>
+        <textarea id="postBody" required hidden></textarea>
 
         <label class="brief-label" for="postStatus">Status</label>
         <select class="brief-input" id="postStatus">

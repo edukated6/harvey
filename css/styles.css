@@ -1267,39 +1267,98 @@ footer,
   margin: -0.35rem 0 0.6rem;
 }
 
-.EasyMDEContainer .CodeMirror,
-.EasyMDEContainer .editor-preview,
-.EasyMDEContainer .editor-preview-side {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: var(--text);
+.toast-editor-shell {
+  margin-top: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
-.EasyMDEContainer .editor-toolbar {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.05);
+.toastui-editor-defaultUI {
+  border: 0;
+  background: #0d121f;
 }
 
-.EasyMDEContainer .editor-toolbar button {
-  color: #ffffff !important;
+.toastui-editor-toolbar,
+.toastui-editor-toolbar-icons,
+.toastui-editor-main,
+.toastui-editor-ww-container {
+  background: #0d121f !important;
+}
+
+.toastui-editor-toolbar {
+  background: #d9dde5 !important;
+  border-bottom: 1px solid #7d8798 !important;
+}
+
+.toastui-editor-toolbar button {
+  background: #f3f4f6 !important;
+  border: 1px solid #8993a3 !important;
+  border-radius: 4px;
   opacity: 1 !important;
 }
 
-.EasyMDEContainer .editor-toolbar button::before,
-.EasyMDEContainer .editor-toolbar button i,
-.EasyMDEContainer .editor-toolbar button .fa {
-  color: #ffffff !important;
+.toastui-editor-toolbar button:hover,
+.toastui-editor-toolbar button.active {
+  background: #ffffff !important;
+  border-color: #90f6ff !important;
 }
 
-.EasyMDEContainer .editor-toolbar button:hover,
-.EasyMDEContainer .editor-toolbar button.active {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: transparent;
+.toastui-editor-toolbar-icons {
+  filter: none;
+  opacity: 1 !important;
 }
 
-.EasyMDEContainer .editor-toolbar i.separator {
-  border-left-color: rgba(255, 255, 255, 0.28);
-  border-right-color: transparent;
+.toastui-editor-toolbar-divider {
+  background-color: #7d8798 !important;
+}
+
+.toastui-editor-ww-container .toastui-editor-contents,
+.toastui-editor-ww-container .ProseMirror {
+  min-height: 360px;
+  background: #141b2a !important;
+  color: #f8f6f0 !important;
+  caret-color: #f8f6f0;
+}
+
+.toastui-editor-ww-container .toastui-editor-contents p,
+.toastui-editor-ww-container .toastui-editor-contents li,
+.toastui-editor-ww-container .toastui-editor-contents span,
+.toastui-editor-ww-container .ProseMirror p,
+.toastui-editor-ww-container .ProseMirror li,
+.toastui-editor-ww-container .ProseMirror span {
+  color: #f8f6f0;
+}
+
+.toastui-editor-contents img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.75rem 0;
+  border-radius: 10px;
+}
+
+.toastui-editor-contents h1,
+.toastui-editor-contents h2,
+.toastui-editor-contents h3 {
+  margin: 0.8rem 0 0.35rem;
+  color: var(--text);
+}
+
+.toastui-editor-ww-container .toastui-editor-contents a,
+.toastui-editor-ww-container .ProseMirror a {
+  color: var(--accent-2);
+}
+
+.toastui-editor-toolbar-divider {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.toastui-editor-contents blockquote {
+  margin: 0.75rem 0;
+  padding-left: 0.8rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
 }
 
 .thumb-dropzone {

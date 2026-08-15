@@ -61,47 +61,38 @@ const postCategoryInput = document.getElementById('postCategory');
 const postTagsInput = document.getElementById('postTags');
 const postRelatedServiceInput = document.getElementById('postRelatedService');
 const postBodyInput = document.getElementById('postBody');
+const postBodyEditorElement = document.getElementById('postBodyEditor');
 const BODY_IMAGE_MAX_DIMENSION = 1600;
 const BODY_IMAGE_JPEG_QUALITY = 0.76;
 
-function insertBodyImage(editor) {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setPostFormMessage('Please choose an image file.', true);
-      return;
-    }
-    try {
-      const rawDataUrl = await readImageAsDataUrl(file);
-      const imageDataUrl = await resizeImageDataUrl(rawDataUrl, BODY_IMAGE_MAX_DIMENSION, BODY_IMAGE_JPEG_QUALITY);
-      const altText = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim() || 'Blog image';
-      const imageMarkdown = `![${altText}](${imageDataUrl})`;
-      const cursor = editor.codemirror.getCursor();
-      editor.codemirror.replaceSelection(`${imageMarkdown}\n`);
-      editor.codemirror.setCursor({ line: cursor.line + 1, ch: 0 });
-      editor.codemirror.save();
-      setPostFormMessage('Image added to the post.');
-    } catch (error) {
-      setPostFormMessage(error.message, true);
-    }
-  });
-  fileInput.click();
+const postBodyEditor = postBodyEditorElement && window.toastui ? new toastui.Editor({
+  el: postBodyEditorElement,
+  height: '420px',
+  initialEditType: 'wysiwyg',
+  hideModeSwitch: true,
+  usageStatistics: false,
+  hooks: {
+    addImageBlobHook: async (file, callback) => {
+      try {
+        const rawDataUrl = await readImageAsDataUrl(file);
+        const imageDataUrl = await resizeImageDataUrl(rawDataUrl, BODY_IMAGE_MAX_DIMENSION, BODY_IMAGE_JPEG_QUALITY);
+        callback(imageDataUrl, file.name);
+      } catch (error) {
+        setPostFormMessage(error.message, true);
+      }
+    },
+  },
+  events: {
+    change: () => syncPostBodyMarkdown(),
+  },
+}) : null;
+
+function syncPostBodyMarkdown() {
+  if (postBodyEditor && postBodyInput) postBodyInput.value = postBodyEditor.getMarkdown();
 }
 
-const postBodyEditor = postBodyInput && window.EasyMDE ? new EasyMDE({
-  element: postBodyInput,
-  autofocus: false,
-  spellChecker: true,
-  status: ['lines', 'words', 'cursor'],
-  toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', { name: 'image', action: insertBodyImage, title: 'Insert image from your computer', className: 'fa fa-picture-o' }, 'code', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
-  minHeight: '260px',
-}) : null;
 if (postBodyEditor) {
-  postBodyEditor.codemirror.on('change', () => postBodyEditor.codemirror.save());
+  syncPostBodyMarkdown();
 }
 const postStatusInput = document.getElementById('postStatus');
 const postFormTitle = document.getElementById('postFormTitle');
@@ -238,15 +229,22 @@ function fillPostForm(post) {
   postCategoryInput.value = post.category || '';
   postTagsInput.value = Array.isArray(post.tags) ? post.tags.join(', ') : '';
   postRelatedServiceInput.value = post.relatedServiceId || '';
-  if (postBodyEditor) postBodyEditor.value(post.bodyMd || '');
-  else postBodyInput.value = post.bodyMd || '';
+  if (postBodyEditor) {
+    postBodyEditor.setMarkdown(post.bodyMd || '');
+    syncPostBodyMarkdown();
+  } else {
+    postBodyInput.value = post.bodyMd || '';
+  }
   postStatusInput.value = post.status || 'draft';
   postFormTitle.textContent = `Editing: ${post.title}`;
 }
 
 function clearPostForm() {
   postForm.reset();
-  if (postBodyEditor) postBodyEditor.value('');
+  if (postBodyEditor) {
+    postBodyEditor.setMarkdown('');
+    syncPostBodyMarkdown();
+  }
   postIdInput.value = '';
   postFormTitle.textContent = 'New Post';
   setPostFormMessage('');
@@ -404,7 +402,7 @@ if (postForm) {
   postForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    if (postBodyEditor) postBodyEditor.codemirror.save();
+    syncPostBodyMarkdown();
 
     const id = postIdInput.value;
     const payload = {
