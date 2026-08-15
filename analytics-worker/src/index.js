@@ -753,7 +753,7 @@ async function createPost(request, env, headers) {
   }
 
   const title = asString(payload?.title, 200);
-  const bodyMd = asString(payload?.bodyMd, 20000);
+  const bodyMd = asString(payload?.bodyMd, 2000000);
   if (!title || !bodyMd) {
     return json({ error: 'Title and body are required' }, 400, headers);
   }
@@ -824,7 +824,7 @@ async function updatePost(request, env, headers, id) {
       slug,
       title,
       asString(payload?.excerpt, 400) || existing.excerpt,
-      asString(payload?.bodyMd, 20000) || existing.body_md,
+      asString(payload?.bodyMd, 2000000) || existing.body_md,
       asString(payload?.coverImage, 2000000) || existing.cover_image,
       asString(payload?.category, 80) || existing.category,
       tags,

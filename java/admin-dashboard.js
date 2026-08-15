@@ -61,12 +61,43 @@ const postCategoryInput = document.getElementById('postCategory');
 const postTagsInput = document.getElementById('postTags');
 const postRelatedServiceInput = document.getElementById('postRelatedService');
 const postBodyInput = document.getElementById('postBody');
+const BODY_IMAGE_MAX_DIMENSION = 1600;
+const BODY_IMAGE_JPEG_QUALITY = 0.76;
+
+function insertBodyImage(editor) {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setPostFormMessage('Please choose an image file.', true);
+      return;
+    }
+    try {
+      const rawDataUrl = await readImageAsDataUrl(file);
+      const imageDataUrl = await resizeImageDataUrl(rawDataUrl, BODY_IMAGE_MAX_DIMENSION, BODY_IMAGE_JPEG_QUALITY);
+      const altText = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim() || 'Blog image';
+      const imageMarkdown = `![${altText}](${imageDataUrl})`;
+      const cursor = editor.codemirror.getCursor();
+      editor.codemirror.replaceSelection(`${imageMarkdown}\n`);
+      editor.codemirror.setCursor({ line: cursor.line + 1, ch: 0 });
+      editor.codemirror.save();
+      setPostFormMessage('Image added to the post.');
+    } catch (error) {
+      setPostFormMessage(error.message, true);
+    }
+  });
+  fileInput.click();
+}
+
 const postBodyEditor = postBodyInput && window.EasyMDE ? new EasyMDE({
   element: postBodyInput,
   autofocus: false,
   spellChecker: true,
   status: ['lines', 'words', 'cursor'],
-  toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
+  toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', { name: 'image', action: insertBodyImage, title: 'Insert image from your computer', className: 'fa fa-picture-o' }, 'code', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
   minHeight: '260px',
 }) : null;
 if (postBodyEditor) {
@@ -120,13 +151,13 @@ function readImageAsDataUrl(file) {
 }
 
 // Resizes/compresses the image client-side so it stores compactly as a data URL.
-function resizeImageDataUrl(dataUrl) {
+function resizeImageDataUrl(dataUrl, maxDimension = THUMB_MAX_DIMENSION, quality = THUMB_JPEG_QUALITY) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
       let { width, height } = img;
-      if (width > THUMB_MAX_DIMENSION || height > THUMB_MAX_DIMENSION) {
-        const scale = THUMB_MAX_DIMENSION / Math.max(width, height);
+      if (width > maxDimension || height > maxDimension) {
+        const scale = maxDimension / Math.max(width, height);
         width = Math.round(width * scale);
         height = Math.round(height * scale);
       }
@@ -135,7 +166,7 @@ function resizeImageDataUrl(dataUrl) {
       canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/jpeg', THUMB_JPEG_QUALITY));
+      resolve(canvas.toDataURL('image/jpeg', quality));
     };
     img.onerror = () => reject(new Error('That file could not be loaded as an image.'));
     img.src = dataUrl;
