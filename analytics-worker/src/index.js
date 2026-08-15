@@ -5,7 +5,7 @@ export default {
     const origin = request.headers.get('Origin') || '';
     const corsHeaders = {
       ...getCorsHeaders(origin, env),
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Analytics-Key',
       'Cache-Control': 'no-store',
     };
