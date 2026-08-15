@@ -20,24 +20,17 @@ async function adminFetch(path, options = {}) {
   try {
     response = await fetch(`${apiBase}${path}`, {
       ...options,
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         ...(options.headers || {}),
       },
     });
   } catch (error) {
-    throw new Error('Your admin session could not be verified. Return to Login and sign in again.');
+    throw new Error('The blog service could not be reached. Check your connection and try again.');
   }
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    if (response.status === 401) {
-      sessionStorage.removeItem('harveyAnalyticsOwnerUnlocked');
-      sessionStorage.removeItem('harveyAdminSessionToken');
-      window.location.replace('./login?redirect=admin');
-      throw new Error('Your admin session has expired. Return to Login and sign in again.');
-    }
     throw new Error(data.error || `Request failed (${response.status})`);
   }
   return data;
