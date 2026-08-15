@@ -20,6 +20,10 @@ export default {
       return loginAdmin(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/auth/logout') {
+      return logoutAdmin(request, env, corsHeaders);
+    }
+
     if (request.method === 'POST' && url.pathname === '/events') {
       return ingestEvent(request, env, corsHeaders);
     }
@@ -152,7 +156,16 @@ function isAllowedOrigin(origin, env) {
 }
 
 async function isAuthorized(request, env) {
-  return true;
+  const token = getSessionToken(request);
+  if (!token) return false;
+
+  const tokenHash = await hashToken(token);
+  const session = await env.DB
+    .prepare(`SELECT id FROM admin_sessions WHERE token_hash = ? AND expires_at > datetime('now') LIMIT 1`)
+    .bind(tokenHash)
+    .first();
+
+  return Boolean(session);
 }
 
 async function hashToken(value) {
@@ -172,7 +185,7 @@ async function loginAdmin(request, env, headers) {
   const password = asString(payload?.password, 500);
   const expectedPassword = asString(env.HARVEY_ADMIN_PASSWORD, 500);
 
-  if (!expectedPassword || username !== 'admin' || password !== expectedPassword) {
+  if (!expectedPassword || username !== 'admin' || !timingSafeStringEqual(password, expectedPassword)) {
     return json({ error: 'Invalid username or passcode' }, 401, headers);
   }
 
@@ -191,6 +204,28 @@ async function loginAdmin(request, env, headers) {
       'Set-Cookie': `harvey_admin_session=${token}; Max-Age=28800; Path=/; Secure; HttpOnly; SameSite=None`,
     },
   });
+}
+
+async function logoutAdmin(request, env, headers) {
+  const token = getSessionToken(request);
+  if (token) {
+    const tokenHash = await hashToken(token);
+    await env.DB.prepare(`DELETE FROM admin_sessions WHERE token_hash = ?`).bind(tokenHash).run();
+  }
+
+  return json({ ok: true }, 200, headers);
+}
+
+function getSessionToken(request) {
+  const authorization = request.headers.get('Authorization') || '';
+  const bearerMatch = authorization.match(/^Bearer\s+(.+)$/i);
+  return (bearerMatch?.[1] || getCookie(request, 'harvey_admin_session')).trim();
+}
+
+function timingSafeStringEqual(left, right) {
+  const leftBytes = new TextEncoder().encode(left);
+  const rightBytes = new TextEncoder().encode(right);
+  return leftBytes.byteLength === rightBytes.byteLength && crypto.subtle.timingSafeEqual(leftBytes, rightBytes);
 }
 
 function getCookie(request, name) {

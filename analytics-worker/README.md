@@ -19,9 +19,9 @@ Run from [analytics-worker](analytics-worker):
 
 ## 2) Set Owner Secret
 
-Set a worker secret that is required for owner dashboard API reads:
+Set the password used by the private dashboard login. The username is `admin`; the password is kept only as a Worker secret:
 
-- `wrangler secret put HARVEY_ANALYTICS_ADMIN_KEY`
+- `wrangler secret put HARVEY_ADMIN_PASSWORD`
 
 Set the Stripe secret used by the dynamic checkout route:
 
@@ -63,14 +63,16 @@ Also set API base:
 
 - `window.HARVEY_ANALYTICS_API_BASE = "https://<your-worker>.workers.dev"`
 
-Use the same admin key inside your private dashboard gate to read summary data.
+The login endpoint creates an eight-hour session. A valid session token is required for owner endpoints and blog administration actions.
 
 ## Endpoints
 
 - `POST /events` (public ingest)
-- `GET /summary?days=14` (owner key required)
-- `GET /recent?limit=30` (owner key required)
+- `POST /auth/login` (issues a server session)
+- `POST /auth/logout` (revokes the current server session)
+- `GET /summary?days=14` (authenticated session required)
+- `GET /recent?limit=30` (authenticated session required)
 
 Auth header for owner endpoints:
 
-- `Authorization: Bearer <HARVEY_ANALYTICS_ADMIN_KEY>`
+- `Authorization: Bearer <session token>`

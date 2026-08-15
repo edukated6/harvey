@@ -338,6 +338,9 @@ async function fetchRemote(apiBase, days) {
     ]);
 
     if (!summaryRes.ok || !recentRes.ok) {
+      if (summaryRes.status === 401 || recentRes.status === 401) {
+        window.dispatchEvent(new Event('harvey-session-expired'));
+      }
       return null;
     }
 

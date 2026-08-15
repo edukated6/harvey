@@ -13,11 +13,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/styles.css?v=20260815">
   <script src="./java/analytics-config.js" defer></script>
-  <script src="./java/analytics-dashboard.js?v=20260814-2" defer></script>
-  <script src="./java/local-gate.js?v=20260815-2" defer></script>
+  <script src="./java/analytics-dashboard.js?v=20260815-3" defer></script>
+  <script src="./java/local-gate.js?v=20260815-3" defer></script>
 </head>
 <body class="analytics-page">
-  <main class="analytics-main" id="analyticsMain" data-api-base="" data-api-days="14">
+  <main class="analytics-main" id="analyticsMain" data-api-base="" data-api-days="14" hidden>
     <header class="analytics-header reveal-up is-visible">
       <div>
         <p class="analytics-kicker">Portfolio Intelligence</p>
@@ -28,6 +28,7 @@
         <a class="btn btn-ghost" href="./index">Back to Portfolio</a>
         <a class="btn btn-ghost" href="./admin">Manage Blog</a>
         <button class="btn btn-primary" id="clearAnalytics" type="button">Reset Local Data</button>
+        <button class="btn btn-ghost" data-dashboard-logout type="button">Log Out</button>
       </div>
     </header>
 

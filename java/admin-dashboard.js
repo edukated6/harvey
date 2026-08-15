@@ -30,6 +30,10 @@ async function adminFetch(path, options = {}) {
   }
 
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401) {
+    window.dispatchEvent(new Event('harvey-session-expired'));
+    throw new Error('Your dashboard session has expired.');
+  }
   if (!response.ok) {
     throw new Error(data.error || `Request failed (${response.status})`);
   }

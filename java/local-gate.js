@@ -1,18 +1,10 @@
 const LOCAL_GATE_KEY = 'harveyLocalDashboardUnlocked';
+const LOCAL_SESSION_KEY = 'harveyAdminSessionToken';
 const LOCAL_GATE_TARGETS = ['admin', 'analytics'];
 
 function getTarget() {
   const target = new URLSearchParams(window.location.search).get('redirect') || '';
   return LOCAL_GATE_TARGETS.includes(target) ? target : 'admin';
-}
-
-function toHex(buffer) {
-  return [...new Uint8Array(buffer)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
-}
-
-async function hashText(value) {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
-  return toHex(digest);
 }
 
 function unlockDashboard() {
@@ -32,27 +24,75 @@ function setGateMessage(message) {
   if (element) element.textContent = message;
 }
 
-async function attemptLocalUnlock() {
-  const gate = document.getElementById('localGate');
-  const username = document.getElementById('localGateUsername')?.value || '';
-  const password = document.getElementById('localGatePassword')?.value || '';
-  const usernameHash = await hashText(username);
-  const passwordHash = await hashText(password);
+function clearDashboardSession() {
+  sessionStorage.removeItem(LOCAL_GATE_KEY);
+  sessionStorage.removeItem(LOCAL_SESSION_KEY);
+}
 
-  if (usernameHash !== gate.dataset.usernameHash || passwordHash !== gate.dataset.passwordHash) {
-    setGateMessage('Invalid username or password.');
+function redirectToLogin() {
+  const target = window.location.pathname.split('/').pop()?.replace(/\.html$/, '') || 'admin';
+  window.location.replace(`./login?redirect=${encodeURIComponent(target)}`);
+}
+
+async function attemptLocalUnlock() {
+  const username = document.getElementById('localGateUsername')?.value.trim() || '';
+  const password = document.getElementById('localGatePassword')?.value || '';
+  if (!username || !password) {
+    setGateMessage('Enter your username and password.');
     return;
   }
 
+  const apiBase = String(window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+  if (!apiBase) {
+    setGateMessage('Login service is not configured.');
+    return;
+  }
+
+  let response;
+  try {
+    response = await fetch(`${apiBase}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+  } catch {
+    setGateMessage('Unable to reach the login service.');
+    return;
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.ok || !data.token) {
+    setGateMessage(data.error || 'Invalid username or password.');
+    return;
+  }
+
+  sessionStorage.setItem(LOCAL_SESSION_KEY, data.token);
   sessionStorage.setItem(LOCAL_GATE_KEY, '1');
   unlockDashboard();
+}
+
+async function signOut() {
+  const token = sessionStorage.getItem(LOCAL_SESSION_KEY) || '';
+  const apiBase = String(window.HARVEY_ANALYTICS_API_BASE || '').replace(/\/$/, '');
+  try {
+    if (token && apiBase) {
+      await fetch(`${apiBase}/auth/logout`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    }
+  } finally {
+    clearDashboardSession();
+    window.location.replace('./login');
+  }
 }
 
 function bootstrapLocalGate() {
   const gate = document.getElementById('localGate');
   const dashboard = document.getElementById('analyticsMain');
 
-  if (sessionStorage.getItem(LOCAL_GATE_KEY) === '1') {
+  const hasSession = sessionStorage.getItem(LOCAL_GATE_KEY) === '1' && Boolean(sessionStorage.getItem(LOCAL_SESSION_KEY));
+  if (hasSession) {
     if (gate) {
       window.location.replace(`./${getTarget()}`);
     } else if (dashboard) {
@@ -63,8 +103,7 @@ function bootstrapLocalGate() {
   }
 
   if (!gate) {
-    const target = window.location.pathname.split('/').pop()?.replace(/\.html$/, '') || 'admin';
-    window.location.replace(`./login?redirect=${encodeURIComponent(target)}`);
+    redirectToLogin();
     return;
   }
 
@@ -77,6 +116,16 @@ function bootstrapLocalGate() {
       attemptLocalUnlock().catch(() => setGateMessage('Unable to verify credentials in this browser.'));
     }
   });
+
+  document.querySelectorAll('[data-dashboard-logout]').forEach((button) => {
+    button.addEventListener('click', () => {
+      signOut();
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', bootstrapLocalGate);
+window.addEventListener('harvey-session-expired', () => {
+  clearDashboardSession();
+  redirectToLogin();
+});
