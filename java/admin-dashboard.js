@@ -69,6 +69,9 @@ const postBodyEditor = postBodyInput && window.EasyMDE ? new EasyMDE({
   toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', 'code', 'preview', 'side-by-side', 'fullscreen', '|', 'guide'],
   minHeight: '260px',
 }) : null;
+if (postBodyEditor) {
+  postBodyEditor.codemirror.on('change', () => postBodyEditor.codemirror.save());
+}
 const postStatusInput = document.getElementById('postStatus');
 const postFormTitle = document.getElementById('postFormTitle');
 const postFormMessage = document.getElementById('postFormMessage');
