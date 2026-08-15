@@ -91,6 +91,12 @@ function bootstrapLocalGate() {
   const gate = document.getElementById('localGate');
   const dashboard = document.getElementById('analyticsMain');
 
+  document.querySelectorAll('[data-dashboard-logout]').forEach((button) => {
+    button.addEventListener('click', () => {
+      signOut();
+    });
+  });
+
   const hasSession = sessionStorage.getItem(LOCAL_GATE_KEY) === '1' && Boolean(sessionStorage.getItem(LOCAL_SESSION_KEY));
   if (hasSession) {
     if (gate) {
@@ -117,11 +123,6 @@ function bootstrapLocalGate() {
     }
   });
 
-  document.querySelectorAll('[data-dashboard-logout]').forEach((button) => {
-    button.addEventListener('click', () => {
-      signOut();
-    });
-  });
 }
 
 document.addEventListener('DOMContentLoaded', bootstrapLocalGate);
