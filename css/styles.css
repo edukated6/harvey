@@ -1360,6 +1360,8 @@ footer,
 .toastui-editor-popup.toastui-editor-popup-add-heading {
   position: absolute;
   z-index: 1000 !important;
+  top: auto !important;
+  bottom: 100% !important;
   background: #141b2a !important;
   border: 1px solid #8993a3 !important;
   border-radius: 6px;
