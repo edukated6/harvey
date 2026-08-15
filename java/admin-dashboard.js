@@ -275,3 +275,8 @@ window.addEventListener('harvey-analytics-unlocked', () => {
   loadPosts();
   loadComments();
 });
+
+window.addEventListener('harvey-local-gate-unlocked', () => {
+  loadPosts();
+  loadComments();
+});

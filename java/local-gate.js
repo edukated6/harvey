@@ -1,4 +1,10 @@
 const LOCAL_GATE_KEY = 'harveyLocalDashboardUnlocked';
+const LOCAL_GATE_TARGETS = ['admin', 'analytics'];
+
+function getTarget() {
+  const target = new URLSearchParams(window.location.search).get('redirect') || '';
+  return LOCAL_GATE_TARGETS.includes(target) ? target : 'admin';
+}
 
 function toHex(buffer) {
   return [...new Uint8Array(buffer)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -12,7 +18,11 @@ async function hashText(value) {
 function unlockDashboard() {
   const gate = document.getElementById('localGate');
   const dashboard = document.getElementById('analyticsMain');
-  if (gate) gate.hidden = true;
+  if (gate) {
+    sessionStorage.setItem(LOCAL_GATE_KEY, '1');
+    window.location.replace(`./${getTarget()}`);
+    return;
+  }
   if (dashboard) dashboard.hidden = false;
   window.dispatchEvent(new CustomEvent('harvey-local-gate-unlocked'));
 }
@@ -40,10 +50,21 @@ async function attemptLocalUnlock() {
 
 function bootstrapLocalGate() {
   const gate = document.getElementById('localGate');
-  if (!gate) return;
+  const dashboard = document.getElementById('analyticsMain');
 
   if (sessionStorage.getItem(LOCAL_GATE_KEY) === '1') {
-    unlockDashboard();
+    if (gate) {
+      window.location.replace(`./${getTarget()}`);
+    } else if (dashboard) {
+      dashboard.hidden = false;
+      window.dispatchEvent(new CustomEvent('harvey-local-gate-unlocked'));
+    }
+    return;
+  }
+
+  if (!gate) {
+    const target = window.location.pathname.split('/').pop()?.replace(/\.html$/, '') || 'admin';
+    window.location.replace(`./login?redirect=${encodeURIComponent(target)}`);
     return;
   }
 

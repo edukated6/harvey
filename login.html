@@ -12,25 +12,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/styles.css?v=20260815">
-  <script src="./java/analytics-config.js" defer></script>
-  <script src="./java/login-gate.js?v=20260814-7" defer></script>
+  <script src="./java/local-gate.js?v=20260815-2" defer></script>
 </head>
 <body class="analytics-page">
-  <section class="analytics-gate" id="loginGateSection" aria-label="Owner login">
+  <section class="analytics-gate" id="localGate" aria-label="Dashboard login" data-username-hash="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" data-password-hash="a5dcb13891f053e2de7e36495f35a880104014345071ad4cc009b8d330fb3cc8">
     <div class="analytics-gate-card">
+      <p class="analytics-kicker">Private Dashboard</p>
       <h1>Login</h1>
 
-      <label class="analytics-gate-label" for="loginUsername">Username</label>
-      <input class="analytics-gate-input" id="loginUsername" type="text" autocomplete="username" placeholder="Enter username">
+      <label class="analytics-gate-label" for="localGateUsername">Username</label>
+      <input class="analytics-gate-input" id="localGateUsername" type="text" autocomplete="username" placeholder="Enter username">
 
-      <label class="analytics-gate-label" for="loginPasscode">Passcode</label>
-      <input class="analytics-gate-input" id="loginPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
+      <label class="analytics-gate-label" for="localGatePassword">Password</label>
+      <input class="analytics-gate-input" id="localGatePassword" type="password" autocomplete="current-password" placeholder="Enter password">
 
       <div class="analytics-actions">
-        <button class="btn btn-primary" id="loginSubmit" type="button">Log In</button>
+        <button class="btn btn-primary" id="localGateSubmit" type="button">Log In</button>
         <a class="btn btn-ghost" href="./index">Back to Portfolio</a>
       </div>
-      <p id="loginMessage" class="analytics-gate-message" aria-live="polite">Enter your admin credentials to continue.</p>
+      <p id="localGateMessage" class="analytics-gate-message" aria-live="polite">Enter your dashboard credentials.</p>
     </div>
   </section>
 </body>
