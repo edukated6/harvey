@@ -1281,13 +1281,25 @@ footer,
 }
 
 .EasyMDEContainer .editor-toolbar button {
-  color: var(--text);
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.EasyMDEContainer .editor-toolbar button::before,
+.EasyMDEContainer .editor-toolbar button i,
+.EasyMDEContainer .editor-toolbar button .fa {
+  color: #ffffff !important;
 }
 
 .EasyMDEContainer .editor-toolbar button:hover,
 .EasyMDEContainer .editor-toolbar button.active {
   background: rgba(255, 255, 255, 0.14);
   border-color: transparent;
+}
+
+.EasyMDEContainer .editor-toolbar i.separator {
+  border-left-color: rgba(255, 255, 255, 0.28);
+  border-right-color: transparent;
 }
 
 .thumb-dropzone {
