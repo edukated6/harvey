@@ -1268,13 +1268,17 @@ footer,
 }
 
 .toast-editor-shell {
+  position: relative;
+  z-index: 10;
   margin-top: 0.35rem;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .toastui-editor-defaultUI {
+  position: relative;
+  z-index: 10;
   border: 0;
   background: #0d121f;
 }
@@ -1354,7 +1358,8 @@ footer,
 }
 
 .toastui-editor-popup.toastui-editor-popup-add-heading {
-  z-index: 20;
+  position: absolute;
+  z-index: 1000 !important;
   background: #141b2a !important;
   border: 1px solid #8993a3 !important;
   border-radius: 6px;
