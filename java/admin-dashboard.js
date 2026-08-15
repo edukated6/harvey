@@ -16,12 +16,14 @@ function slugify(value) {
 }
 
 async function adminFetch(path, options = {}) {
+  const sessionToken = sessionStorage.getItem('harveyAdminSessionToken') || '';
   let response;
   try {
     response = await fetch(`${apiBase}${path}`, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
         ...(options.headers || {}),
       },
     });
