@@ -1315,7 +1315,7 @@ footer,
 .toastui-editor-ww-container .toastui-editor-contents,
 .toastui-editor-ww-container .ProseMirror {
   min-height: 360px;
-  background: #141b2a !important;
+  background: #0e0d16 !important;
   color: #f8f6f0 !important;
   caret-color: #f8f6f0;
 }
@@ -1351,6 +1351,53 @@ footer,
 
 .toastui-editor-toolbar-divider {
   background-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.toastui-editor-popup.toastui-editor-popup-add-heading {
+  z-index: 20;
+  background: #141b2a !important;
+  border: 1px solid #8993a3 !important;
+  border-radius: 6px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.toastui-editor-popup-add-heading .toastui-editor-popup-body,
+.toastui-editor-popup-add-heading ul,
+.toastui-editor-popup-add-heading li {
+  background: #141b2a !important;
+}
+
+.toastui-editor-popup-add-heading h1,
+.toastui-editor-popup-add-heading h2,
+.toastui-editor-popup-add-heading h3,
+.toastui-editor-popup-add-heading h4,
+.toastui-editor-popup-add-heading h5,
+.toastui-editor-popup-add-heading h6,
+.toastui-editor-popup-add-heading li {
+  color: #f8f6f0 !important;
+}
+
+.toastui-editor-popup-add-heading li:hover {
+  background-color: #263247 !important;
+  color: #ffffff !important;
+}
+
+.toastui-editor-popup-add-heading li:hover h1,
+.toastui-editor-popup-add-heading li:hover h2,
+.toastui-editor-popup-add-heading li:hover h3,
+.toastui-editor-popup-add-heading li:hover h4,
+.toastui-editor-popup-add-heading li:hover h5,
+.toastui-editor-popup-add-heading li:hover h6 {
+  color: #ffffff !important;
+}
+
+.toastui-editor-popup-add-heading button {
+  width: 100%;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0;
+  color: #f8f6f0 !important;
+  text-align: left;
 }
 
 .toastui-editor-contents blockquote {
