@@ -328,7 +328,8 @@ async function fetchRemote(apiBase, days) {
 
   const summaryUrl = `${apiBase.replace(/\/$/, '')}/summary?days=${days}`;
   const recentUrl = `${apiBase.replace(/\/$/, '')}/recent?limit=${MAX_ROWS}`;
-  const headers = {};
+  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '').trim();
+  const headers = ownerKey ? { Authorization: `Bearer ${ownerKey}` } : {};
 
   try {
     const [summaryRes, recentRes] = await Promise.all([

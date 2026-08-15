@@ -179,7 +179,7 @@ async function loginAdmin(request, env, headers) {
     .bind(tokenHash)
     .run();
 
-  return new Response(JSON.stringify({ ok: true, expiresIn: 8 * 60 * 60 }), {
+  return new Response(JSON.stringify({ ok: true, token, expiresIn: 8 * 60 * 60 }), {
     status: 200,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',

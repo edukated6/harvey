@@ -55,6 +55,7 @@ async function attemptLogin() {
     return;
   }
 
+  sessionStorage.setItem(LOGIN_SESSION_STORAGE, data.token || '');
   sessionStorage.setItem(LOGIN_UNLOCKED_KEY, '1');
 
   const redirectTarget = getRedirectTarget();

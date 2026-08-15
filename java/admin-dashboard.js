@@ -16,7 +16,7 @@ function slugify(value) {
 }
 
 function getOwnerKey() {
-  return window.HARVEY_ANALYTICS_OWNER_KEY || '';
+  return window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '';
 }
 
 async function adminFetch(path, options = {}) {
@@ -28,6 +28,7 @@ async function adminFetch(path, options = {}) {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        ...(ownerKey ? { Authorization: `Bearer ${ownerKey}` } : {}),
         ...(options.headers || {}),
       },
     });
