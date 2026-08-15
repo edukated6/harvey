@@ -49,6 +49,18 @@ async function adminFetch(path, options = {}) {
   return data;
 }
 
+async function ensureAdminSession() {
+  try {
+    await adminFetch('/admin/posts');
+    return true;
+  } catch (error) {
+    if (!window.location.pathname.endsWith('/login') && !window.location.pathname.endsWith('/login.html')) {
+      window.location.replace('./login?redirect=admin');
+    }
+    return false;
+  }
+}
+
 const postForm = document.getElementById('postForm');
 const postIdInput = document.getElementById('postId');
 const postTitleInput = document.getElementById('postTitle');
@@ -150,6 +162,7 @@ function renderPostsList(posts) {
 
 async function loadPosts() {
   if (!adminPostsList) return;
+  if (!(await ensureAdminSession())) return;
   try {
     const data = await adminFetch('/admin/posts');
     renderPostsList(Array.isArray(data.posts) ? data.posts : []);
