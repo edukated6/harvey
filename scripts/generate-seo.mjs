@@ -105,7 +105,10 @@ function pageTemplate(post) {
   <meta name="twitter:description" content="${escapeHtml(description)}">
   <meta name="twitter:image" content="${escapeHtml(image)}">
   <meta name="theme-color" content="#0d121f">
-  <link rel="stylesheet" href="../../css/styles.css?v=20260815">
+  <link rel="stylesheet" href="../../css/styles.css?v=20260816-2">
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer crossorigin="anonymous"></script>
+  <script src="../../java/analytics-config.js?v=20260816-2" defer></script>
   <script type="application/ld+json">${jsonLd}</script>
 </head>
 <body>
@@ -123,7 +126,7 @@ function pageTemplate(post) {
     </div>
   </nav>
   <main>
-    <article class="post-article page-section-first">
+    <article class="post-article page-section-first" id="postArticle" aria-live="polite">
       ${coverHtml}
       <div class="post-header">
         <p class="post-kicker">${escapeHtml(post.category || 'Insight')}</p>
@@ -132,9 +135,36 @@ function pageTemplate(post) {
       </div>
       <div class="post-body">${body}</div>
     </article>
+
+    <section class="comments-section" id="comments" aria-label="Comments">
+      <div class="section-heading reveal-up">
+        <p>Join The Conversation</p>
+        <h2 id="commentsHeading">Comments</h2>
+      </div>
+
+      <form class="comment-form reveal-up" id="commentForm">
+        <label class="brief-label" for="commentAuthorName">Name</label>
+        <input class="brief-input" id="commentAuthorName" type="text" maxlength="80" placeholder="Your name" required>
+
+        <label class="brief-label" for="commentBody">Comment</label>
+        <textarea class="brief-input brief-textarea" id="commentBody" rows="4" maxlength="2000" placeholder="Share your thoughts..." required></textarea>
+
+        <input type="text" id="commentWebsite" name="website" autocomplete="off" tabindex="-1" class="comment-honeypot" aria-hidden="true">
+
+        <div class="booking-actions">
+          <button class="btn btn-primary" type="submit">Post Comment</button>
+        </div>
+        <p id="commentFormMessage" class="analytics-gate-message"></p>
+      </form>
+
+      <div class="comment-list" id="commentList" aria-live="polite">
+        <p class="blog-empty" id="commentsEmptyState">Loading comments&hellip;</p>
+      </div>
+    </section>
   </main>
   <footer>© 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.</footer>
-  <script src="../../java/scripts.js" defer></script>
+  <script src="../../java/scripts.js?v=20260816-2" defer></script>
+  <script src="../../java/blog-post.js?v=20260816-2" defer></script>
 </body>
 </html>
 `;
