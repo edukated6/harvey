@@ -23,6 +23,15 @@ function getSlugFromQuery() {
   return blogIndex >= 0 ? decodeURIComponent(pathParts[blogIndex + 1] || '') : '';
 }
 
+// DOMPurify strips data: URIs by default; allow them only for <img> so embedded post images render.
+if (window.DOMPurify) {
+  window.DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
+    if (data.attrName === 'src' && node.nodeName === 'IMG' && /^data:image\//i.test(data.attrValue)) {
+      data.forceKeepAttr = true;
+    }
+  });
+}
+
 function renderMarkdown(bodyMd) {
   if (window.marked && window.DOMPurify) {
     const rawHtml = window.marked.parse(bodyMd || '');
