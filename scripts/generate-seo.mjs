@@ -24,19 +24,39 @@ function stripMarkdown(value = '') {
     .trim();
 }
 
+// Applies inline Markdown (images, links, bold, italic, code) to already-HTML-escaped text.
+function renderInline(text) {
+  return escapeHtml(text)
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" decoding="async">')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*|__([^_]+)__/g, (_m, a, b) => `<strong>${a ?? b}</strong>`)
+    .replace(/\*([^*]+)\*|_([^_]+)_/g, (_m, a, b) => `<em>${a ?? b}</em>`)
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
 function renderMarkdown(value = '') {
   return String(value).split(/\r?\n\s*\r?\n/).filter(Boolean).map((block) => {
     const text = block.trim();
-    if (/^#{1,3}\s/.test(text)) {
-      const [, hashes, heading] = text.match(/^(#{1,3})\s+(.+)$/);
+    const lines = text.split('\n');
+
+    if (/^#{1,6}\s/.test(text)) {
+      const [, hashes, heading] = text.match(/^(#{1,6})\s+(.+)$/);
       const level = Math.min(hashes.length + 1, 4);
-      return `<h${level}>${escapeHtml(heading)}</h${level}>`;
+      return `<h${level}>${renderInline(heading)}</h${level}>`;
     }
-    if (text.split('\n').every((line) => /^[-*]\s+/.test(line))) {
-      const items = text.split('\n').map((line) => `<li>${escapeHtml(line.replace(/^[-*]\s+/, ''))}</li>`).join('');
+    if (lines.every((line) => /^>\s?/.test(line))) {
+      const quoted = lines.map((line) => line.replace(/^>\s?/, '')).join(' ');
+      return `<blockquote><p>${renderInline(quoted)}</p></blockquote>`;
+    }
+    if (lines.every((line) => /^[-*]\s+/.test(line))) {
+      const items = lines.map((line) => `<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`).join('');
       return `<ul>${items}</ul>`;
     }
-    return `<p>${escapeHtml(text).replaceAll('\n', '<br>')}</p>`;
+    if (lines.every((line) => /^\d+\.\s+/.test(line))) {
+      const items = lines.map((line) => `<li>${renderInline(line.replace(/^\d+\.\s+/, ''))}</li>`).join('');
+      return `<ol>${items}</ol>`;
+    }
+    return `<p>${lines.map(renderInline).join('<br>')}</p>`;
   }).join('\n');
 }
 
@@ -50,6 +70,9 @@ function pageTemplate(post) {
   const description = stripMarkdown(post.excerpt || post.bodyMd).slice(0, 160);
   const canonical = `${siteUrl}/blog/${encodeURIComponent(post.slug)}/`;
   const image = post.coverImage && /^https?:\/\//.test(post.coverImage) ? post.coverImage : `${siteUrl}/assets/images/Harvey%20poster.png`;
+  const coverHtml = post.coverImage
+    ? `<div class="post-cover"><img src="${escapeHtml(post.coverImage)}" alt="" decoding="async"></div>`
+    : '';
   const body = renderMarkdown(post.bodyMd);
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -101,6 +124,7 @@ function pageTemplate(post) {
   </nav>
   <main>
     <article class="post-article page-section-first">
+      ${coverHtml}
       <div class="post-header">
         <p class="post-kicker">${escapeHtml(post.category || 'Insight')}</p>
         <h1>${escapeHtml(post.title)}</h1>
