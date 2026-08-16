@@ -92,7 +92,7 @@ function pageTemplate(post) {
       <span></span><span></span><span></span>
     </button>
     <div class="nav-links" id="navLinks">
-      <a href="../../index">Home</a>
+      <a href="../../home">Home</a>
       <a href="../../work">Work</a>
       <a href="../../blog">Blog</a>
       <a href="../../services">Services</a>
