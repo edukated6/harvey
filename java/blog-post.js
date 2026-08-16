@@ -15,7 +15,12 @@ function formatPostDate(isoString) {
 
 function getSlugFromQuery() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('slug') || '';
+  const querySlug = params.get('slug');
+  if (querySlug) return querySlug;
+
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const blogIndex = pathParts.indexOf('blog');
+  return blogIndex >= 0 ? decodeURIComponent(pathParts[blogIndex + 1] || '') : '';
 }
 
 function renderMarkdown(bodyMd) {
@@ -44,6 +49,12 @@ function renderPost(post) {
   if (!postArticle) return;
 
   document.title = `${post.title} \u2022 The Harvey Effect`;
+  const description = post.excerpt || String(post.bodyMd || '').replace(/[*_>#`~-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 160);
+  const canonicalUrl = `${window.location.origin}/blog/${encodeURIComponent(post.slug)}/`;
+  const descriptionMeta = document.querySelector('meta[name="description"]');
+  const canonicalLink = document.querySelector('link[rel="canonical"]');
+  if (descriptionMeta) descriptionMeta.setAttribute('content', description);
+  if (canonicalLink) canonicalLink.setAttribute('href', canonicalUrl);
 
   const coverHtml = post.coverImage
     ? `<div class="post-cover"><img src="${escapePostHtml(post.coverImage)}" alt="" decoding="async"></div>`

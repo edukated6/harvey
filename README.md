@@ -6,6 +6,20 @@ Professional Portfolio
 - Measured audit and optimization plan: [assets/docs/PERFORMANCE_AUDIT_2026-06-14.md](assets/docs/PERFORMANCE_AUDIT_2026-06-14.md)
 - Includes exact media sizes/bitrates, estimated impact, and ready-to-run ffmpeg commands.
 
+## Search Engine Optimization
+
+- Public page metadata includes canonical URLs, Open Graph previews, Twitter cards, and JSON-LD where applicable.
+- Generate crawlable blog pages and refresh [sitemap.xml](sitemap.xml) after publishing posts:
+
+	`node scripts/generate-seo.mjs`
+
+- The generator reads published posts from the public analytics API. Set `HARVEY_ANALYTICS_API_BASE` to use a different API during a deployment build.
+- GitHub Actions runs the generator and deploys GitHub Pages on pushes to `main`, manually, and every 15 minutes so newly published posts become crawlable without a local command.
+
+### Enable Automatic Pages Deployment
+
+In the repository settings, open **Pages** and set **Build and deployment** → **Source** to **GitHub Actions**. After that, publishing a post through the admin panel will be picked up by the scheduled workflow within the next run. You can also run **Build and deploy site** manually from the repository's **Actions** tab.
+
 ## Owner Login
 
 - Private login URL: `login.html`. The page sends credentials only to the Worker and receives an eight-hour, revocable server session.

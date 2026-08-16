@@ -5,3 +5,5 @@ Disallow: /login.html
 Disallow: /analytics
 Disallow: /admin
 Disallow: /login
+
+Sitemap: https://theharveyeffect.com/sitemap.xml

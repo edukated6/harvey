@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="../../assets/images/harvey logo.svg">
+  <meta charset="UTF-8">
+  <title>Dynamic Broadcast Lower Thirds | The Harvey Effect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lower Thirds are graphics that display additional information to supplement video storytelling or sometimes ultimately explaining to audiences what they are eve">
+  <link rel="canonical" href="https://theharveyeffect.com/blog/dynamic-broadcast-lower-thirds/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://theharveyeffect.com/blog/dynamic-broadcast-lower-thirds/">
+  <meta property="og:title" content="Dynamic Broadcast Lower Thirds | The Harvey Effect">
+  <meta property="og:description" content="Lower Thirds are graphics that display additional information to supplement video storytelling or sometimes ultimately explaining to audiences what they are eve">
+  <meta property="og:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dynamic Broadcast Lower Thirds | The Harvey Effect">
+  <meta name="twitter:description" content="Lower Thirds are graphics that display additional information to supplement video storytelling or sometimes ultimately explaining to audiences what they are eve">
+  <meta name="twitter:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
+  <meta name="theme-color" content="#0d121f">
+  <link rel="stylesheet" href="../../css/styles.css?v=20260815">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Dynamic Broadcast Lower Thirds","description":"Lower Thirds are graphics that display additional information to supplement video storytelling or sometimes ultimately explaining to audiences what they are eve","datePublished":"2026-08-16T02:34:46.856Z","author":{"@type":"Person","name":"Ahmaad Harvey","url":"https://theharveyeffect.com"},"image":"https://theharveyeffect.com/assets/images/Harvey%20poster.png","mainEntityOfPage":"https://theharveyeffect.com/blog/dynamic-broadcast-lower-thirds/","publisher":{"@type":"Person","name":"Ahmaad Harvey","url":"https://theharveyeffect.com"}}</script>
+</head>
+<body>
+  <nav class="site-nav" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="../../index">Home</a>
+      <a href="../../work">Work</a>
+      <a href="../../blog">Blog</a>
+      <a href="../../services">Services</a>
+      <a href="../../contact">Contact</a>
+    </div>
+  </nav>
+  <main>
+    <article class="post-article page-section-first">
+      <div class="post-header">
+        <p class="post-kicker">Motion Graphics</p>
+        <h1>Dynamic Broadcast Lower Thirds</h1>
+        <p class="post-meta">2026-08-16</p>
+      </div>
+      <div class="post-body"><p>**Lower Thirds** are graphics that display additional information to supplement video storytelling or sometimes ultimately explaining to audiences what they are even looking at. They provide a title safe and lower area of the screen form of communication. You will see them being used all of the time on the news or on your grandmothers favorite game show.<br>But have you ever wondered how they create these lower thirds that are adaptable to font size and positioning of text? It appears that even if it is a full paragraph of information, it stills fit in the box perfectly. Early in my creative years I often used Lower Third **MOGRTs** from Adobe Stock, but it would always be a limitation to how many characters I could use or the amount of information I could lay out. Here&#39;s a guide to how I create dynamic lower third **MOGRTs** for preproduced segments and even live segments.</p>
+<p>1. Open a **project** with your lower third graphic.<br>2. Add **3 Slider Control effects** to your text layer*(Make sure your text layer isn&#39;t a text box. This causes sizing issues later.)*<br>3. Name each box as follows: **Max Characters Per Line, Absolute Max Characters and Font Size**. <br>4. Navigate to **source text** to your text layer and **alt-click** on the stopwatch icon to activate expressions.<br>5. Enter this value into the expression:</p>
+<p>**\*\*\*\*Referencing your controllers\*\*\*\***<br>var maxChars = effect(&quot;Max Characters Per Line&quot;)(&quot;Slider&quot;);<br>var absoluteMaxTotal = effect(&quot;Absolute Max Characters&quot;)(&quot;Slider&quot;);<br>var targetFontSize = effect(&quot;Font Size&quot;)(&quot;Slider&quot;);</p>
+<p>var txt = value.substring(0, absoluteMaxTotal);<br>var words = txt.split(&quot; &quot;);<br>var currentLine = &quot;&quot;;<br>var finalResult = &quot;&quot;;<br>for (var i = 0; i &lt; words.length; i++) {</p>
+<p>if ((currentLine + words[i]).length &gt; maxChars) {<br> finalResult += currentLine.trim() + &quot;\\n&quot;;<br> currentLine = words[i] + &quot; &quot;;<br> } else {<br> currentLine += words[i] + &quot; &quot;;<br> }<br>}<br>finalResult += currentLine.trim();<br>var proportionalLeading = targetFontSize \* 1.2;</p>
+<p>style.setText(finalResult)<br> .setFontSize(targetFontSize)<br> .setLeading(proportionalLeading);</p>
+<p>&gt; *Now you should be able to use the slider controls to control the max characters per line, how many characters to fit in the base of your graphic and font size.*</p>
+<p>6\. Navigate to transform and then position\. **Alt-click** on the stopwatch to activate expressions again.<br>7\. Enter these values into the expression:<br>var subTextLayer = thisComp.layer(&quot;Sub-text Layer Name Here&quot;);</p>
+<p>&gt; *Make sure the sub-text layer&#39;s name is in the placeholder spot and exactly what the name of the layer is.*</p>
+<p>var subTextString = subTextLayer.text.sourceText.value.toString().trim();<br>var shiftAmount = 30;</p>
+<p>&gt; *The &quot;shiftAmount&quot; value will determine the amount of pixels the top layer text shifts.*</p>
+<p>var currentPos = value;<br>if (subTextString.length &gt; 0 &amp;&amp; subTextString !== &quot;&quot;) {<br> [currentPos[0], currentPos[1] - shiftAmount];<br>} else {<br> currentPos;<br>}</p>
+<p>&gt; *This calculates the direction of where the top layer text goes to.*</p>
+<p>Now you should have a fully functional standard **Broadcast lower third**, that has dynamic functionality. Granting the ability to control the length, size and amount of characters on lower thirds.</p>
+<p>**Comment** below if this is helpful any or if I missed a few details!</p></div>
+    </article>
+  </main>
+  <footer>© 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.</footer>
+  <script src="../../java/scripts.js" defer></script>
+</body>
+</html>
