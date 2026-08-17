@@ -1809,7 +1809,6 @@ footer {
   flex-wrap: wrap;
   gap: 0.7rem;
   justify-content: flex-end;
-  padding-bottom: 0.2rem;
 }
 
 .analytics-metrics {
