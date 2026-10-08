@@ -106,7 +106,7 @@ let activeCommentFilter = 'pending';
 function setPostFormMessage(message, isError = false) {
   if (!postFormMessage) return;
   postFormMessage.textContent = message;
-  postFormMessage.style.color = isError ? '#ffc7c7' : '';
+  postFormMessage.style.color = isError ? 'var(--danger)' : '';
 }
 
 const THUMB_MAX_DIMENSION = 1280;

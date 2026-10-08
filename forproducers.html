@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/forProducers.svg">
+  <meta charset="UTF-8">
+  <title>forProducers | Coming Soon from Ahmaad Harvey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECEFF2">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E1117">
+  <link rel="canonical" href="https://theharveyeffect.com/forproducers">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://theharveyeffect.com/forproducers">
+  <meta property="og:title" content="forProducers | Coming Soon">
+  <meta property="og:description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta property="og:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="forProducers | Coming Soon">
+  <meta name="twitter:description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta name="twitter:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20261008-min">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+  <style>
+:root{
+  --bg:#ECEFF2; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14181F; --muted:#59606C; --line:#D5DAE1;
+  --tally:#C8323F; --go:#2B8A53; --amber:#A57C2C; --focus:#3D6E99;
+  --logo-f:#E0333A; --logo-p:#2B9A5C;
+  --c-coral:#B4583F; --c-teal:#3F7F78; --c-violet:#6E5F96; --c-red:#C8323F; --c-amber:#A57C2C; --c-sky:#3D6E99; --c-green:#4C7A55; --c-slate:#6A6F7A; --c-indigo:#55586F;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C;
+  --tally:#E2525E; --go:#4CC27F; --amber:#D4A646; --focus:#7FA9D6; --logo-f:#FF4A4A; --logo-p:#3CC377; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C;
+  --tally:#E2525E; --go:#4CC27F; --amber:#D4A646; --focus:#7FA9D6; --logo-f:#FF4A4A; --logo-p:#3CC377; color-scheme:dark }
+.fp .wrap{max-width:1180px;margin-inline:auto}
+.fp h1,.fp h2,.fp h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+.fp h2{font-size:clamp(28px,4vw,42px);font-variation-settings:"wdth" 112;font-weight:800;letter-spacing:-.01em}
+.fp h3{font-size:20px;font-weight:700;font-variation-settings:"wdth" 105}
+.fp p{margin:0}
+.fp .eyebrow{font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fp .lede{color:var(--muted);max-width:60ch;font-size:17px}
+.fp .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.fp button{font:inherit;color:inherit;cursor:pointer}
+.fp :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.fp .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.fp .btn:hover{border-color:var(--muted)}
+.fp .btn.primary{background:var(--tally);border-color:var(--tally);color:#fff}
+.fp .btn.primary:hover{filter:brightness(1.08)}
+.fp .btn:disabled{opacity:.45;cursor:default}
+.fp kbd{font:600 11px/1 var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:3px 6px;background:var(--panel-2);color:var(--muted);white-space:nowrap}
+.fp section{padding-block:72px 0}
+.fp nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:20px;flex-wrap:wrap}
+.fp .brand{display:flex;align-items:center;gap:10px;font:800 20px/1 var(--display);font-variation-settings:"wdth" 110;letter-spacing:-.01em}
+.fp .brand svg{width:36px;height:36px}
+.fp nav ul{display:flex;gap:20px;list-style:none;margin:0;padding:0;flex-wrap:wrap;font-size:14px}
+.fp nav a{color:var(--muted);text-decoration:none}
+.fp nav a:hover{color:var(--ink)}
+.fp .hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:start;padding-block:32px 0}
+.fp .hero-copy{display:grid;gap:22px;padding-top:12px}
+.fp .hero h1{font-size:clamp(40px,5.4vw,64px);font-weight:900;font-variation-settings:"wdth" 118;letter-spacing:-.025em;line-height:.95}
+.fp .hero h1 em{font-style:normal;color:var(--tally)}
+.fp .facts{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.fp .facts span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--go);margin-right:8px;vertical-align:1px}
+.fp .cta-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.fp .flow{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(10,20,40,.35)}
+.fp .flow-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--line)}
+.fp .flow-head .t{font:800 19px/1.1 var(--display);font-variation-settings:"wdth" 108}
+.fp .flow-head .meta{font:12px/1.4 var(--mono);color:var(--muted);margin-top:4px}
+.fp .speed{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.fp .speed button{border:0;background:transparent;padding:4px 9px;font:600 12px var(--mono);color:var(--muted)}
+.fp .speed button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.fp .livebar{padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel-2);display:grid;gap:10px}
+.fp .live-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fp .tally{font:700 11px/1 var(--mono);letter-spacing:.12em;background:var(--tally);color:#fff;padding:5px 8px;border-radius:4px}
+.fp .tally.paused{background:var(--amber)}
+.fp .live-title{font:700 17px/1.2 var(--display);font-variation-settings:"wdth" 105;flex:1;min-width:0}
+.fp .drift{font:600 12px/1 var(--mono);padding:6px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.fp .drift.over{color:var(--tally)}
+.fp .drift.under{color:var(--focus)}
+.fp .drift.ok{color:var(--go)}
+.fp .prog{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.fp .prog i{display:block;height:100%;width:0;background:var(--go);transition:width .12s linear}
+.fp .prog.over i{background:var(--tally)}
+.fp .live-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fp .stat .k{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fp .stat .v{font:600 15px/1.5 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp .live-ctrl{display:flex;gap:6px;flex-wrap:wrap}
+.fp .live-ctrl .btn{padding:6px 10px;font-size:13px}
+.fp .segs{list-style:none;margin:0;padding:6px 0}
+.fp .seg{display:grid;grid-template-columns:28px 112px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 18px;border-left:4px solid transparent}
+.fp .seg .n{font:600 12px var(--mono);color:var(--muted)}
+.fp .chip{font:600 10.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:#fff;padding:5px 7px;border-radius:4px;justify-self:start;white-space:nowrap}
+.fp .seg .what{min-width:0}
+.fp .seg .what b{display:block;font-weight:600;font-size:14.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp .seg .what small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp .dur{display:flex;align-items:center;gap:4px}
+.fp .dur span{font:600 14px var(--mono);font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+.fp .dur button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font:600 14px/1 var(--mono);color:var(--muted);padding:0}
+.fp .dur button:hover{color:var(--ink);border-color:var(--muted)}
+.fp .seg.current{background:var(--panel-2);border-left-color:var(--tally)}
+.fp .seg.done{opacity:.55}
+.fp .seg .actual{font:12px var(--mono);color:var(--muted)}
+.fp .flow-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);font:13px var(--mono)}
+.fp .badge{font:600 12px/1 var(--mono);padding:6px 9px;border-radius:999px;color:#fff}
+.fp .badge.under{background:var(--c-sky)}
+.fp .badge.over{background:var(--tally)}
+.fp .badge.ok{background:var(--go)}
+.fp .report{padding:14px 18px;overflow-x:auto}
+.fp .report table{width:100%;border-collapse:collapse;font:13px var(--mono);font-variant-numeric:tabular-nums}
+.fp .report th{font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.fp .report td{padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.fp .report td.num,.fp .report th.num{text-align:right}
+.fp .pos{color:var(--tally)}
+.fp .neg{color:var(--focus)}
+.fp .hint{font-size:12.5px;color:var(--muted)}
+.fp .soon{display:inline-block;font:700 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--tally);padding:5px 8px;border-radius:4px;margin-right:8px;vertical-align:1px}
+.fp .soon.on-ink{background:var(--tally);margin:0}
+.fp .facts.quiet span::before{background:var(--muted)}
+.fp .kinds{display:flex;gap:6px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.fp .kinds button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+.fp .kinds button i{width:8px;height:8px;border-radius:50%;background:var(--k)}
+.fp .kinds button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fp .kinds button:disabled{opacity:.5;cursor:default}
+.fp .who{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fp .wcard{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--k);border-radius:12px;padding:20px;display:grid;gap:12px;align-content:start}
+.fp .wcard .eyebrow{color:var(--k)}
+.fp .wcard h3{font-size:21px}
+.fp .wcard p{font-size:14.5px;color:var(--muted)}
+.fp .wcard ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
+.fp .wcard li{padding-left:16px;position:relative}
+.fp .wcard li::before{content:"";position:absolute;left:0;top:.65em;width:7px;height:2px;background:var(--k)}
+.fp .wcard .btn{justify-self:start;margin-top:4px}
+.fp .wcard.active{box-shadow:0 0 0 1px var(--k)}
+.fp .arc-head{display:grid;gap:14px;margin-bottom:28px}
+.fp .stops{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;list-style:none;margin:0;padding:0;position:relative}
+.fp .stops::before{content:"";position:absolute;left:4%;right:4%;top:19px;height:2px;background:var(--line)}
+.fp .stop button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:8px;text-align:center;width:100%;padding-bottom:8px;position:relative}
+.fp .stop button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:8px}
+.fp .stop .dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:2px solid var(--line);font:700 13px var(--mono);color:var(--muted);transition:.15s}
+.fp .stop .lbl{font:700 14px/1.2 var(--display);font-variation-settings:"wdth" 100}
+.fp .stop .sub{font-size:12px;color:var(--muted);line-height:1.3}
+.fp .stop button[aria-selected="true"] .dot{background:var(--c);border-color:var(--c);color:#fff;transform:scale(1.08)}
+.fp .stop button:hover .dot{border-color:var(--c)}
+.fp .panel{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,32px);display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:clamp(20px,3vw,40px)}
+.fp .panel .copy{display:grid;gap:14px;align-content:start}
+.fp .panel .copy h3{font-size:26px}
+.fp .panel ul.ticks{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.fp .panel ul.ticks li{padding-left:20px;position:relative}
+.fp .panel ul.ticks li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:2px;background:var(--pc,var(--tally))}
+.fp .demo{background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
+.fp .demo-label{font:600 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fp .pills{display:flex;flex-wrap:wrap;gap:6px}
+.fp .pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:500}
+.fp .pill[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fp .qs{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.fp .qs li{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
+.fp .qs li small{display:block;font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.fp .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font:12px var(--mono)}
+.fp .cal .dow{color:var(--muted);text-align:center;font-size:10.5px;padding-bottom:2px}
+.fp .cal button{border:1px solid var(--line);background:var(--panel);border-radius:6px;aspect-ratio:1/0.82;padding:4px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font:12px var(--mono);min-width:0}
+.fp .cal button.has::after{content:"";width:100%;height:4px;border-radius:2px;background:var(--dc,var(--c-teal))}
+.fp .cal button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.fp .cal button.today{color:var(--tally);font-weight:700}
+.fp .cal .blank{visibility:hidden}
+.fp .tasks{display:grid;gap:6px;font-size:14px}
+.fp .task{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.fp .task input{accent-color:var(--go);width:16px;height:16px;flex:none}
+.fp .task.done span{text-decoration:line-through;color:var(--muted)}
+.fp .task small{margin-left:auto;font:11px var(--mono);color:var(--muted);white-space:nowrap}
+.fp .board-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fp .sw{width:24px;height:24px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);padding:0}
+.fp .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.fp canvas#board{width:100%;aspect-ratio:16/9;max-width:100%;background:#FBFBF9;border-radius:8px;border:1px solid var(--line);touch-action:none;cursor:crosshair;display:block}
+.fp .meta-row{display:flex;gap:8px;flex-wrap:wrap;font-size:13px}
+.fp .meta-row span{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.fp .risk{display:inline-flex;gap:4px}
+.fp .risk button{border:1px solid var(--line);background:var(--panel);border-radius:6px;font:600 11px var(--mono);padding:4px 8px;text-transform:uppercase}
+.fp .risk button[aria-pressed="true"][data-r="low"]{background:var(--go);color:#fff;border-color:var(--go)}
+.fp .risk button[aria-pressed="true"][data-r="medium"]{background:var(--amber);color:#fff;border-color:var(--amber)}
+.fp .risk button[aria-pressed="true"][data-r="high"]{background:var(--tally);color:#fff;border-color:var(--tally)}
+.fp .doc{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.fp .doc table{width:100%;border-collapse:collapse;font-size:13px;min-width:420px}
+.fp .doc th{font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+.fp .doc td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.fp .doc td[contenteditable]{cursor:text}
+.fp .doc td[contenteditable]:hover{background:var(--panel-2)}
+.fp .doc td.edited{box-shadow:inset 3px 0 0 var(--c-sky)}
+.fp .doc td.stale{box-shadow:inset 3px 0 0 var(--amber);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.fp .doc td.stale::after{content:"STALE";font:700 9px var(--mono);letter-spacing:.1em;color:var(--amber);margin-left:8px}
+.fp .doc-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.fp .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.fp .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.fp .search{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:9px 12px;font:14px var(--body);color:var(--ink)}
+.fp .files{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.fp .file{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.fp .file .ic{font:700 10px var(--mono);width:38px;text-align:center;padding:4px 0;border-radius:4px;color:#fff}
+.fp .file b{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp .file small{color:var(--muted);font-size:12px}
+.fp .file .tag{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.fp .file mark{background:color-mix(in srgb,var(--amber) 35%,transparent);color:inherit;border-radius:2px}
+.fp .empty{font-size:14px;color:var(--muted);padding:8px 2px}
+.fp .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,4vw,48px);align-items:start}
+.fp .script{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fp .script textarea{width:100%;min-height:230px;border:0;resize:vertical;padding:18px;font:15px/1.7 var(--mono);background:transparent;color:var(--ink);display:block}
+.fp .script textarea:focus{outline:none}
+.fp .script-bar{border-top:1px solid var(--line);padding:14px 18px;display:grid;gap:14px;background:var(--panel-2)}
+.fp .readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fp .ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px}
+.fp .ctl input[type=range]{flex:1;min-width:140px;accent-color:var(--tally)}
+.fp .ctl select{font:14px var(--mono);border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:4px 6px}
+.fp .fit{font-size:14px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel)}
+.fp .fit b{font-family:var(--mono)}
+.fp .fit.over{border-color:var(--tally)}
+.fp .fit.ok{border-color:var(--go)}
+.fp .keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-top:28px}
+.fp .key{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:14px;transition:background .15s,border-color .15s}
+.fp .key .combo{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.fp .key.hit{border-color:var(--tally);background:color-mix(in srgb,var(--tally) 10%,var(--panel))}
+.fp .key.hit kbd{color:var(--tally);border-color:var(--tally)}
+.fp .priv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:28px}
+.fp .priv div{background:var(--panel);padding:22px;display:grid;gap:8px;align-content:start}
+.fp .priv h3{font-size:18px}
+.fp .priv p{font-size:14.5px;color:var(--muted)}
+.fp .priv code{font:13px var(--mono);color:var(--ink)}
+.fp .get{margin-top:72px;background:var(--ink);color:var(--bg);border-radius:18px;padding:clamp(24px,5vw,56px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
+.fp .get h2{color:var(--bg)}
+.fp .get p{color:color-mix(in srgb,var(--bg) 70%,var(--ink));max-width:52ch;margin-top:12px}
+.fp .get .logo-big svg{width:clamp(110px,16vw,180px);height:auto;display:block}
+.fp .plats{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.fp .plat{border:1px solid color-mix(in srgb,var(--bg) 30%,var(--ink));border-radius:10px;padding:10px 14px;display:grid;gap:2px;min-width:140px}
+.fp .plat b{font:700 15px var(--display);font-variation-settings:"wdth" 105}
+.fp .plat small{font:12px var(--mono);opacity:.75}
+.fp footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;padding-top:28px}
+@media (max-width:900px){.fp .hero,.fp .panel,.fp .split{grid-template-columns:minmax(0,1fr)}
+.fp .priv{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fp .who{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fp .get{grid-template-columns:minmax(0,1fr)}
+.fp .get .logo-big{display:none}}
+@media (max-width:640px){.fp .stops{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:14px}
+.fp .stops::before{display:none}
+.fp .stop .sub{display:none}
+.fp .seg{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:10px 14px}
+.fp .seg .n{display:none}
+.fp .seg .chip{grid-row:1}
+.fp .seg .what{grid-column:1/-1;grid-row:2}
+.fp .seg .dur{grid-row:1;grid-column:2}
+.fp .live-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fp .priv{grid-template-columns:minmax(0,1fr)}
+.fp .who{grid-template-columns:minmax(0,1fr)}
+.fp .readout{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fp nav ul{display:none}}
+@media (prefers-reduced-motion:reduce){}
+.fp [hidden]{display:none!important}
+.fp section,.fp .get{scroll-margin-top:80px}
+.fp .brand{margin-bottom:-6px}
+
+  </style>
+</head>
+
+<body>
+  <nav class="site-nav reveal-up" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./home" data-nav-link>Home</a>
+      <a href="./work" data-nav-link>Work</a>
+      <a href="./blog" data-nav-link>Blog</a>
+      <a href="./services" data-nav-link>Services</a>
+      <a href="./contact" data-nav-link>Contact</a>
+      <a href="./forproducers" data-nav-link class="nav-feature is-active" aria-current="page">forProducers</a>
+    </div>
+  </nav>
+
+  <main class="fp">
+<header class="hero">
+  <div class="hero-copy">
+    <div class="brand"><span class="logo"><svg viewBox="0 0 2000 2000" version="1.1" xmlns="http://www.w3.org/2000/svg"> <g> <g transform="translate(-11.324757,-69.7826)"> <g transform="rotate(-3.2188358,1227.4515,1935.7198)"> <path style="color:#000000;fill:var(--logo-p);fill-opacity:1;" d="m 1434.1641,201.7793 c -35.1339,-0.34241 -70.0904,0.39237 -104.4942,1.29882 -79.4467,2.09323 -158.8714,5.00702 -238.2578,8.74219 l 2.3496,49.94531 c 79.0423,-3.71897 158.1244,-6.62092 237.2266,-8.70507 136.7377,-3.6027 275.1007,-3.01582 393.5195,50.76172 59.0452,26.8142 112.1497,67.1116 148.1172,119.0625 35.8102,51.72379 54.1036,116.38736 45.4375,177.08789 -7.0116,49.1118 -31.4464,96.11902 -65.707,134.05468 -34.3646,38.05074 -78.5609,67.74754 -126.4805,89.97266 -114.4176,53.06686 -272.072,42.51451 -392.6204,5.42578 l 8.0462,67.51563 c 132.7155,40.83214 279.6454,30.84094 405.6113,-27.58204 52.6682,-24.42748 102.5986,-57.58065 142.5508,-101.81835 40.0561,-44.35277 69.438,-99.84681 78.0976,-160.50196 10.7286,-75.14609 -11.5249,-151.51593 -53.8261,-212.61523 -42.144,-60.87221 -102.6542,-106.20045 -168.5528,-136.12696 -98.6015,-44.77791 -205.6159,-55.49036 -311.0175,-56.51757 z" /> <path style="color:#000000;fill:var(--logo-p);fill-opacity:1;" d="m 1140.8652,238.42383 -49.998,0.43945 15.1953,1724.65432 422.793,-5.4121 -128.1856,-1073.17972 -73.3072,-59.67671 145.2525,1083.57123 -316.9961,4.0586 z" /> <path style="fill:none;stroke:#2b2450;stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 1453.5528,710.59442 c -25.7895,-8.26438 -52.1111,-15.10926 -77.011,-25.75762 -24.9,-10.64835 -48.6702,-25.48751 -65.2881,-46.87073 -20.7921,-26.75441 -28.7423,-62.50312 -23.7092,-96.01099 5.0331,-33.50787 22.4677,-64.60631 46.691,-88.29891 29.2852,-28.64355 67.7088,-46.51815 107.2625,-57.17537 39.5538,-10.65722 80.563,-14.5551 121.3275,-18.59658 37.4405,-3.71193 75.2053,-7.57906 112.5988,-3.42083 37.3935,4.15823 74.917,17.05371 102.2915,42.86466 18.3887,17.33844 31.7325,40.59959 34.6647,65.70273 1.4662,12.55157 0.3233,25.44045 -3.6759,37.42786 -3.9992,11.9874 -10.88,23.04782 -20.1164,31.67223 -14.1835,13.24376 -33.375,20.27459 -52.6723,22.32066 -19.2972,2.04608 -38.8081,-0.57806 -57.7816,-4.64952 -26.4557,-5.67703 -53.2513,-14.23107 -80.0119,-10.23114 -13.3803,1.99996 -26.5105,7.32556 -36.337,16.62456 -4.9133,4.6495 -8.9516,10.25418 -11.5912,16.48242 -2.6395,6.22823 -3.8604,13.08192 -3.3006,19.82319 0.9837,11.84551 7.2396,22.5044 13.166,32.80788 5.9264,10.30347 11.8305,21.26675 11.9921,33.15194 0.164,12.06728 -5.9068,23.77543 -14.995,31.71588 -9.0882,7.94045 -20.9337,12.31597 -32.9244,13.68381 -23.9812,2.7357 -47.5941,-5.90032 -70.5795,-13.26613 z" /> </g> <g transform="translate(217.11244,4.9393761)"> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="M 877.55766,874.36756 C 838.09956,815.82663 786.50233,765.50745 726.99033,727.52976 658.12888,683.5857 577.857,656.16227 496.17701,654.99692 c -81.68,-1.16535 -164.50251,24.9324 -227.04569,77.48076 -43.06177,36.18021 -75.65924,83.76821 -98.82165,135.02079 -23.16241,51.25257 -37.21067,106.21154 -46.90937,161.61243 -24.683337,140.9961 -21.7111,285.1819 -18.7872,428.2924 3.32796,162.8874 6.49327,325.7781 9.4959,488.6718" /> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 98.139879,1923.4654 265.383191,1.4323 -10.03535,-491.2109 402.27865,-4.7433 -5.45015,-227.5577 -406.48251,4.3248" /> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 366.18304,1209.3378 c -16.30179,-60.3806 -4.80086,-127.6818 30.62686,-179.2225 21.1137,-30.71645 50.17421,-55.75171 83.1453,-73.1355 32.97108,-17.38379 69.77474,-27.18439 106.96397,-29.68446 74.37844,-5.00015 148.93857,19.25249 211.57413,59.67453 28.87622,18.63533 55.5519,40.67733 79.29688,65.52263" /> <path style="fill:var(--logo-f);fill-opacity:1;stroke:var(--logo-f);stroke-width:141.421;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 205.76807,1912.7272 -57.27565,-0.8276 0.007,-26.1044 c 0.004,-14.3574 -2.03051,-124.7458 -4.52063,-245.3075 -5.2285,-253.1421 -4.15955,-437.4628 2.90337,-500.6316 16.01468,-143.2309 42.06524,-231.6238 89.60931,-304.05588 20.47095,-31.18694 65.9457,-75.60007 95.25678,-93.03298 84.82062,-50.44749 192.73489,-59.30704 293.86714,-24.12591 87.12842,30.30958 165.06641,87.74732 225.24032,165.99471 7.49618,9.74772 28.67672,44.01199 47.06783,76.14284 l 33.43837,58.41972 -16.92205,8.0029 c -9.30714,4.4015 -18.19858,8.0028 -19.75877,8.0028 -1.56019,0 -10.67367,-7.1142 -20.25216,-15.8094 -37.5241,-34.06383 -95.35259,-67.34035 -147.11501,-84.65509 -148.25973,-49.59348 -301.80698,4.73888 -359.85683,127.33459 -16.70404,35.2773 -21.14919,53.7432 -22.97462,95.44 -1.22745,28.0377 -0.44783,42.0467 3.51018,63.0739 l 5.08809,27.0309 190.13179,-2.0012 190.13176,-2.0012 1.70557,40.7507 c 0.93805,22.4128 2.0828,61.4265 2.54392,86.6971 l 0.83835,45.9465 -8.59158,1.2965 c -4.72534,0.7131 -95.13364,2.0911 -200.90728,3.0623 -105.77367,0.9711 -192.3891,1.9856 -192.47877,2.2544 -0.0897,0.2687 2.03031,102.3121 4.71105,226.7629 2.68075,124.4508 4.97371,234.8655 5.09547,245.3661 l 0.22139,19.0919 -41.7193,-0.6452 c -22.94561,-0.3549 -67.49334,-1.0176 -98.99495,-1.4728 z" transform="translate(-9.830728,-15.45759)" /> <path style="color:#000000;fill:var(--logo-f);fill-opacity:1;" d="m 965.73047,980.76367 c -21.88841,14.68837 -63.79772,36.10513 -116.42439,55.55553 l 15.19113,45.5192 c 51.78448,-19.1391 97.77595,-28.6357 133.67662,-52.7271 z" /> <path style="fill:var(--logo-f);stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="M 867.2619,855.77567 972.05171,1038.2255" /> </g> </g> </g> </svg></span>forProducers</div>
+    <div class="eyebrow"><span class="soon">Coming soon</span> Desktop app for producers</div>
+    <h1>Run the show. <em>Not</em> the stopwatch.</h1>
+    <p class="lede">forProducers is for every kind of producer: broadcast, film, commercials, social and content. Build the flow, run it with drift tracking, and let the paperwork fill itself in from it.</p>
+    <div class="cta-row">
+      <button class="btn primary" id="heroRun">▶ Run this flow</button>
+      <a class="btn" href="#who" style="text-decoration:none">Who it's for</a>
+    </div>
+    <div class="facts"><span>Broadcast</span><span>Film</span><span>Commercial</span><span>Social &amp; content</span></div>
+    <div class="facts quiet"><span>Offline-first</span><span>No account</span><span>Linux · macOS · Windows</span><span>MIT licensed</span></div>
+    <p class="hint">The flow on the right works. Pick a production type, change a duration, then run it. During the run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
+  </div>
+
+  <div class="flow" id="flow" aria-label="Example rundown">
+    <div class="flow-head">
+      <div style="min-width:0">
+        <div class="eyebrow" style="margin-bottom:6px">The Flow</div>
+        <div class="t" id="flowTitle"></div>
+        <div class="meta" id="flowMeta"></div>
+      </div>
+      <div class="speed" role="group" aria-label="Demo clock speed">
+        <button data-speed="1" aria-pressed="false">1×</button>
+        <button data-speed="10" aria-pressed="true">10×</button>
+        <button data-speed="30" aria-pressed="false">30×</button>
+      </div>
+    </div>
+    <div class="kinds" role="group" aria-label="Production type" id="kinds"></div>
+    <div class="livebar" id="livebar" hidden>
+      <div class="live-top">
+        <span class="tally" id="tally">LIVE</span>
+        <span class="live-title" id="liveTitle"></span>
+        <span class="drift ok" id="drift">On time</span>
+      </div>
+      <div class="prog" id="prog"><i></i></div>
+      <div class="live-stats">
+        <div class="stat"><div class="k">Segment</div><div class="v" id="sTimer">0:00</div></div>
+        <div class="stat"><div class="k">Elapsed</div><div class="v" id="sElapsed">0:00</div></div>
+        <div class="stat"><div class="k" id="schedK">Scheduled</div><div class="v" id="sSched">7:00:00</div></div>
+        <div class="stat"><div class="k">Next</div><div class="v" id="sNext">—</div></div>
+      </div>
+      <div class="live-ctrl">
+        <button class="btn" id="bPrev">← Prev</button>
+        <button class="btn" id="bPause">Pause</button>
+        <button class="btn primary" id="bNext">Next ␣</button>
+        <button class="btn" id="bEnd">End</button>
+      </div>
+    </div>
+    <ol class="segs" id="segs"></ol>
+    <div class="report" id="report" hidden></div>
+    <div class="flow-foot">
+      <span>Total runtime <b id="total" class="mono">0:00</b> / <span id="allot"></span></span>
+      <span class="badge ok" id="overunder">On time</span>
+    </div>
+  </div>
+</header>
+
+<section id="who">
+  <div class="arc-head">
+    <div class="eyebrow">Built for every producer</div>
+    <h2>Same flow, whatever you're making</h2>
+    <p class="lede">A morning newscast, a short film, a 30-second spot and a weekly YouTube episode all come down to the same job: get the right pieces in the right order and land them on time. forProducers is built around that job, not around one industry.</p>
+  </div>
+  <div class="who" id="whoGrid"></div>
+  <p class="hint" style="margin-top:14px">Also at home on events, music videos, podcasts, livestreams and explainers. Brainstorm has a question set for "Something else."</p>
+</section>
+
+<section id="arc">
+  <div class="arc-head">
+    <div class="eyebrow">One app, the whole production</div>
+    <h2>From first idea to the archive</h2>
+    <p class="lede">Most teams stitch a show together from a spreadsheet, a shared doc, a whiteboard photo and somebody's phone timer. forProducers covers each stage in one place, and each stage feeds the next.</p>
+  </div>
+  <ol class="stops" role="tablist" id="stops"></ol>
+  <div class="panel" id="panel" role="tabpanel"></div>
+</section>
+
+<section id="script">
+  <div class="split">
+    <div style="display:grid;gap:16px">
+      <div class="eyebrow">Script panel</div>
+      <h2>Know the read time before the talent does</h2>
+      <p class="lede">Every segment has its own script. forProducers counts the words, applies the talent's pace and tells you whether the copy fits the slot. Try it: edit the script or move the pace.</p>
+    </div>
+    <div class="script">
+      <textarea id="scriptText" aria-label="Segment script" spellcheck="false">Good morning, and welcome to The Morning Desk. I'm Dana Reyes.
+
+And I'm Theo Marsh. Coming up this hour: the harbor rebuild hits a milestone, Mayor Okafor joins us live from City Hall on the new transit budget, and we'll go to Ridge County where crews are making progress on the fire line.
+
+Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
+      <div class="script-bar">
+        <div class="readout">
+          <div class="stat"><div class="k">Words</div><div class="v" id="wc">0</div></div>
+          <div class="stat"><div class="k">Read time</div><div class="v" id="rt">0:00</div></div>
+          <div class="stat"><div class="k">Slot</div><div class="v" id="slotV">0:20</div></div>
+        </div>
+        <div class="ctl"><label for="wpm">Pace</label><input type="range" id="wpm" min="110" max="220" step="5" value="160"><span class="mono" id="wpmV">160 wpm</span></div>
+        <div class="ctl"><label for="slot">Segment</label>
+          <select id="slot">
+            <option value="20">Intro · 0:20</option>
+            <option value="30">Intro · 0:30</option>
+            <option value="45">Intro · 0:45</option>
+            <option value="60">Intro · 1:00</option>
+          </select>
+        </div>
+        <div class="fit" id="fit"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="keys">
+  <div class="eyebrow" style="margin-bottom:14px">Keyboard-driven</div>
+  <h2>Your hands stay on the keys</h2>
+  <p class="lede" style="margin-top:14px">A control room or a set doesn't wait for a mouse. Every action has a shortcut, and every shortcut can be rebound in Settings. Press one now and watch it light up. <kbd>Ctrl</kbd> <kbd>Enter</kbd> runs the flow at the top of the page.</p>
+  <div class="keys" id="keyGrid"></div>
+</section>
+
+<section id="private">
+  <div class="eyebrow" style="margin-bottom:14px">Private by default</div>
+  <h2>Your show stays on your machine</h2>
+  <div class="priv">
+    <div><h3>No account</h3><p>Install it and start a show. There is no sign-up, no login and no subscription.</p></div>
+    <div><h3>Offline-first</h3><p>Projects live inside the app on your computer. A flaky studio connection can't take your rundown down.</p></div>
+    <div><h3>AI is optional</h3><p>Follow-up questions and draft proposals can run locally through Ollama (<code>llama3.2</code> by default), or through any OpenAI-compatible endpoint with your own key. Or leave it off.</p></div>
+    <div><h3>One file to move a show</h3><p>Package a whole project as a single <code>.fpshow</code> file and open it on another machine.</p></div>
+  </div>
+</section>
+
+<div class="get" id="get">
+  <div>
+    <span class="soon on-ink">Coming soon</span>
+    <h2 style="margin-top:14px">Plan, manage, and run productions with confidence.</h2>
+    <p>A clear, flexible flow for every segment, scene and shot, from the first idea to final sign-off. forProducers is on its way to Linux, macOS and Windows, free and open source under the MIT license.</p>
+    <div class="plats">
+      <div class="plat"><b>Linux</b><small>.deb · coming soon</small></div>
+      <div class="plat"><b>macOS</b><small>.dmg · coming soon</small></div>
+      <div class="plat"><b>Windows</b><small>installer · coming soon</small></div>
+    </div>
+  </div>
+  <div class="logo-big" id="logoBig"></div>
+</div>
+  </main>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+
+  <script>
+(()=>{
+const $=s=>document.querySelector(s);
+const COLORS={"Intro":"--c-coral","Interview":"--c-teal","Package":"--c-violet","Live Shot":"--c-red","Voice-Over":"--c-amber","Opening Graphic":"--c-sky","Closing Graphic":"--c-indigo","Break":"--c-slate","Custom":"--c-green"};
+const col=t=>`var(${COLORS[t]})`;
+const fmt=s=>{s=Math.round(Math.abs(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+const clock=s=>{s=Math.round(s);let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;const ap=h>=12?"PM":"AM";h=h%12||12;return `${h}:${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")} ${ap}`};
+
+/* logo */
+const logoHTML=document.querySelector(".brand .logo").innerHTML;
+$("#logoBig").innerHTML=logoHTML;
+
+/* ---------- rundown ---------- */
+const FLOWS={
+ broadcast:{name:"Broadcast",k:"--c-red",title:"The Morning Desk",meta:"Live newscast · Thu Oct 8 · Air 7:00:00 AM",air:7*3600,allot:720,step:15,speed:10,segs:[
+  {type:"Opening Graphic",title:"Show open",talent:"",loc:"GFX",dur:15},
+  {type:"Intro",title:"Welcome & headlines",talent:"Dana Reyes, Theo Marsh",loc:"Studio A",dur:60},
+  {type:"Package",title:"Harbor rebuild hits phase two",talent:"Priya Nand (reporter)",loc:"Pier 9",dur:150},
+  {type:"Interview",title:"Mayor Okafor on the transit budget",talent:"Dana Reyes, Mayor Okafor",loc:"Remote · City Hall",dur:210},
+  {type:"Break",title:"Commercial break",talent:"",loc:"",dur:120},
+  {type:"Live Shot",title:"Ridge fire: containment update",talent:"Luis Ortega",loc:"Ridge County",dur:105},
+  {type:"Closing Graphic",title:"Weekend forecast & close",talent:"Theo Marsh",loc:"Studio A",dur:20}]},
+ film:{name:"Film",k:"--c-violet",title:"Long Way Home",meta:"Short film · Festival cut · Target 14:00",air:null,allot:840,step:15,speed:30,segs:[
+  {type:"Opening Graphic",title:"Title card over dawn plate",talent:"",loc:"GFX",dur:20},
+  {type:"Custom",title:"Sc. 1 · Bus station, dawn",talent:"Mara Quinn, Eli Brandt",loc:"Union Depot",dur:150},
+  {type:"Voice-Over",title:"Mara reads her father's letter",talent:"Mara Quinn",loc:"ADR suite",dur:60},
+  {type:"Custom",title:"Sc. 2 · The diner",talent:"Mara Quinn, June Alvarez",loc:"Rosie's Diner",dur:195},
+  {type:"Custom",title:"Sc. 3 · Highway shoulder, flat tire",talent:"Mara Quinn, Eli Brandt",loc:"Route 9 pull-off",dur:165},
+  {type:"Custom",title:"Sc. 4 · The porch, the return",talent:"Mara Quinn, Walt Quinn",loc:"Farmhouse",dur:180},
+  {type:"Closing Graphic",title:"End credits",talent:"",loc:"GFX",dur:60}]},
+ commercial:{name:"Commercial",k:"--c-amber",title:"Riverside Coffee · “First Pour”",meta:"30-second broadcast spot · Client cut v3",air:null,allot:30,step:1,speed:1,segs:[
+  {type:"Custom",title:"Hook: 6 a.m. alarm, empty mug",talent:"Sam (talent)",loc:"Apartment set",dur:4},
+  {type:"Package",title:"Pour shot, steam macro",talent:"",loc:"Insert stage",dur:6},
+  {type:"Voice-Over",title:"“Roasted three blocks from you”",talent:"VO: Renee Lark",loc:"Booth",dur:8},
+  {type:"Custom",title:"Barista hand-off, first sip",talent:"Sam, Ola (barista)",loc:"Riverside, Main St",dur:6},
+  {type:"Closing Graphic",title:"Logo, tagline, legal super",talent:"",loc:"GFX",dur:4}]},
+ social:{name:"Social & content",k:"--c-green",title:"Studio Sessions · Ep. 14",meta:"YouTube episode + 3 Shorts cut-downs · Drops Fri",air:null,allot:480,step:15,speed:10,segs:[
+  {type:"Opening Graphic",title:"Cold-open hook (first 5 seconds)",talent:"Kaia Brooks",loc:"Home studio",dur:15},
+  {type:"Intro",title:"Host intro & sponsor read",talent:"Jordan Vale",loc:"Home studio",dur:45},
+  {type:"Interview",title:"Beat breakdown with Kaia",talent:"Jordan Vale, Kaia Brooks",loc:"Home studio",dur:180},
+  {type:"Package",title:"B-roll: making the beat",talent:"",loc:"Kaia's setup",dur:90},
+  {type:"Custom",title:"Q&A from the comments",talent:"Jordan Vale, Kaia Brooks",loc:"Home studio",dur:90},
+  {type:"Closing Graphic",title:"End screen & subscribe card",talent:"",loc:"GFX",dur:20}]},
+};
+let flowKey="broadcast", F=FLOWS[flowKey], segs=F.segs;
+const run={on:false,idx:0,t:0,actual:[],paused:false,speed:10,done:false};
+let lastFrame=0;
+const total=()=>segs.reduce((a,s)=>a+s.dur,0);
+const plannedStart=i=>segs.slice(0,i).reduce((a,s)=>a+s.dur,0);
+
+function renderSegs(){
+  const ol=$("#segs");
+  ol.innerHTML=segs.map((s,i)=>{
+    const cls=run.on? (i<run.idx?"done":i===run.idx?"current":""):(run.done?"done":"");
+    const act=run.actual[i]!=null?`<span class="actual">actual ${fmt(run.actual[i])}</span>`:"";
+    return `<li class="seg ${cls}" style="${i===run.idx&&run.on?"":`border-left-color:${col(s.type)}`}">
+      <span class="n">${String(i+1).padStart(2,"0")}</span>
+      <span class="chip" style="background:${col(s.type)}">${s.type}</span>
+      <span class="what"><b>${s.title}</b><small>${[s.talent,s.loc].filter(Boolean).join(" · ")||"&nbsp;"} ${act}</small></span>
+      <span class="dur"><button data-d="-1" data-i="${i}" aria-label="Shorten ${s.title} by ${F.step} seconds">−</button><span>${fmt(s.dur)}</span><button data-d="1" data-i="${i}" aria-label="Lengthen ${s.title} by ${F.step} seconds">+</button></span>
+    </li>`}).join("");
+  renderFoot(); renderDocs();
+}
+function renderFoot(){
+  const t=total(), d=t-F.allot;
+  $("#total").textContent=fmt(t);
+  const b=$("#overunder");
+  b.className="badge "+(d>0?"over":d<0?"under":"ok");
+  b.textContent=d===0?"On time":`${fmt(d)} ${d>0?"over":"under"}`;
+}
+$("#segs").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-d]"); if(!b)return;
+  const s=segs[+b.dataset.i]; s.dur=Math.max(F.step,Math.min(600,s.dur+ +b.dataset.d*F.step)); renderSegs();
+});
+function setSpeed(v){run.speed=v;document.querySelectorAll(".speed button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.speed===v))}
+document.querySelectorAll(".speed button").forEach(b=>b.addEventListener("click",()=>setSpeed(+b.dataset.speed)));
+function renderKinds(){
+  $("#kinds").innerHTML=Object.entries(FLOWS).map(([k,f])=>`<button data-k="${k}" style="--k:var(${f.k})" aria-pressed="${k===flowKey}" ${run.on?"disabled":""}><i></i>${f.name}</button>`).join("");
+  document.querySelectorAll(".wcard").forEach(c=>c.classList.toggle("active",c.dataset.k===flowKey));
+}
+function setFlow(k){
+  if(run.on)return;
+  flowKey=k;F=FLOWS[k];segs=F.segs;run.done=false;run.actual=[];
+  for(const key in edits)delete edits[key];
+  $("#flowTitle").textContent=F.title;$("#flowMeta").textContent=F.meta+" · Allotted "+fmt(F.allot);$("#allot").textContent=fmt(F.allot);
+  $("#report").hidden=true;$("#segs").hidden=false;$("#heroRun").textContent="▶ Run this flow";
+  setSpeed(F.speed);renderKinds();renderSegs();
+}
+$("#kinds").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(b)setFlow(b.dataset.k)});
+const WHO=[
+ ["broadcast","Broadcast & live","News, studio shows, sports and live events where the clock never stops.",["Live mode with drift on every segment","Live shots, packages, SOTs, breaks","Mic sheets and production orders from the rundown"]],
+ ["film","Film","Shorts, features and documentaries, planned scene by scene.",["A storyboard whiteboard for every scene","Beat, emotion and risk tags on each frame","Full view to run a cut or table read one scene at a time"]],
+ ["commercial","Commercial & brand","Spots and branded content where every second is paid for.",["Second-by-second timing against a 15, 30 or 60","Brainstorm asks about brand mandatories and the call to action","Creative Brief and Production Budget from the flow"]],
+ ["social","Social & content","YouTube episodes, Shorts, podcasts and livestreams on a weekly cadence.",["Plan the hook, sponsor read and end screen","Templates for the show you make every week","A calendar of drop days and shoot tasks"]],
+];
+$("#whoGrid").innerHTML=WHO.map(([k,h,p,l])=>`<div class="wcard" data-k="${k}" style="--k:var(${FLOWS[k].k})"><div class="eyebrow">${FLOWS[k].title}</div><h3>${h}</h3><p>${p}</p><ul>${l.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn" data-k="${k}">Load this flow ↑</button></div>`).join("");
+$("#whoGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(!b)return;if(run.on)endRun();setFlow(b.dataset.k);$("#flow").scrollIntoView({behavior:"smooth",block:"center"})});
+
+function driftNow(){
+  let d=0;
+  for(let i=0;i<run.idx;i++) d+=run.actual[i]-segs[i].dur;
+  if(run.on) d+=Math.max(0,run.t-segs[run.idx].dur);
+  return d;
+}
+function elapsed(){let e=0;for(let i=0;i<run.idx;i++)e+=run.actual[i];return e+(run.on?run.t:0)}
+function renderLive(){
+  if(!run.on)return;
+  const s=segs[run.idx], over=run.t>s.dur;
+  $("#liveTitle").textContent=`${run.idx+1}. ${s.title}`;
+  $("#prog").classList.toggle("over",over);
+  $("#prog i").style.width=Math.min(100,run.t/s.dur*100)+"%";
+  $("#sTimer").textContent=`${fmt(run.t)} / ${fmt(s.dur)}`;
+  $("#sElapsed").textContent=fmt(elapsed());
+  $("#schedK").textContent=F.air!=null?"Scheduled":"Planned in";
+  $("#sSched").textContent=F.air!=null?clock(F.air+plannedStart(run.idx)).replace(/ [AP]M/,""):fmt(plannedStart(run.idx));
+  $("#sNext").textContent=segs[run.idx+1]?segs[run.idx+1].title:"End of show";
+  const d=driftNow(), dr=$("#drift");
+  dr.className="drift "+(Math.abs(d)<1?"ok":d>0?"over":"under");
+  dr.textContent=Math.abs(d)<1?"On time":`${d>0?"+":"−"}${fmt(d)} ${d>0?"over":"under"}`;
+  const tl=$("#tally"); tl.textContent=run.paused?"PAUSED":"LIVE"; tl.classList.toggle("paused",run.paused);
+  $("#bPause").textContent=run.paused?"Resume":"Pause";
+  $("#bPrev").disabled=run.idx===0;
+}
+function tick(ts){
+  if(!run.on)return;
+  if(lastFrame&&!run.paused) run.t+=(ts-lastFrame)/1000*run.speed;
+  lastFrame=ts; renderLive(); requestAnimationFrame(tick);
+}
+function startRun(){
+  run.on=true;run.idx=0;run.t=0;run.actual=[];run.paused=false;run.done=false;lastFrame=0;
+  $("#livebar").hidden=false;$("#report").hidden=true;$("#segs").hidden=false;
+  $("#heroRun").textContent="■ End the run";
+  renderKinds();renderSegs();requestAnimationFrame(tick);
+}
+function next(){
+  if(!run.on)return;
+  run.actual[run.idx]=run.t;
+  if(run.idx>=segs.length-1){endRun();return}
+  run.idx++;run.t=0;renderSegs();
+}
+function prev(){
+  if(!run.on||run.idx===0)return;
+  run.idx--;run.t=run.actual[run.idx]||0;run.actual.length=run.idx;renderSegs();
+}
+function endRun(){
+  if(!run.on)return;
+  if(run.actual[run.idx]==null) run.actual[run.idx]=run.t;
+  run.on=false;run.done=true;
+  $("#livebar").hidden=true;$("#heroRun").textContent="▶ Run it again";renderKinds();
+  showReport();
+}
+function showReport(){
+  let tp=0,ta=0;
+  const rows=segs.map((s,i)=>{
+    const a=run.actual[i]; tp+=s.dur;
+    if(a==null)return `<tr><td>${i+1}. ${s.title}</td><td class="num">${fmt(s.dur)}</td><td class="num">—</td><td class="num">skipped</td></tr>`;
+    ta+=a;const d=a-s.dur;
+    return `<tr><td>${i+1}. ${s.title}</td><td class="num">${fmt(s.dur)}</td><td class="num">${fmt(a)}</td><td class="num ${d>0.5?"pos":d<-0.5?"neg":""}">${Math.abs(d)<0.5?"0:00":(d>0?"+":"−")+fmt(d)}</td></tr>`}).join("");
+  const d=ta-tp;
+  const r=$("#report");
+  r.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <div><div class="eyebrow">Run report</div><div style="font:700 17px var(--display);margin-top:4px">${Math.abs(d)<0.5?"Right on time.":`Finished ${fmt(d)} ${d>0?"over":"under"}.`}</div></div>
+    <button class="btn" id="backToFlow">Back to the rundown</button></div>
+    <table><thead><tr><th>Segment</th><th class="num">Planned</th><th class="num">Actual</th><th class="num">Diff</th></tr></thead><tbody>${rows}</tbody>
+    <tfoot><tr><td><b>Total</b></td><td class="num"><b>${fmt(tp)}</b></td><td class="num"><b>${fmt(ta)}</b></td><td class="num ${d>0.5?"pos":d<-0.5?"neg":""}"><b>${Math.abs(d)<0.5?"0:00":(d>0?"+":"−")+fmt(d)}</b></td></tr></tfoot></table>
+    <p class="hint" style="margin-top:10px">In the app, every report is saved to the Library next to that day's rundown.</p>`;
+  r.hidden=false;$("#segs").hidden=true;
+  $("#backToFlow").onclick=()=>{r.hidden=true;$("#segs").hidden=false;run.done=false;run.actual=[];renderSegs()};
+}
+$("#heroRun").onclick=()=>run.on?endRun():startRun();
+$("#bNext").onclick=next;$("#bPrev").onclick=prev;$("#bEnd").onclick=endRun;
+$("#bPause").onclick=()=>{run.paused=!run.paused;renderLive()};
+
+/* ---------- arc ---------- */
+const STAGES=[
+ {k:"Brainstorm",sub:"Scope it",c:"--c-violet"},
+ {k:"Plan",sub:"Schedule it",c:"--c-teal"},
+ {k:"Storyboard",sub:"Picture it",c:"--c-coral"},
+ {k:"Paperwork",sub:"Document it",c:"--c-sky"},
+ {k:"Run live",sub:"Run it",c:"--c-red"},
+ {k:"Archive",sub:"Keep it",c:"--c-green"},
+];
+let stage=0;
+$("#stops").innerHTML=STAGES.map((s,i)=>`<li class="stop" style="--c:var(${s.c})"><button role="tab" id="tab${i}" aria-selected="${i===0}" data-s="${i}"><span class="dot">${i+1}</span><span class="lbl">${s.k}</span><span class="sub">${s.sub}</span></button></li>`).join("");
+$("#stops").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(b)setStage(+b.dataset.s)});
+$("#stops").addEventListener("keydown",e=>{
+  if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
+  e.preventDefault();e.stopPropagation();
+  setStage((stage+(e.key==="ArrowRight"?1:5))%6);$("#tab"+stage).focus();
+});
+function setStage(i){
+  stage=i;
+  document.querySelectorAll("#stops button").forEach((b,j)=>b.setAttribute("aria-selected",j===i));
+  const p=$("#panel");p.style.setProperty("--pc",`var(${STAGES[i].c})`);p.setAttribute("aria-labelledby","tab"+i);
+  p.innerHTML=PANELS[i]();INIT[i]&&INIT[i]();
+}
+
+const QS={
+ Show:[["Audience","Who is watching at 7 a.m., and what do they already know?"],["Single takeaway","If a viewer remembers one thing from this hour, what is it?"],["Transitions","How does the package hand off to the live interview?"],["Risk plan","What do we cut if the remote shot drops?"]],
+ Commercial:[["Call to action","What exactly should the viewer do after 30 seconds?"],["Brand mandatories","Which logos, legal lines and colors must appear, and when?"],["Single takeaway","What is the one claim this spot has to land?"],["Risk plan","Which shot is hardest to get, and what's the fallback?"]],
+ Film:[["Protagonist","Whose story is this, and what do they want?"],["Obstacle","What stands in their way, and how do we show it?"],["Viewer value","Why would someone choose to sit through this?"],["Risk plan","Which location or permit could slip the schedule?"]],
+ "Something else":[["Format","Event, music video or explainer: what does done look like?"],["Audience","Who is this for, and where will they watch it?"],["Single takeaway","What should someone say about it afterwards?"],["Call to action","What happens next for the viewer?"]],
+};
+let qType="Show";
+const PANELS=[
+()=>`<div class="copy"><div class="eyebrow">01 · Brainstorm</div><h3>Questions a seasoned producer would ask</h3>
+  <p class="lede" style="font-size:15px">Pick what you're making and forProducers asks the right questions for it, at the flow level or per segment.</p>
+  <ul class="ticks"><li>Separate question sets for shows, commercials, films and everything else</li><li>Optional AI follow-ups written from your answers so far</li><li><b>Apply</b> turns answers into real segments, talent, locations, tasks, storyboard beats and notes</li></ul></div>
+  <div class="demo"><div class="demo-label">What are you making?</div>
+  <div class="pills" id="qTypes">${Object.keys(QS).map(k=>`<button class="pill" aria-pressed="${k===qType}">${k}</button>`).join("")}</div>
+  <ul class="qs" id="qList"></ul></div>`,
+()=>`<div class="copy"><div class="eyebrow">02 · Plan</div><h3>The Flow, and a calendar to hang it on</h3>
+  <p class="lede" style="font-size:15px">The flow at the top of this page is the Flow: a rundown, shot list or episode plan. The Production Planner puts every shoot, deadline and air date on a month view.</p>
+  <ul class="ticks"><li>Color-coded segments with talent, locations, B-roll tags (B-ROLL, GFX, LOWER THIRD, SOT, VO, PROPS), notes and script</li><li>Arm a person or location in the sidebar, then click segments to assign them</li><li>Tasks on any day, optionally linked to a segment</li><li>Save a rundown to a date with <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd>; it's filed in the Library for you</li><li>Templates, unlimited undo and autosave</li></ul></div>
+  <div class="demo"><div class="demo-label">Production Planner · October 2026</div><div class="cal" id="cal"></div><div class="tasks" id="tasks"></div></div>`,
+()=>`<div class="copy"><div class="eyebrow">03 · Storyboard</div><h3>A whiteboard for every segment</h3>
+  <p class="lede" style="font-size:15px">Sketch frames with a pressure-sensitive pen, marker and highlighter. Give each frame its scene direction so the crew knows the intent as well as the picture.</p>
+  <ul class="ticks"><li>Frames with a strip view, duplicate and undo</li><li>Scene title, stage description, narrative beat, emotion and a producer risk tag</li><li>Export frames to PNG or the whole board to PDF</li><li>Jump from a frame straight to its segment in the Flow</li></ul></div>
+  <div class="demo"><div class="demo-label">Segment 4 · Frame 1 — draw something</div>
+  <div class="board-tools" id="tools">
+    <button class="pill" data-tool="pen" aria-pressed="true">Pen</button><button class="pill" data-tool="marker" aria-pressed="false">Marker</button><button class="pill" data-tool="hi" aria-pressed="false">Highlighter</button>
+    <span style="width:8px"></span>
+    ${["#1A1D24","#C8323F","#3F7F78","#3D6E99","#A57C2C"].map((c,i)=>`<button class="sw" data-c="${c}" style="background:${c}" aria-label="Color ${c}" aria-pressed="${i===0}"></button>`).join("")}
+    <button class="btn" id="clr" style="margin-left:auto;padding:4px 10px;font-size:12px">Clear</button></div>
+  <canvas id="board" width="960" height="540"></canvas>
+  <div class="meta-row"><span>Beat: <b>Mayor dodges the fare question</b></span><span>Emotion: <b>Tension</b></span></div>
+  <div class="meta-row" style="align-items:center">Producer risk <span class="risk" id="risk" style="border:0;padding:0;background:none"><button data-r="low" aria-pressed="false">low</button><button data-r="medium" aria-pressed="true">medium</button><button data-r="high" aria-pressed="false">high</button></span></div></div>`,
+()=>`<div class="copy"><div class="eyebrow">04 · Paperwork</div><h3>Paperwork that fills itself in</h3>
+  <p class="lede" style="font-size:15px">Production docs are generated live from the Flow. Edit any cell by hand. If the Flow changes later, your edited cells are flagged stale so nothing quietly drifts out of date.</p>
+  <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved rundown; print or save to the Library</li></ul>
+  <p class="hint">Try it: click a cell in the order and type over it. Then change that segment's duration in the flow at the top, or use the button below.</p></div>
+  <div class="demo"><div class="doc-tabs"><span class="pill" aria-pressed="true">Production Order</span><span class="pill">Mic Sheet</span><span class="pill">Memo</span><span class="pill">Budget</span></div>
+  <div class="doc"><table><thead><tr><th>#</th><th>Segment</th><th>Talent</th><th>Dur</th></tr></thead><tbody id="docBody"></tbody></table></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" id="bump">Change the flow: lengthen segment 4</button>
+  <div class="legend"><span><i style="background:var(--c-sky)"></i>Edited by hand</span><span><i style="background:var(--amber)"></i>Stale: flow changed since</span></div></div></div>`,
+()=>`<div class="copy"><div class="eyebrow">05 · Run live</div><h3>Drift tracking while you're live or rolling</h3>
+  <p class="lede" style="font-size:15px">A live bar sits on top of the rundown with the current segment, its timer, total elapsed, what's next, the scheduled time and the drift. The rundown stays editable while the clock runs.</p>
+  <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-show</li><li><b>Film / Full view</b> shows one segment at a time, full screen</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
+  <div><button class="btn primary" id="runFromArc">▶ Run the flow at the top</button></div></div>
+  <div class="demo"><div class="demo-label">How drift reads</div>
+  <div class="qs" style="display:grid;gap:8px">
+   <div class="task"><span class="drift ok">On time</span><span>Every finished segment hit its mark</span></div>
+   <div class="task"><span class="drift over">+0:42 over</span><span>The interview ran long. Trim the live shot or drop the forecast.</span></div>
+   <div class="task"><span class="drift under">−0:18 under</span><span>The package came in short. You have time to fill.</span></div>
+  </div>
+  <p class="hint">Drift adds up what finished segments ran over or under, plus how far the current segment is past its slot. You see the problem while there's still time to fix it.</p></div>`,
+()=>`<div class="copy"><div class="eyebrow">06 · Archive</div><h3>A library you never have to organize</h3>
+  <p class="lede" style="font-size:15px">Projects are named after the show. Each saved date gets its own folder of rundowns, docs, images and run reports. You never manage files yourself.</p>
+  <ul class="ticks"><li>Full-text search across rundowns and saved docs</li><li>Views by person, location, tag and project, plus Recent and This week</li><li>Version history: preview and restore earlier saves of any date</li><li>Mark a show <b>wrapped</b> to lock it once it airs; Trash with restore</li></ul></div>
+  <div class="demo"><div class="pills" id="libViews">${["Recent","This week","Person","Location","Tag","Trash"].map((v,i)=>`<button class="pill" aria-pressed="${i===0}">${v}</button>`).join("")}</div>
+  <input class="search" id="libQ" type="search" placeholder="Search rundowns and docs, e.g. okafor" aria-label="Search the library">
+  <ul class="files" id="files"></ul></div>`,
+];
+const LIB=[
+ {k:"RUN",c:"--c-teal",t:"The Morning Desk · Oct 8",s:"Rundown · 7 segments · Dana Reyes, Theo Marsh, Mayor Okafor",tag:"today",w:"recent week"},
+ {k:"DOC",c:"--c-sky",t:"Production Order · Oct 8",s:"The Morning Desk · Mayor Okafor, City Hall remote",tag:"edited",w:"recent week"},
+ {k:"RPT",c:"--c-red",t:"Run report · Oct 7",s:"The Morning Desk · finished +0:42 over",tag:"wrapped",w:"recent week"},
+ {k:"DOC",c:"--c-sky",t:"Mic Assignment Sheet · Oct 7",s:"Dana Reyes (lav 1), Theo Marsh (lav 2), Luis Ortega (RF)",tag:"wrapped",w:"week"},
+ {k:"IMG",c:"--c-coral",t:"Storyboard · Harbor rebuild",s:"6 frames · Pier 9 · risk: medium",tag:"package",w:"week"},
+ {k:"DOC",c:"--c-sky",t:"Creative Brief · Riverside Coffee spot",s:"Commercial · 30s · brand mandatories, call to action",tag:"client",w:"recent"},
+ {k:"IMG",c:"--c-coral",t:"Storyboard · Long Way Home, Sc. 2",s:"Film · Rosie's Diner · 9 frames · risk: high",tag:"film",w:"week"},
+ {k:"RUN",c:"--c-teal",t:"Studio Sessions · Ep. 14",s:"YouTube episode · Jordan Vale, Kaia Brooks · drops Fri",tag:"social",w:"recent week"},
+ {k:"RUN",c:"--c-teal",t:"Ridge County Fire special · Sep 29",s:"Rundown · Luis Ortega · Ridge County",tag:"wrapped",w:""},
+];
+let libView="Recent";
+const INIT={
+ 0(){
+  const draw=()=>{$("#qList").innerHTML=QS[qType].map(([h,q])=>`<li><small>${h}</small>${q}</li>`).join("")+`<li style="border-style:dashed;color:var(--muted)"><small>AI follow-up · optional</small>Written from your answers so far, by a local model or your own endpoint.</li>`};
+  draw();
+  $("#qTypes").onclick=e=>{const b=e.target.closest("button");if(!b)return;qType=b.textContent;document.querySelectorAll("#qTypes button").forEach(x=>x.setAttribute("aria-pressed",x===b));draw()};
+ },
+ 1(){
+  const days={3:[["Scout Pier 9 for harbor package",1,"Seg 3"]],6:[["Book City Hall remote truck",1,"Seg 4"],["Confirm Mayor Okafor's office",1,"Seg 4"]],7:[["Rundown saved · Morning Desk",1,""],["Mic sheet out to audio",1,""]],8:[["Rundown saved · Morning Desk",1,""],["Lower thirds to GFX",1,"Seg 4"],["Check Ridge County live shot",0,"Seg 6"],["Talent call 5:30 AM",0,""]],9:[["Rundown draft · Morning Desk",0,""]],14:[["Riverside Coffee shoot",0,""],["Pick up props: mugs, signage",0,""]],22:[["Ridge fire follow-up package",0,""]]};
+  const col2={7:"--c-red",8:"--c-red",14:"--c-violet"};
+  let sel=8;
+  const first=new Date(2026,9,1).getDay(), n=31;
+  const drawCal=()=>{
+   $("#cal").innerHTML=["S","M","T","W","T","F","S"].map(d=>`<span class="dow">${d}</span>`).join("")+
+    Array.from({length:first},()=>`<span class="blank"></span>`).join("")+
+    Array.from({length:n},(_,i)=>{const d=i+1;return `<button class="${days[d]?"has":""} ${d===8?"today":""}" style="--dc:var(${col2[d]||"--c-teal"})" aria-pressed="${d===sel}" data-d="${d}" aria-label="October ${d}${days[d]?", "+days[d].length+" items":""}">${d}</button>`}).join("");
+   const t=days[sel]||[];
+   $("#tasks").innerHTML=`<div class="demo-label" style="margin-top:4px">Oct ${sel}${sel===8?" · today":""}</div>`+(t.length?t.map((x,j)=>`<label class="task ${x[1]?"done":""}"><input type="checkbox" data-j="${j}" ${x[1]?"checked":""}><span>${x[0]}</span>${x[2]?`<small>${x[2]}</small>`:""}</label>`).join(""):`<div class="empty">Nothing booked. In the app, click a day to add tasks.</div>`);
+  };
+  drawCal();
+  $("#cal").onclick=e=>{const b=e.target.closest("button[data-d]");if(b){sel=+b.dataset.d;drawCal()}};
+  $("#tasks").onchange=e=>{const j=e.target.dataset.j;if(j!=null){days[sel][j][1]=e.target.checked?1:0;drawCal()}};
+ },
+ 2(){
+  const cv=$("#board"),cx=cv.getContext("2d");let tool="pen",color="#1A1D24",down=false,last=null;
+  const seed=()=>{cx.fillStyle="#FBFBF9";cx.fillRect(0,0,960,540);cx.strokeStyle="#C9CDD4";cx.lineWidth=2;cx.setLineDash([8,8]);cx.strokeRect(40,40,880,460);cx.setLineDash([]);
+   cx.strokeStyle="#55586F";cx.lineWidth=4;cx.lineCap="round";
+   cx.beginPath();cx.arc(300,230,46,0,7);cx.stroke();cx.beginPath();cx.moveTo(220,420);cx.quadraticCurveTo(300,290,380,420);cx.stroke();
+   cx.beginPath();cx.arc(660,230,46,0,7);cx.stroke();cx.beginPath();cx.moveTo(580,420);cx.quadraticCurveTo(660,290,740,420);cx.stroke();
+   cx.fillStyle="#3F7F78";cx.fillRect(220,440,520,36);cx.fillStyle="#fff";cx.font="600 20px monospace";cx.fillText("MAYOR OKAFOR · CITY HALL",240,465);
+   cx.fillStyle="#6A6F7A";cx.font="18px monospace";cx.fillText("2-SHOT · WIDE",56,74)};
+  seed();
+  const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*960,(e.clientY-r.top)/r.height*540]};
+  cv.onpointerdown=e=>{down=true;last=pos(e);cv.setPointerCapture(e.pointerId)};
+  cv.onpointermove=e=>{if(!down)return;const p=pos(e);const pr=e.pressure&&e.pointerType==="pen"?e.pressure:0.6;
+   cx.globalAlpha=tool==="hi"?0.25:1;cx.strokeStyle=tool==="hi"?"#F2C94C":color;cx.lineCap="round";cx.lineJoin="round";
+   cx.lineWidth=tool==="pen"?2+pr*6:tool==="marker"?12:28;cx.beginPath();cx.moveTo(...last);cx.lineTo(...p);cx.stroke();cx.globalAlpha=1;last=p};
+  cv.onpointerup=cv.onpointercancel=()=>{down=false};
+  $("#tools").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+   if(b.dataset.tool){tool=b.dataset.tool;document.querySelectorAll("#tools [data-tool]").forEach(x=>x.setAttribute("aria-pressed",x===b))}
+   if(b.dataset.c){color=b.dataset.c;document.querySelectorAll("#tools [data-c]").forEach(x=>x.setAttribute("aria-pressed",x===b))}
+   if(b.id==="clr")seed()};
+  $("#risk").onclick=e=>{const b=e.target.closest("button");if(b)document.querySelectorAll("#risk button").forEach(x=>x.setAttribute("aria-pressed",x===b))};
+ },
+ 3(){renderDocs();
+  $("#bump").onclick=()=>{segs[3].dur+=F.step*2;renderSegs()};
+  $("#docBody").addEventListener("input",e=>{const td=e.target.closest("td[data-f]");if(!td)return;
+   const i=+td.dataset.i,f=td.dataset.f;edits[i+f]={val:td.textContent,src:srcVal(i,f)};td.classList.add("edited");td.classList.remove("stale")});
+ },
+ 4(){$("#runFromArc").onclick=()=>{document.getElementById("flow").scrollIntoView({behavior:"smooth",block:"center"});if(!run.on)startRun()}},
+ 5(){
+  const draw=()=>{const q=$("#libQ").value.trim().toLowerCase();
+   let items=LIB.filter(x=>libView==="Recent"?x.w.includes("recent"):libView==="This week"?x.w.includes("week"):libView==="Trash"?false:true);
+   if(q)items=LIB.filter(x=>(x.t+" "+x.s+" "+x.tag).toLowerCase().includes(q));
+   const hl=s=>q?s.replace(new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"),"<mark>$1</mark>"):s;
+   $("#files").innerHTML=items.length?items.map(x=>`<li class="file"><span class="ic" style="background:var(${x.c})">${x.k}</span><span style="min-width:0"><b>${hl(x.t)}</b><small>${hl(x.s)}</small></span><span class="tag">${x.tag}</span></li>`).join(""):`<li class="empty">${libView==="Trash"&&!q?"Trash is empty.":"No matches. Try “okafor” or “wrapped”."}</li>`};
+  draw();$("#libQ").oninput=draw;
+  $("#libViews").onclick=e=>{const b=e.target.closest("button");if(!b)return;libView=b.textContent;$("#libQ").value="";document.querySelectorAll("#libViews button").forEach(x=>x.setAttribute("aria-pressed",x===b));draw()};
+ },
+};
+const edits={};
+const srcVal=(i,f)=>f==="dur"?fmt(segs[i].dur):(segs[i].talent||"—");
+function renderDocs(){
+  const tb=document.getElementById("docBody");if(!tb)return;
+  if(tb.contains(document.activeElement))return;
+  tb.innerHTML=segs.map((s,i)=>{
+   const cell=f=>{const e=edits[i+f];const cur=srcVal(i,f);const cls=e?(e.src!==cur?"stale":"edited"):"";
+     return `<td contenteditable="plaintext-only" spellcheck="false" data-i="${i}" data-f="${f}" class="${cls} ${f==="dur"?"mono":""}">${e?e.val:cur}</td>`};
+   return `<tr><td class="mono">${i+1}</td><td>${s.title}</td>${cell("talent")}${cell("dur")}</tr>`}).join("");
+}
+document.addEventListener("focusout",e=>{if(e.target.closest&&e.target.closest("#docBody"))setTimeout(renderDocs,0)});
+
+/* ---------- script timer ---------- */
+function script(){
+  const w=($("#scriptText").value.match(/\S+/g)||[]).length, wpm=+$("#wpm").value, slot=+$("#slot").value;
+  const sec=w/wpm*60;
+  $("#wc").textContent=w;$("#rt").textContent=fmt(sec);$("#wpmV").textContent=wpm+" wpm";$("#slotV").textContent=fmt(slot);
+  const need=Math.ceil(w/slot*60), f=$("#fit"), d=sec-slot;
+  if(Math.abs(d)<1.5){f.className="fit ok";f.innerHTML=`Fits the slot at <b>${wpm} wpm</b>.`}
+  else if(d>0){f.className="fit over";f.innerHTML=`Runs <b>${fmt(d)}</b> long. To fit ${fmt(slot)}, the talent would need <b>${need} wpm</b>${need>200?", which is too fast. Cut about <b>"+Math.ceil(w-slot/60*wpm)+" words</b>.":"."}`}
+  else{f.className="fit ok";f.innerHTML=`<b>${fmt(d)}</b> to spare at ${wpm} wpm. Room for about <b>${Math.floor((slot-sec)/60*wpm)}</b> more words.`}
+}
+["input","change"].forEach(ev=>["#scriptText","#wpm","#slot"].forEach(s=>$(s).addEventListener(ev,script)));
+script();
+
+/* ---------- shortcuts ---------- */
+const KEYS=[
+ ["Save rundown",["Ctrl","S"],e=>mod(e)&&!e.shiftKey&&key(e,"s")],
+ ["Save to a date",["Ctrl","Shift","S"],e=>mod(e)&&e.shiftKey&&key(e,"s")],
+ ["Undo",["Ctrl","Z"],e=>mod(e)&&!e.shiftKey&&key(e,"z")],
+ ["Redo",["Ctrl","Shift","Z"],e=>mod(e)&&e.shiftKey&&key(e,"z")],
+ ["Duplicate segment",["Ctrl","D"],e=>mod(e)&&key(e,"d")],
+ ["Delete segment",["Delete"],e=>!mod(e)&&e.key==="Delete"],
+ ["New show",["Ctrl","N"],e=>mod(e)&&key(e,"n")],
+ ["Import",["Ctrl","O"],e=>mod(e)&&key(e,"o")],
+ ["Export",["Ctrl","E"],e=>mod(e)&&key(e,"e")],
+ ["Run flow",["Ctrl","Enter"],e=>mod(e)&&e.key==="Enter"],
+ ["Run: next",["Space"],e=>!mod(e)&&e.key===" "],
+ ["Run: previous",["←"],e=>!mod(e)&&e.key==="ArrowLeft"],
+ ["Run: pause",["P"],e=>!mod(e)&&key(e,"p")],
+ ["Run: exit",["Esc"],e=>e.key==="Escape"],
+];
+const isMac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
+const mod=e=>e.ctrlKey||e.metaKey, key=(e,k)=>e.key.toLowerCase()===k;
+$("#keyGrid").innerHTML=KEYS.map(([n,c],i)=>`<div class="key" id="k${i}"><span>${n}</span><span class="combo">${c.map(k=>`<kbd>${k==="Ctrl"&&isMac?"⌘":k}</kbd>`).join("")}</span></div>`).join("");
+document.addEventListener("keydown",e=>{
+  const typing=e.target.closest&&e.target.closest("input,textarea,select,[contenteditable]");
+  KEYS.forEach(([,,m],i)=>{if(m(e)){const el=$("#k"+i);el.classList.add("hit");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("hit"),700);
+    if(mod(e)&&!typing)e.preventDefault()}});
+  if(typing)return;
+  if(mod(e)&&e.key==="Enter"){run.on?endRun():startRun();return}
+  if(!run.on)return;
+  if(e.key===" "){e.preventDefault();next()}
+  else if(e.key==="ArrowLeft"&&!e.target.closest("[role=tablist]")){prev()}
+  else if(key(e,"p")){run.paused=!run.paused;renderLive()}
+  else if(e.key==="Escape"){endRun()}
+});
+
+setFlow("broadcast");setStage(0);
+})();
+</script>
+</body>
+</html>

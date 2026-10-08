@@ -104,8 +104,13 @@ function pageTemplate(post) {
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
   <meta name="twitter:image" content="${escapeHtml(image)}">
-  <meta name="theme-color" content="#0d121f">
-  <link rel="stylesheet" href="../../css/styles.css?v=20260816-2">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECEFF2">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E1117">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/styles.css?v=20261008-min">
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" defer crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" defer crossorigin="anonymous"></script>
   <script src="../../java/analytics-config.js?v=20260816-2" defer></script>
@@ -123,6 +128,7 @@ function pageTemplate(post) {
       <a href="../../blog">Blog</a>
       <a href="../../services">Services</a>
       <a href="../../contact">Contact</a>
+      <a href="../../forproducers" class="nav-feature">forProducers</a>
     </div>
   </nav>
   <main>
@@ -193,6 +199,7 @@ const staticUrls = [
   { loc: `${siteUrl}/blog`, lastmod: '' },
   { loc: `${siteUrl}/services`, lastmod: '' },
   { loc: `${siteUrl}/contact`, lastmod: '' },
+  { loc: `${siteUrl}/forproducers`, lastmod: '' },
   ...generatedUrls,
 ];
 const urlEntries = staticUrls.map(({ loc, lastmod }) => `  <url>\n    <loc>${loc}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}\n  </url>`).join('\n');

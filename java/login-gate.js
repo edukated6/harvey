@@ -19,7 +19,7 @@ function setLoginMessage(message, isError = false) {
   const element = document.getElementById('loginMessage');
   if (!element) return;
   element.textContent = message;
-  element.style.color = isError ? '#ffc7c7' : '';
+  element.style.color = isError ? 'var(--danger)' : '';
 }
 
 async function attemptLogin() {

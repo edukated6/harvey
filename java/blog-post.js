@@ -157,7 +157,7 @@ async function loadPost() {
 function setCommentFormMessage(message, isError = false) {
   if (!commentFormMessage) return;
   commentFormMessage.textContent = message;
-  commentFormMessage.style.color = isError ? '#ffc7c7' : '';
+  commentFormMessage.style.color = isError ? 'var(--danger)' : '';
 }
 
 if (commentForm) {
