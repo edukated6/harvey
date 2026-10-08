@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="./css/styles.css?v=20261008-min">
   <script src="./java/analytics-config.js" defer></script>
   <script src="./java/scripts.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <style>
 :root{
   --bg:#ECEFF2; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14181F; --muted:#59606C; --line:#D5DAE1;
@@ -34,6 +35,7 @@
   --display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --pen:"Nanum Pen Script","Segoe Print","Bradley Hand",cursive;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
@@ -131,16 +133,30 @@
 .fp .kinds button i{width:8px;height:8px;border-radius:50%;background:var(--k)}
 .fp .kinds button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .fp .kinds button:disabled{opacity:.5;cursor:default}
-.fp .who{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.fp .wcard{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--k);border-radius:12px;padding:20px;display:grid;gap:12px;align-content:start}
-.fp .wcard .eyebrow{color:var(--k)}
-.fp .wcard h3{font-size:21px}
-.fp .wcard p{font-size:14.5px;color:var(--muted)}
-.fp .wcard ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
-.fp .wcard li{padding-left:16px;position:relative}
-.fp .wcard li::before{content:"";position:absolute;left:0;top:.65em;width:7px;height:2px;background:var(--k)}
-.fp .wcard .btn{justify-self:start;margin-top:4px}
-.fp .wcard.active{box-shadow:0 0 0 1px var(--k)}
+.fp .status{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.fp .status .soon{margin:0}
+.fp .scribble{font:400 25px/1 var(--pen);color:var(--tally);transform:rotate(-4deg);display:inline-block;white-space:nowrap}
+.fp .who{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.fp .wrow{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) auto;gap:24px;align-items:center;padding:18px 0 18px 18px;border-bottom:1px solid var(--line);position:relative}
+.fp .wrow::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:2px;background:var(--k)}
+.fp .wname{font:700 20px/1.15 var(--display);font-variation-settings:"wdth" 105}
+.fp .wdesc{color:var(--muted);font-size:15px;display:grid;gap:4px}
+.fp .wdesc small{font:12px var(--mono);color:var(--muted);opacity:.85}
+.fp .wrow.active .wname{color:var(--k)}
+.fp .wrow .btn{padding:6px 12px;font-size:13px}
+.fp .faq{margin:24px 0 0;border-top:1px solid var(--line)}
+.fp .faq div{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px;padding:16px 0;border-bottom:1px solid var(--line)}
+.fp .faq dt{font-weight:600}
+.fp .faq dd{margin:0;color:var(--muted);max-width:62ch}
+.fp .faq code{font:13px var(--mono);color:var(--ink)}
+.fp .note{max-width:60ch;display:grid;gap:14px}
+.fp .get .note p{margin:0;color:var(--bg);font-size:18px;line-height:1.6;max-width:none}
+.fp .get .note .sig{font:400 44px/1 var(--pen);color:var(--logo-f);transform:rotate(-3deg);transform-origin:left;margin-top:4px}
+.fp .get .note .note-meta{font-size:14px;color:color-mix(in srgb,var(--bg) 65%,var(--ink))}
+.fp .get .note a{color:inherit;text-underline-offset:3px}
+@media (max-width:640px){.fp .wrow{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
+.fp .wrow .wdesc{grid-column:1/-1;grid-row:2}
+.fp .faq div{grid-template-columns:minmax(0,1fr);gap:4px}}
 .fp .arc-head{display:grid;gap:14px;margin-bottom:28px}
 .fp .stops{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;list-style:none;margin:0;padding:0;position:relative}
 .fp .stops::before{content:"";position:absolute;left:4%;right:4%;top:19px;height:2px;background:var(--line)}
@@ -243,7 +259,6 @@
 .fp footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;padding-top:28px}
 @media (max-width:900px){.fp .hero,.fp .panel,.fp .split{grid-template-columns:minmax(0,1fr)}
 .fp .priv{grid-template-columns:repeat(2,minmax(0,1fr))}
-.fp .who{grid-template-columns:repeat(2,minmax(0,1fr))}
 .fp .get{grid-template-columns:minmax(0,1fr)}
 .fp .get .logo-big{display:none}}
 @media (max-width:640px){.fp .stops{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:14px}
@@ -256,7 +271,6 @@
 .fp .seg .dur{grid-row:1;grid-column:2}
 .fp .live-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 .fp .priv{grid-template-columns:minmax(0,1fr)}
-.fp .who{grid-template-columns:minmax(0,1fr)}
 .fp .readout{grid-template-columns:repeat(3,minmax(0,1fr))}
 .fp nav ul{display:none}}
 @media (prefers-reduced-motion:reduce){}
@@ -287,16 +301,14 @@
 <header class="hero">
   <div class="hero-copy">
     <div class="brand"><span class="logo"><svg viewBox="0 0 2000 2000" version="1.1" xmlns="http://www.w3.org/2000/svg"> <g> <g transform="translate(-11.324757,-69.7826)"> <g transform="rotate(-3.2188358,1227.4515,1935.7198)"> <path style="color:#000000;fill:var(--logo-p);fill-opacity:1;" d="m 1434.1641,201.7793 c -35.1339,-0.34241 -70.0904,0.39237 -104.4942,1.29882 -79.4467,2.09323 -158.8714,5.00702 -238.2578,8.74219 l 2.3496,49.94531 c 79.0423,-3.71897 158.1244,-6.62092 237.2266,-8.70507 136.7377,-3.6027 275.1007,-3.01582 393.5195,50.76172 59.0452,26.8142 112.1497,67.1116 148.1172,119.0625 35.8102,51.72379 54.1036,116.38736 45.4375,177.08789 -7.0116,49.1118 -31.4464,96.11902 -65.707,134.05468 -34.3646,38.05074 -78.5609,67.74754 -126.4805,89.97266 -114.4176,53.06686 -272.072,42.51451 -392.6204,5.42578 l 8.0462,67.51563 c 132.7155,40.83214 279.6454,30.84094 405.6113,-27.58204 52.6682,-24.42748 102.5986,-57.58065 142.5508,-101.81835 40.0561,-44.35277 69.438,-99.84681 78.0976,-160.50196 10.7286,-75.14609 -11.5249,-151.51593 -53.8261,-212.61523 -42.144,-60.87221 -102.6542,-106.20045 -168.5528,-136.12696 -98.6015,-44.77791 -205.6159,-55.49036 -311.0175,-56.51757 z" /> <path style="color:#000000;fill:var(--logo-p);fill-opacity:1;" d="m 1140.8652,238.42383 -49.998,0.43945 15.1953,1724.65432 422.793,-5.4121 -128.1856,-1073.17972 -73.3072,-59.67671 145.2525,1083.57123 -316.9961,4.0586 z" /> <path style="fill:none;stroke:#2b2450;stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 1453.5528,710.59442 c -25.7895,-8.26438 -52.1111,-15.10926 -77.011,-25.75762 -24.9,-10.64835 -48.6702,-25.48751 -65.2881,-46.87073 -20.7921,-26.75441 -28.7423,-62.50312 -23.7092,-96.01099 5.0331,-33.50787 22.4677,-64.60631 46.691,-88.29891 29.2852,-28.64355 67.7088,-46.51815 107.2625,-57.17537 39.5538,-10.65722 80.563,-14.5551 121.3275,-18.59658 37.4405,-3.71193 75.2053,-7.57906 112.5988,-3.42083 37.3935,4.15823 74.917,17.05371 102.2915,42.86466 18.3887,17.33844 31.7325,40.59959 34.6647,65.70273 1.4662,12.55157 0.3233,25.44045 -3.6759,37.42786 -3.9992,11.9874 -10.88,23.04782 -20.1164,31.67223 -14.1835,13.24376 -33.375,20.27459 -52.6723,22.32066 -19.2972,2.04608 -38.8081,-0.57806 -57.7816,-4.64952 -26.4557,-5.67703 -53.2513,-14.23107 -80.0119,-10.23114 -13.3803,1.99996 -26.5105,7.32556 -36.337,16.62456 -4.9133,4.6495 -8.9516,10.25418 -11.5912,16.48242 -2.6395,6.22823 -3.8604,13.08192 -3.3006,19.82319 0.9837,11.84551 7.2396,22.5044 13.166,32.80788 5.9264,10.30347 11.8305,21.26675 11.9921,33.15194 0.164,12.06728 -5.9068,23.77543 -14.995,31.71588 -9.0882,7.94045 -20.9337,12.31597 -32.9244,13.68381 -23.9812,2.7357 -47.5941,-5.90032 -70.5795,-13.26613 z" /> </g> <g transform="translate(217.11244,4.9393761)"> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="M 877.55766,874.36756 C 838.09956,815.82663 786.50233,765.50745 726.99033,727.52976 658.12888,683.5857 577.857,656.16227 496.17701,654.99692 c -81.68,-1.16535 -164.50251,24.9324 -227.04569,77.48076 -43.06177,36.18021 -75.65924,83.76821 -98.82165,135.02079 -23.16241,51.25257 -37.21067,106.21154 -46.90937,161.61243 -24.683337,140.9961 -21.7111,285.1819 -18.7872,428.2924 3.32796,162.8874 6.49327,325.7781 9.4959,488.6718" /> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 98.139879,1923.4654 265.383191,1.4323 -10.03535,-491.2109 402.27865,-4.7433 -5.45015,-227.5577 -406.48251,4.3248" /> <path style="fill:none;stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 366.18304,1209.3378 c -16.30179,-60.3806 -4.80086,-127.6818 30.62686,-179.2225 21.1137,-30.71645 50.17421,-55.75171 83.1453,-73.1355 32.97108,-17.38379 69.77474,-27.18439 106.96397,-29.68446 74.37844,-5.00015 148.93857,19.25249 211.57413,59.67453 28.87622,18.63533 55.5519,40.67733 79.29688,65.52263" /> <path style="fill:var(--logo-f);fill-opacity:1;stroke:var(--logo-f);stroke-width:141.421;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="m 205.76807,1912.7272 -57.27565,-0.8276 0.007,-26.1044 c 0.004,-14.3574 -2.03051,-124.7458 -4.52063,-245.3075 -5.2285,-253.1421 -4.15955,-437.4628 2.90337,-500.6316 16.01468,-143.2309 42.06524,-231.6238 89.60931,-304.05588 20.47095,-31.18694 65.9457,-75.60007 95.25678,-93.03298 84.82062,-50.44749 192.73489,-59.30704 293.86714,-24.12591 87.12842,30.30958 165.06641,87.74732 225.24032,165.99471 7.49618,9.74772 28.67672,44.01199 47.06783,76.14284 l 33.43837,58.41972 -16.92205,8.0029 c -9.30714,4.4015 -18.19858,8.0028 -19.75877,8.0028 -1.56019,0 -10.67367,-7.1142 -20.25216,-15.8094 -37.5241,-34.06383 -95.35259,-67.34035 -147.11501,-84.65509 -148.25973,-49.59348 -301.80698,4.73888 -359.85683,127.33459 -16.70404,35.2773 -21.14919,53.7432 -22.97462,95.44 -1.22745,28.0377 -0.44783,42.0467 3.51018,63.0739 l 5.08809,27.0309 190.13179,-2.0012 190.13176,-2.0012 1.70557,40.7507 c 0.93805,22.4128 2.0828,61.4265 2.54392,86.6971 l 0.83835,45.9465 -8.59158,1.2965 c -4.72534,0.7131 -95.13364,2.0911 -200.90728,3.0623 -105.77367,0.9711 -192.3891,1.9856 -192.47877,2.2544 -0.0897,0.2687 2.03031,102.3121 4.71105,226.7629 2.68075,124.4508 4.97371,234.8655 5.09547,245.3661 l 0.22139,19.0919 -41.7193,-0.6452 c -22.94561,-0.3549 -67.49334,-1.0176 -98.99495,-1.4728 z" transform="translate(-9.830728,-15.45759)" /> <path style="color:#000000;fill:var(--logo-f);fill-opacity:1;" d="m 965.73047,980.76367 c -21.88841,14.68837 -63.79772,36.10513 -116.42439,55.55553 l 15.19113,45.5192 c 51.78448,-19.1391 97.77595,-28.6357 133.67662,-52.7271 z" /> <path style="fill:var(--logo-f);stroke:var(--logo-f);stroke-width:50;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" d="M 867.2619,855.77567 972.05171,1038.2255" /> </g> </g> </g> </svg></span>forProducers</div>
-    <div class="eyebrow"><span class="soon">Coming soon</span> Desktop app for producers</div>
-    <h1>Run the show. <em>Not</em> the stopwatch.</h1>
-    <p class="lede">forProducers is for every kind of producer: broadcast, film, commercials, social and content. Build the flow, run it with drift tracking, and let the paperwork fill itself in from it.</p>
+    <p class="status"><span class="soon">Coming soon</span>No release date yet</p>
+    <h1>Make your <em>hard out.</em></h1>
+    <p class="lede">I produce Studio 3 and Today at 11 in Jackson, Mississippi. forProducers is the app I'm building for that job: an ENPS-style rundown, a clock that tells you how far over or under you are, and paperwork that fills itself in from the rundown. It works just as well for a short film, a 30-second spot or a YouTube episode.</p>
     <div class="cta-row">
       <button class="btn primary" id="heroRun">▶ Run this flow</button>
-      <a class="btn" href="#who" style="text-decoration:none">Who it's for</a>
+      <span class="scribble" aria-hidden="true">it actually runs. try it ↗</span>
     </div>
-    <div class="facts"><span>Broadcast</span><span>Film</span><span>Commercial</span><span>Social &amp; content</span></div>
-    <div class="facts quiet"><span>Offline-first</span><span>No account</span><span>Linux · macOS · Windows</span><span>MIT licensed</span></div>
-    <p class="hint">The flow on the right works. Pick a production type, change a duration, then run it. During the run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
+    <p class="hint">Free and open source. Runs offline on Linux, macOS and Windows, with no account. During a run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
   </div>
 
   <div class="flow" id="flow" aria-label="Example rundown">
@@ -344,19 +356,17 @@
 
 <section id="who">
   <div class="arc-head">
-    <div class="eyebrow">Built for every producer</div>
-    <h2>Same flow, whatever you're making</h2>
-    <p class="lede">A morning newscast, a short film, a 30-second spot and a weekly YouTube episode all come down to the same job: get the right pieces in the right order and land them on time. forProducers is built around that job, not around one industry.</p>
+    <h2>Not just for TV</h2>
+    <p class="lede">I built it for live TV, but a short film, a commercial and a weekly YouTube episode come down to the same job: the right pieces, in the right order, landed on time. Load any of these into the flow up top.</p>
   </div>
-  <div class="who" id="whoGrid"></div>
-  <p class="hint" style="margin-top:14px">Also at home on events, music videos, podcasts, livestreams and explainers. Brainstorm has a question set for "Something else."</p>
+  <ol class="who" id="whoGrid"></ol>
+  <p class="hint" style="margin-top:14px">Events, music videos, podcasts and explainers work too. Brainstorm has a question set for "Something else."</p>
 </section>
 
 <section id="arc">
   <div class="arc-head">
-    <div class="eyebrow">One app, the whole production</div>
-    <h2>From first idea to the archive</h2>
-    <p class="lede">Most teams stitch a show together from a spreadsheet, a shared doc, a whiteboard photo and somebody's phone timer. forProducers covers each stage in one place, and each stage feeds the next.</p>
+    <h2>How a production moves through it</h2>
+    <p class="lede">Six stages, and each one hands its work to the next. Click through them. Every stage has a small working piece of the app.</p>
   </div>
   <ol class="stops" role="tablist" id="stops"></ol>
   <div class="panel" id="panel" role="tabpanel"></div>
@@ -365,9 +375,8 @@
 <section id="script">
   <div class="split">
     <div style="display:grid;gap:16px">
-      <div class="eyebrow">Script panel</div>
-      <h2>Know the read time before the talent does</h2>
-      <p class="lede">Every segment has its own script. forProducers counts the words, applies the talent's pace and tells you whether the copy fits the slot. Try it: edit the script or move the pace.</p>
+      <h2>Will the script fit?</h2>
+      <p class="lede">Every segment has a script panel. It counts the words, applies the talent's pace and tells you if the copy fits the slot. Edit the script or move the pace to see.</p>
     </div>
     <div class="script">
       <textarea id="scriptText" aria-label="Segment script" spellcheck="false">Good morning, and welcome to The Morning Desk. I'm Dana Reyes.
@@ -397,33 +406,27 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
 </section>
 
 <section id="keys">
-  <div class="eyebrow" style="margin-bottom:14px">Keyboard-driven</div>
-  <h2>Your hands stay on the keys</h2>
-  <p class="lede" style="margin-top:14px">A control room or a set doesn't wait for a mouse. Every action has a shortcut, and every shortcut can be rebound in Settings. Press one now and watch it light up. <kbd>Ctrl</kbd> <kbd>Enter</kbd> runs the flow at the top of the page.</p>
+  <h2>Shortcuts</h2>
+  <p class="lede" style="margin-top:14px">Every action has one, and you can rebind all of them in Settings. Press one and it lights up below. <kbd>Ctrl</kbd> <kbd>Enter</kbd> runs the flow at the top of the page.</p>
   <div class="keys" id="keyGrid"></div>
 </section>
 
 <section id="private">
-  <div class="eyebrow" style="margin-bottom:14px">Private by default</div>
-  <h2>Your show stays on your machine</h2>
-  <div class="priv">
-    <div><h3>No account</h3><p>Install it and start a show. There is no sign-up, no login and no subscription.</p></div>
-    <div><h3>Offline-first</h3><p>Projects live inside the app on your computer. A flaky studio connection can't take your rundown down.</p></div>
-    <div><h3>AI is optional</h3><p>Follow-up questions and draft proposals can run locally through Ollama (<code>llama3.2</code> by default), or through any OpenAI-compatible endpoint with your own key. Or leave it off.</p></div>
-    <div><h3>One file to move a show</h3><p>Package a whole project as a single <code>.fpshow</code> file and open it on another machine.</p></div>
-  </div>
+  <h2>Questions</h2>
+  <dl class="faq">
+    <div><dt>Do I need an account?</dt><dd>No. Install it and start a show. There's no sign-up, no login and no subscription.</dd></div>
+    <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your rundown down with it.</dd></div>
+    <div><dt>Do I have to use AI?</dt><dd>No. You only use it if you set it up. If you do, it can run on your own machine through Ollama, or through an OpenAI-compatible service with your own key.</dd></div>
+    <div><dt>Can I move a show to another computer?</dt><dd>Yes. A whole project packs into one <code>.fpshow</code> file.</dd></div>
+    <div><dt>When can I get it?</dt><dd>There's no release date yet. I'd rather it be right than early. The launch will be announced on the blog.</dd></div>
+  </dl>
 </section>
 
 <div class="get" id="get">
-  <div>
-    <span class="soon on-ink">Coming soon</span>
-    <h2 style="margin-top:14px">Plan, manage, and run productions with confidence.</h2>
-    <p>A clear, flexible flow for every segment, scene and shot, from the first idea to final sign-off. forProducers is on its way to Linux, macOS and Windows, free and open source under the MIT license.</p>
-    <div class="plats">
-      <div class="plat"><b>Linux</b><small>.deb · coming soon</small></div>
-      <div class="plat"><b>macOS</b><small>.dmg · coming soon</small></div>
-      <div class="plat"><b>Windows</b><small>installer · coming soon</small></div>
-    </div>
+  <div class="note">
+    <p>When I started producing, there wasn't much out there to learn from, and the pro tools were built for big broadcast systems, not for everyday producers. This guy here isn't one to gatekeep. fP will be free and open source on Linux, macOS and Windows.</p>
+    <p class="sig">Ahmaad</p>
+    <p class="note-meta">Producer, Studio 3 &amp; Today at 11 · <a href="https://theharveyeffect.com/blog">Follow along on the blog</a></p>
   </div>
   <div class="logo-big" id="logoBig"></div>
 </div>
@@ -511,7 +514,7 @@ function setSpeed(v){run.speed=v;document.querySelectorAll(".speed button").forE
 document.querySelectorAll(".speed button").forEach(b=>b.addEventListener("click",()=>setSpeed(+b.dataset.speed)));
 function renderKinds(){
   $("#kinds").innerHTML=Object.entries(FLOWS).map(([k,f])=>`<button data-k="${k}" style="--k:var(${f.k})" aria-pressed="${k===flowKey}" ${run.on?"disabled":""}><i></i>${f.name}</button>`).join("");
-  document.querySelectorAll(".wcard").forEach(c=>c.classList.toggle("active",c.dataset.k===flowKey));
+  document.querySelectorAll(".wrow").forEach(c=>c.classList.toggle("active",c.dataset.k===flowKey));
 }
 function setFlow(k){
   if(run.on)return;
@@ -528,7 +531,7 @@ const WHO=[
  ["commercial","Commercial & brand","Spots and branded content where every second is paid for.",["Second-by-second timing against a 15, 30 or 60","Brainstorm asks about brand mandatories and the call to action","Creative Brief and Production Budget from the flow"]],
  ["social","Social & content","YouTube episodes, Shorts, podcasts and livestreams on a weekly cadence.",["Plan the hook, sponsor read and end screen","Templates for the show you make every week","A calendar of drop days and shoot tasks"]],
 ];
-$("#whoGrid").innerHTML=WHO.map(([k,h,p,l])=>`<div class="wcard" data-k="${k}" style="--k:var(${FLOWS[k].k})"><div class="eyebrow">${FLOWS[k].title}</div><h3>${h}</h3><p>${p}</p><ul>${l.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn" data-k="${k}">Load this flow ↑</button></div>`).join("");
+$("#whoGrid").innerHTML=WHO.map(([k,h,p])=>`<li class="wrow" data-k="${k}" style="--k:var(${FLOWS[k].k})"><span class="wname">${h}</span><span class="wdesc">${p}<small>Sample: ${FLOWS[k].title}</small></span><button class="btn" data-k="${k}">Load ↑</button></li>`).join("");
 $("#whoGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(!b)return;if(run.on)endRun();setFlow(b.dataset.k);$("#flow").scrollIntoView({behavior:"smooth",block:"center"})});
 
 function driftNow(){
@@ -616,7 +619,7 @@ const STAGES=[
  {k:"Archive",sub:"Keep it",c:"--c-green"},
 ];
 let stage=0;
-$("#stops").innerHTML=STAGES.map((s,i)=>`<li class="stop" style="--c:var(${s.c})"><button role="tab" id="tab${i}" aria-selected="${i===0}" data-s="${i}"><span class="dot">${i+1}</span><span class="lbl">${s.k}</span><span class="sub">${s.sub}</span></button></li>`).join("");
+$("#stops").innerHTML=STAGES.map((s,i)=>`<li class="stop" style="--c:var(${s.c})"><button role="tab" id="tab${i}" aria-selected="${i===0}" data-s="${i}"><span class="dot">${i+1}</span><span class="lbl">${s.k}</span></button></li>`).join("");
 $("#stops").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(b)setStage(+b.dataset.s)});
 $("#stops").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
@@ -638,17 +641,17 @@ const QS={
 };
 let qType="Show";
 const PANELS=[
-()=>`<div class="copy"><div class="eyebrow">01 · Brainstorm</div><h3>Questions a seasoned producer would ask</h3>
+()=>`<div class="copy"><h3>Questions a seasoned producer would ask</h3>
   <p class="lede" style="font-size:15px">Pick what you're making and forProducers asks the right questions for it, at the flow level or per segment.</p>
   <ul class="ticks"><li>Separate question sets for shows, commercials, films and everything else</li><li>Optional AI follow-ups written from your answers so far</li><li><b>Apply</b> turns answers into real segments, talent, locations, tasks, storyboard beats and notes</li></ul></div>
   <div class="demo"><div class="demo-label">What are you making?</div>
   <div class="pills" id="qTypes">${Object.keys(QS).map(k=>`<button class="pill" aria-pressed="${k===qType}">${k}</button>`).join("")}</div>
   <ul class="qs" id="qList"></ul></div>`,
-()=>`<div class="copy"><div class="eyebrow">02 · Plan</div><h3>The Flow, and a calendar to hang it on</h3>
+()=>`<div class="copy"><h3>The Flow, and a calendar to hang it on</h3>
   <p class="lede" style="font-size:15px">The flow at the top of this page is the Flow: a rundown, shot list or episode plan. The Production Planner puts every shoot, deadline and air date on a month view.</p>
   <ul class="ticks"><li>Color-coded segments with talent, locations, B-roll tags (B-ROLL, GFX, LOWER THIRD, SOT, VO, PROPS), notes and script</li><li>Arm a person or location in the sidebar, then click segments to assign them</li><li>Tasks on any day, optionally linked to a segment</li><li>Save a rundown to a date with <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd>; it's filed in the Library for you</li><li>Templates, unlimited undo and autosave</li></ul></div>
   <div class="demo"><div class="demo-label">Production Planner · October 2026</div><div class="cal" id="cal"></div><div class="tasks" id="tasks"></div></div>`,
-()=>`<div class="copy"><div class="eyebrow">03 · Storyboard</div><h3>A whiteboard for every segment</h3>
+()=>`<div class="copy"><h3>A whiteboard for every segment</h3>
   <p class="lede" style="font-size:15px">Sketch frames with a pressure-sensitive pen, marker and highlighter. Give each frame its scene direction so the crew knows the intent as well as the picture.</p>
   <ul class="ticks"><li>Frames with a strip view, duplicate and undo</li><li>Scene title, stage description, narrative beat, emotion and a producer risk tag</li><li>Export frames to PNG or the whole board to PDF</li><li>Jump from a frame straight to its segment in the Flow</li></ul></div>
   <div class="demo"><div class="demo-label">Segment 4 · Frame 1 — draw something</div>
@@ -660,7 +663,7 @@ const PANELS=[
   <canvas id="board" width="960" height="540"></canvas>
   <div class="meta-row"><span>Beat: <b>Mayor dodges the fare question</b></span><span>Emotion: <b>Tension</b></span></div>
   <div class="meta-row" style="align-items:center">Producer risk <span class="risk" id="risk" style="border:0;padding:0;background:none"><button data-r="low" aria-pressed="false">low</button><button data-r="medium" aria-pressed="true">medium</button><button data-r="high" aria-pressed="false">high</button></span></div></div>`,
-()=>`<div class="copy"><div class="eyebrow">04 · Paperwork</div><h3>Paperwork that fills itself in</h3>
+()=>`<div class="copy"><h3>Paperwork that fills itself in</h3>
   <p class="lede" style="font-size:15px">Production docs are generated live from the Flow. Edit any cell by hand. If the Flow changes later, your edited cells are flagged stale so nothing quietly drifts out of date.</p>
   <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved rundown; print or save to the Library</li></ul>
   <p class="hint">Try it: click a cell in the order and type over it. Then change that segment's duration in the flow at the top, or use the button below.</p></div>
@@ -668,7 +671,7 @@ const PANELS=[
   <div class="doc"><table><thead><tr><th>#</th><th>Segment</th><th>Talent</th><th>Dur</th></tr></thead><tbody id="docBody"></tbody></table></div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" id="bump">Change the flow: lengthen segment 4</button>
   <div class="legend"><span><i style="background:var(--c-sky)"></i>Edited by hand</span><span><i style="background:var(--amber)"></i>Stale: flow changed since</span></div></div></div>`,
-()=>`<div class="copy"><div class="eyebrow">05 · Run live</div><h3>Drift tracking while you're live or rolling</h3>
+()=>`<div class="copy"><h3>Drift tracking while you're live or rolling</h3>
   <p class="lede" style="font-size:15px">A live bar sits on top of the rundown with the current segment, its timer, total elapsed, what's next, the scheduled time and the drift. The rundown stays editable while the clock runs.</p>
   <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-show</li><li><b>Film / Full view</b> shows one segment at a time, full screen</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
   <div><button class="btn primary" id="runFromArc">▶ Run the flow at the top</button></div></div>
@@ -679,7 +682,7 @@ const PANELS=[
    <div class="task"><span class="drift under">−0:18 under</span><span>The package came in short. You have time to fill.</span></div>
   </div>
   <p class="hint">Drift adds up what finished segments ran over or under, plus how far the current segment is past its slot. You see the problem while there's still time to fix it.</p></div>`,
-()=>`<div class="copy"><div class="eyebrow">06 · Archive</div><h3>A library you never have to organize</h3>
+()=>`<div class="copy"><h3>A library you never have to organize</h3>
   <p class="lede" style="font-size:15px">Projects are named after the show. Each saved date gets its own folder of rundowns, docs, images and run reports. You never manage files yourself.</p>
   <ul class="ticks"><li>Full-text search across rundowns and saved docs</li><li>Views by person, location, tag and project, plus Recent and This week</li><li>Version history: preview and restore earlier saves of any date</li><li>Mark a show <b>wrapped</b> to lock it once it airs; Trash with restore</li></ul></div>
   <div class="demo"><div class="pills" id="libViews">${["Recent","This week","Person","Location","Tag","Trash"].map((v,i)=>`<button class="pill" aria-pressed="${i===0}">${v}</button>`).join("")}</div>
