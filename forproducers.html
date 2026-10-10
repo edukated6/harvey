@@ -3,7 +3,7 @@
 <head>
   <link rel="icon" type="image/svg+xml" href="./assets/images/forProducers.svg">
   <meta charset="UTF-8">
-  <title>forProducers | Coming Soon from Ahmaad Harvey</title>
+  <title>forProducers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
   <meta name="color-scheme" content="light dark">
@@ -248,6 +248,21 @@
 .fp .priv h3{font-size:18px}
 .fp .priv p{font-size:14.5px;color:var(--muted)}
 .fp .priv code{font:13px var(--mono);color:var(--ink)}
+.fp .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:28px}
+.fp .tier{background:var(--panel);padding:24px;display:grid;gap:14px;align-content:start;grid-template-rows:auto auto auto 1fr auto}
+.fp .tier.pick{box-shadow:inset 0 3px 0 var(--tally)}
+.fp .tier-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fp .tier .price{font:800 32px/1 var(--display);font-variation-settings:"wdth" 110}
+.fp .tier .price small{font:500 13px var(--mono);color:var(--muted);margin-left:6px}
+.fp .tier .for{font-size:14.5px;color:var(--muted)}
+.fp .tier ul{list-style:none;margin:0;padding:14px 0 0;border-top:1px solid var(--line);display:grid;gap:8px;font-size:14px}
+.fp .tier li{padding-left:20px;position:relative}
+.fp .tier li::before{content:"✓";position:absolute;left:0;color:var(--go);font-weight:700}
+.fp .tier li.plus::before{content:"+";color:var(--muted)}
+.fp .tier li.no{color:var(--muted)}
+.fp .tier li.no::before{content:"–";color:var(--muted);font-weight:400}
+.fp .tier .btn{justify-content:center}
+.fp .tier code{font:13px var(--mono);color:var(--ink)}
 .fp .get{margin-top:72px;background:var(--ink);color:var(--bg);border-radius:18px;padding:clamp(24px,5vw,56px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
 .fp .get h2{color:var(--bg)}
 .fp .get p{color:color-mix(in srgb,var(--bg) 70%,var(--ink));max-width:52ch;margin-top:12px}
@@ -260,6 +275,7 @@
 @media (max-width:900px){.fp .hero,.fp .panel,.fp .split{grid-template-columns:minmax(0,1fr)}
 .fp .priv{grid-template-columns:repeat(2,minmax(0,1fr))}
 .fp .get{grid-template-columns:minmax(0,1fr)}
+.fp .tiers{grid-template-columns:minmax(0,1fr)}
 .fp .get .logo-big{display:none}}
 @media (max-width:640px){.fp .stops{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:14px}
 .fp .stops::before{display:none}
@@ -308,10 +324,10 @@
       <button class="btn primary" id="heroRun">▶ Run this flow</button>
       <span class="scribble" aria-hidden="true">it actually runs. try it ↗</span>
     </div>
-    <p class="hint">Runs offline on Linux, macOS and Windows, with no account. During a run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
+    <p class="hint">Runs offline on Linux and Windows, with no account. macOS is coming later. During a run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
   </div>
 
-  <div class="flow" id="flow" aria-label="Example rundown">
+  <div class="flow" id="flow" aria-label="Example flow">
     <div class="flow-head">
       <div style="min-width:0">
         <div class="eyebrow" style="margin-bottom:6px">The Flow</div>
@@ -410,20 +426,67 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
   <div class="keys" id="keyGrid"></div>
 </section>
 
+<section id="download">
+  <h2>Pick your version</h2>
+  <p class="lede" style="margin-top:14px">Start free and move up when your work needs it. Downloads for Linux and Windows open when forProducers launches; macOS comes later.</p>
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-top"><h3>Free</h3></div>
+      <div class="price">$0</div>
+      <p class="for">For solo producers making media on their own.</p>
+      <ul>
+        <li>The Flow: plan and run any production</li>
+        <li>Storyboards</li>
+        <li>Templates</li>
+        <li>Import and export</li>
+        <li class="no">No Brainstorm, Production Docs, Library, Calendar or appearance options</li>
+      </ul>
+      <button class="btn" disabled>Download · coming soon</button>
+    </div>
+    <div class="tier pick">
+      <div class="tier-top"><h3>Pro</h3><span class="soon" style="margin:0">Most picked</span></div>
+      <div class="price">TBA</div>
+      <p class="for">Everything unlocked, for producers who run the whole production.</p>
+      <ul>
+        <li class="plus">Everything in Free</li>
+        <li>Brainstorm</li>
+        <li>Production Docs that fill themselves from the Flow</li>
+        <li>Library</li>
+        <li>Calendar</li>
+        <li>Appearance options</li>
+      </ul>
+      <button class="btn primary" disabled>Download · coming soon</button>
+    </div>
+    <div class="tier">
+      <div class="tier-top"><h3>Teams</h3></div>
+      <div class="price">TBA</div>
+      <p class="for">For newsrooms, studios, agencies and crews working on the same project.</p>
+      <ul>
+        <li class="plus">Everything in Pro</li>
+        <li>Shared projects across the whole crew</li>
+        <li>Roles for producers, directors and talent</li>
+        <li>A shared template library for every project</li>
+        <li>One license for multiple seats</li>
+      </ul>
+      <button class="btn" disabled>Download · coming soon</button>
+    </div>
+  </div>
+</section>
+
 <section id="private">
   <h2>Questions</h2>
   <dl class="faq">
-    <div><dt>Do I need an account?</dt><dd>No. Install it and start a show. There's no sign-up, no login and no subscription.</dd></div>
-    <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your rundown down with it.</dd></div>
+    <div><dt>Do I need an account?</dt><dd>Not for Free. Install it and start a project, with no sign-up and no login. Pro and Teams will need a license, and pricing will be announced at launch.</dd></div>
+    <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your work down with it.</dd></div>
     <div><dt>Do I have to use AI?</dt><dd>No. You only use it if you set it up. If you do, it can run on your own machine through Ollama, or through an OpenAI-compatible service with your own key.</dd></div>
-    <div><dt>Can I move a show to another computer?</dt><dd>Yes. A whole project packs into one <code>.fpshow</code> file.</dd></div>
+    <div><dt>Can I move a project to another computer?</dt><dd>Yes. A whole project packs into one <code>.fpshow</code> file.</dd></div>
     <div><dt>When can I get it?</dt><dd>There's no release date yet. I'd rather it be right than early. The launch will be announced on the blog.</dd></div>
   </dl>
 </section>
 
 <div class="get" id="get">
   <div class="note">
-    <p>When I started producing, there wasn't much out there to learn from, and the pro tools were built for big broadcast systems, not for everyday producers. This guy here isn't one to gatekeep. fP will be on Linux, macOS and Windows for all producers.</p>
+    <p>When I started producing, there wasn't much out there to learn from, and the pro tools were built for big broadcast systems, not for everyday producers. This guy here isn't one to gatekeep. fP will be on Linux and Windows first, with macOS after that, for all producers.</p>
     <p class="sig">Ahmaad</p>
     <p class="note-meta">Producer, Studio 3 &amp; Today at 11 · <a href="https://theharveyeffect.com/blog">Follow along on the blog</a></p>
   </div>
@@ -528,7 +591,7 @@ const WHO=[
  ["broadcast","Broadcast & live","News, studio shows, sports and live events where the clock never stops.",["Live mode with drift on every segment","Live shots, packages, SOTs, breaks","Mic sheets and production orders from the rundown"]],
  ["film","Film","Shorts, features and documentaries, planned scene by scene.",["A storyboard whiteboard for every scene","Beat, emotion and risk tags on each frame","Full view to run a cut or table read one scene at a time"]],
  ["commercial","Commercial & brand","Spots and branded content where every second is paid for.",["Second-by-second timing against a 15, 30 or 60","Brainstorm asks about brand mandatories and the call to action","Creative Brief and Production Budget from the flow"]],
- ["social","Social & content","YouTube episodes, Shorts, podcasts and livestreams on a weekly cadence.",["Plan the hook, sponsor read and end screen","Templates for the show you make every week","A calendar of drop days and shoot tasks"]],
+ ["social","Social & content","YouTube episodes, Shorts, podcasts and livestreams on a weekly cadence.",["Plan the hook, sponsor read and end screen","Templates for the series you make every week","A calendar of drop days and shoot tasks"]],
 ];
 $("#whoGrid").innerHTML=WHO.map(([k,h,p])=>`<li class="wrow" data-k="${k}" style="--k:var(${FLOWS[k].k})"><span class="wname">${h}</span><span class="wdesc">${p}<small>Sample: ${FLOWS[k].title}</small></span><button class="btn" data-k="${k}">Load ↑</button></li>`).join("");
 $("#whoGrid").addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(!b)return;if(run.on)endRun();setFlow(b.dataset.k);$("#flow").scrollIntoView({behavior:"smooth",block:"center"})});
@@ -550,7 +613,7 @@ function renderLive(){
   $("#sElapsed").textContent=fmt(elapsed());
   $("#schedK").textContent=F.air!=null?"Scheduled":"Planned in";
   $("#sSched").textContent=F.air!=null?clock(F.air+plannedStart(run.idx)).replace(/ [AP]M/,""):fmt(plannedStart(run.idx));
-  $("#sNext").textContent=segs[run.idx+1]?segs[run.idx+1].title:"End of show";
+  $("#sNext").textContent=segs[run.idx+1]?segs[run.idx+1].title:"End of flow";
   const d=driftNow(), dr=$("#drift");
   dr.className="drift "+(Math.abs(d)<1?"ok":d>0?"over":"under");
   dr.textContent=Math.abs(d)<1?"On time":`${d>0?"+":"−"}${fmt(d)} ${d>0?"over":"under"}`;
@@ -597,10 +660,10 @@ function showReport(){
   const r=$("#report");
   r.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
     <div><div class="eyebrow">Run report</div><div style="font:700 17px var(--display);margin-top:4px">${Math.abs(d)<0.5?"Right on time.":`Finished ${fmt(d)} ${d>0?"over":"under"}.`}</div></div>
-    <button class="btn" id="backToFlow">Back to the rundown</button></div>
+    <button class="btn" id="backToFlow">Back to the flow</button></div>
     <table><thead><tr><th>Segment</th><th class="num">Planned</th><th class="num">Actual</th><th class="num">Diff</th></tr></thead><tbody>${rows}</tbody>
     <tfoot><tr><td><b>Total</b></td><td class="num"><b>${fmt(tp)}</b></td><td class="num"><b>${fmt(ta)}</b></td><td class="num ${d>0.5?"pos":d<-0.5?"neg":""}"><b>${Math.abs(d)<0.5?"0:00":(d>0?"+":"−")+fmt(d)}</b></td></tr></tfoot></table>
-    <p class="hint" style="margin-top:10px">In the app, every report is saved to the Library next to that day's rundown.</p>`;
+    <p class="hint" style="margin-top:10px">In the app, every report is saved to the Library next to that day's flow.</p>`;
   r.hidden=false;$("#segs").hidden=true;
   $("#backToFlow").onclick=()=>{r.hidden=true;$("#segs").hidden=false;run.done=false;run.actual=[];renderSegs()};
 }
@@ -647,8 +710,8 @@ const PANELS=[
   <div class="pills" id="qTypes">${Object.keys(QS).map(k=>`<button class="pill" aria-pressed="${k===qType}">${k}</button>`).join("")}</div>
   <ul class="qs" id="qList"></ul></div>`,
 ()=>`<div class="copy"><h3>The Flow, and a calendar to hang it on</h3>
-  <p class="lede" style="font-size:15px">The flow at the top of this page is the Flow: a rundown, shot list or episode plan. The Production Planner puts every shoot, deadline and air date on a month view.</p>
-  <ul class="ticks"><li>Color-coded segments with talent, locations, B-roll tags (B-ROLL, GFX, LOWER THIRD, SOT, VO, PROPS), notes and script</li><li>Arm a person or location in the sidebar, then click segments to assign them</li><li>Tasks on any day, optionally linked to a segment</li><li>Save a rundown to a date with <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd>; it's filed in the Library for you</li><li>Templates, unlimited undo and autosave</li></ul></div>
+  <p class="lede" style="font-size:15px">The flow at the top of this page is the Flow: a rundown, shot list or episode plan. The Production Planner puts every shoot, deadline, air date and delivery on a month view.</p>
+  <ul class="ticks"><li>Color-coded segments with talent, locations, B-roll tags (B-ROLL, GFX, LOWER THIRD, SOT, VO, PROPS), notes and script</li><li>Arm a person or location in the sidebar, then click segments to assign them</li><li>Tasks on any day, optionally linked to a segment</li><li>Save a flow to a date with <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>S</kbd>; it's filed in the Library for you</li><li>Templates, unlimited undo and autosave</li></ul></div>
   <div class="demo"><div class="demo-label">Production Planner · October 2026</div><div class="cal" id="cal"></div><div class="tasks" id="tasks"></div></div>`,
 ()=>`<div class="copy"><h3>A whiteboard for every segment</h3>
   <p class="lede" style="font-size:15px">Sketch frames with a pressure-sensitive pen, marker and highlighter. Give each frame its scene direction so the crew knows the intent as well as the picture.</p>
@@ -664,15 +727,15 @@ const PANELS=[
   <div class="meta-row" style="align-items:center">Producer risk <span class="risk" id="risk" style="border:0;padding:0;background:none"><button data-r="low" aria-pressed="false">low</button><button data-r="medium" aria-pressed="true">medium</button><button data-r="high" aria-pressed="false">high</button></span></div></div>`,
 ()=>`<div class="copy"><h3>Paperwork that fills itself in</h3>
   <p class="lede" style="font-size:15px">Production docs are generated live from the Flow. Edit any cell by hand. If the Flow changes later, your edited cells are flagged stale so nothing quietly drifts out of date.</p>
-  <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved rundown; print or save to the Library</li></ul>
+  <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved flow; print or save to the Library</li></ul>
   <p class="hint">Try it: click a cell in the order and type over it. Then change that segment's duration in the flow at the top, or use the button below.</p></div>
   <div class="demo"><div class="doc-tabs"><span class="pill" aria-pressed="true">Production Order</span><span class="pill">Mic Sheet</span><span class="pill">Memo</span><span class="pill">Budget</span></div>
   <div class="doc"><table><thead><tr><th>#</th><th>Segment</th><th>Talent</th><th>Dur</th></tr></thead><tbody id="docBody"></tbody></table></div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" id="bump">Change the flow: lengthen segment 4</button>
   <div class="legend"><span><i style="background:var(--c-sky)"></i>Edited by hand</span><span><i style="background:var(--amber)"></i>Stale: flow changed since</span></div></div></div>`,
 ()=>`<div class="copy"><h3>Drift tracking while you're live or rolling</h3>
-  <p class="lede" style="font-size:15px">A live bar sits on top of the rundown with the current segment, its timer, total elapsed, what's next, the scheduled time and the drift. The rundown stays editable while the clock runs.</p>
-  <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-show</li><li><b>Film / Full view</b> shows one segment at a time, full screen</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
+  <p class="lede" style="font-size:15px">A live bar sits on top of the flow with the current segment, its timer, total elapsed, what's next, the scheduled time and the drift. The flow stays editable while the clock runs.</p>
+  <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-run</li><li><b>Film / Full view</b> shows one segment at a time, full screen</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
   <div><button class="btn primary" id="runFromArc">▶ Run the flow at the top</button></div></div>
   <div class="demo"><div class="demo-label">How drift reads</div>
   <div class="qs" style="display:grid;gap:8px">
@@ -682,10 +745,10 @@ const PANELS=[
   </div>
   <p class="hint">Drift adds up what finished segments ran over or under, plus how far the current segment is past its slot. You see the problem while there's still time to fix it.</p></div>`,
 ()=>`<div class="copy"><h3>A library you never have to organize</h3>
-  <p class="lede" style="font-size:15px">Projects are named after the show. Each saved date gets its own folder of rundowns, docs, images and run reports. You never manage files yourself.</p>
-  <ul class="ticks"><li>Full-text search across rundowns and saved docs</li><li>Views by person, location, tag and project, plus Recent and This week</li><li>Version history: preview and restore earlier saves of any date</li><li>Mark a show <b>wrapped</b> to lock it once it airs; Trash with restore</li></ul></div>
+  <p class="lede" style="font-size:15px">Projects are named after the production. Each saved date gets its own folder of flows, docs, images and run reports. You never manage files yourself.</p>
+  <ul class="ticks"><li>Full-text search across flows and saved docs</li><li>Views by person, location, tag and project, plus Recent and This week</li><li>Version history: preview and restore earlier saves of any date</li><li>Mark a project <b>wrapped</b> to lock it once it airs or delivers; Trash with restore</li></ul></div>
   <div class="demo"><div class="pills" id="libViews">${["Recent","This week","Person","Location","Tag","Trash"].map((v,i)=>`<button class="pill" aria-pressed="${i===0}">${v}</button>`).join("")}</div>
-  <input class="search" id="libQ" type="search" placeholder="Search rundowns and docs, e.g. okafor" aria-label="Search the library">
+  <input class="search" id="libQ" type="search" placeholder="Search flows and docs, e.g. okafor" aria-label="Search the library">
   <ul class="files" id="files"></ul></div>`,
 ];
 const LIB=[
@@ -786,13 +849,13 @@ script();
 
 /* ---------- shortcuts ---------- */
 const KEYS=[
- ["Save rundown",["Ctrl","S"],e=>mod(e)&&!e.shiftKey&&key(e,"s")],
+ ["Save flow",["Ctrl","S"],e=>mod(e)&&!e.shiftKey&&key(e,"s")],
  ["Save to a date",["Ctrl","Shift","S"],e=>mod(e)&&e.shiftKey&&key(e,"s")],
  ["Undo",["Ctrl","Z"],e=>mod(e)&&!e.shiftKey&&key(e,"z")],
  ["Redo",["Ctrl","Shift","Z"],e=>mod(e)&&e.shiftKey&&key(e,"z")],
  ["Duplicate segment",["Ctrl","D"],e=>mod(e)&&key(e,"d")],
  ["Delete segment",["Delete"],e=>!mod(e)&&e.key==="Delete"],
- ["New show",["Ctrl","N"],e=>mod(e)&&key(e,"n")],
+ ["New project",["Ctrl","N"],e=>mod(e)&&key(e,"n")],
  ["Import",["Ctrl","O"],e=>mod(e)&&key(e,"o")],
  ["Export",["Ctrl","E"],e=>mod(e)&&key(e,"e")],
  ["Run flow",["Ctrl","Enter"],e=>mod(e)&&e.key==="Enter"],
