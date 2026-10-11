@@ -5,19 +5,19 @@
   <meta charset="UTF-8">
   <title>forProducers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta name="description" content="forProducers is a desktop app for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECEFF2">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E1117">
   <link rel="canonical" href="https://theharveyeffect.com/forproducers">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://theharveyeffect.com/forproducers">
-  <meta property="og:title" content="forProducers | Coming Soon">
-  <meta property="og:description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta property="og:title" content="forProducers">
+  <meta property="og:description" content="forProducers is a desktop app for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
   <meta property="og:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="forProducers | Coming Soon">
-  <meta name="twitter:description" content="forProducers is a coming-soon desktop app from Ahmaad Harvey for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
+  <meta name="twitter:title" content="forProducers">
+  <meta name="twitter:description" content="forProducers is a desktop app for broadcast, film, commercial and social producers: plan the flow, run it live with drift tracking, and let the paperwork fill itself in.">
   <meta name="twitter:image" content="https://theharveyeffect.com/assets/images/Harvey%20poster.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <style>
 :root{
-  --bg:#ECEFF2; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14181F; --muted:#59606C; --line:#D5DAE1;
+  --bg:#ECEFF2; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14181F; --muted:#59606C; --line:#D5DAE1; --note-ink:#14181F;
   --tally:#C8323F; --go:#2B8A53; --amber:#A57C2C; --focus:#3D6E99;
   --logo-f:#E0333A; --logo-p:#2B9A5C;
   --c-coral:#B4583F; --c-teal:#3F7F78; --c-violet:#6E5F96; --c-red:#C8323F; --c-amber:#A57C2C; --c-sky:#3D6E99; --c-green:#4C7A55; --c-slate:#6A6F7A; --c-indigo:#55586F;
@@ -39,10 +39,10 @@
   --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C;
+  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C; --note-ink:#FFFFFF;
   --tally:#E2525E; --go:#4CC27F; --amber:#D4A646; --focus:#7FA9D6; --logo-f:#FF4A4A; --logo-p:#3CC377; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C;
+  --bg:#0E1117; --panel:#161A22; --panel-2:#1C212B; --ink:#E8EBF0; --muted:#9AA2AF; --line:#2A303C; --note-ink:#FFFFFF;
   --tally:#E2525E; --go:#4CC27F; --amber:#D4A646; --focus:#7FA9D6; --logo-f:#FF4A4A; --logo-p:#3CC377; color-scheme:dark }
 .fp .wrap{max-width:1180px;margin-inline:auto}
 .fp h1,.fp h2,.fp h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
@@ -150,9 +150,9 @@
 .fp .faq dd{margin:0;color:var(--muted);max-width:62ch}
 .fp .faq code{font:13px var(--mono);color:var(--ink)}
 .fp .note{max-width:60ch;display:grid;gap:14px}
-.fp .get .note p{margin:0;color:var(--bg);font-size:18px;line-height:1.6;max-width:none}
+.fp .get .note p{margin:0;color:var(--note-ink);font-size:18px;line-height:1.6;max-width:none}
 .fp .get .note .sig{font:400 44px/1 var(--pen);color:var(--logo-f);transform:rotate(-3deg);transform-origin:left;margin-top:4px}
-.fp .get .note .note-meta{font-size:14px;color:color-mix(in srgb,var(--bg) 65%,var(--ink))}
+.fp .get .note .note-meta{font-size:14px;color:var(--note-ink)}
 .fp .get .note a{color:inherit;text-underline-offset:3px}
 @media (max-width:640px){.fp .wrow{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
 .fp .wrow .wdesc{grid-column:1/-1;grid-row:2}
@@ -263,7 +263,12 @@
 .fp .tier li.no::before{content:"–";color:var(--muted);font-weight:400}
 .fp .tier .btn{justify-content:center}
 .fp .tier code{font:13px var(--mono);color:var(--ink)}
-.fp .get{margin-top:72px;background:var(--ink);color:var(--bg);border-radius:18px;padding:clamp(24px,5vw,56px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
+.fp .os-pick summary{list-style:none;justify-content:center;cursor:pointer}
+.fp .os-pick summary::-webkit-details-marker{display:none}
+.fp .os-menu{display:grid;gap:8px;margin-top:8px}
+.fp .os-menu .btn{justify-content:center}
+.fp .os-menu [aria-disabled="true"]{opacity:.45;cursor:default}
+.fp .get{margin-top:72px;background:var(--bg);color:var(--note-ink);border-radius:18px;padding:clamp(24px,5vw,56px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center}
 .fp .get h2{color:var(--bg)}
 .fp .get p{color:color-mix(in srgb,var(--bg) 70%,var(--ink));max-width:52ch;margin-top:12px}
 .fp .get .logo-big svg{width:clamp(110px,16vw,180px);height:auto;display:block}
@@ -441,7 +446,14 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
         <li>Import and export</li>
         <li class="no">No Brainstorm, Production Docs, Library, Calendar or appearance options</li>
       </ul>
-      <button class="btn" disabled>Download · coming soon</button>
+      <details class="os-pick">
+        <summary class="btn">Download free</summary>
+        <div class="os-menu">
+          <a class="btn" href="https://downloads.theharveyeffect.com/forProducers-Free-1.0.0-x64.AppImage" data-os="linux">Linux</a>
+          <a class="btn" href="https://downloads.theharveyeffect.com/forProducers-Free-Setup-1.0.0.exe" data-os="windows">Windows</a>
+          <span class="btn" aria-disabled="true">macOS · coming later</span>
+        </div>
+      </details>
     </div>
     <div class="tier pick">
       <!--<div class="tier-top"><h3>Pro</h3><span class="soon" style="margin:0">Most picked</span></div>-->
