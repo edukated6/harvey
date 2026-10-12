@@ -11,8 +11,17 @@ STRIPE_CANCEL_URL = "https://theharveyeffect.com/?checkout=cancelled"
 # Verified domain in Resend — sends from theharveyeffect.com.
 RESEND_FROM = "contact@theharveyeffect.com"
 EMAIL_TO = "ahmaadharvey@pm.me"
+# R2 object keys handed out by POST /downloads once a visitor gives an email, keyed tier:os.
+# The worker serves them through short-lived signed links (secret: DOWNLOAD_SIGNING_SECRET).
+DOWNLOAD_FILES = '{"free:linux":"forProducers-Free-1.0.0-x64.AppImage","free:windows":"forProducers-Free-Setup-1.0.0.exe"}'
 
 [[d1_databases]]
 binding = "DB"
 database_name = "harvey-analytics"
 database_id = "8bcfdaee-957a-4b38-8bc6-e4d8c0d33f39"
+
+# Bucket that holds the forProducers installers. Turn off its public access (r2.dev and the
+# downloads.theharveyeffect.com custom domain) so files are only reachable through signed links.
+[[r2_buckets]]
+binding = "DOWNLOADS"
+bucket_name = "forproducers-downloads"

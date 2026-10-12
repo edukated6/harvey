@@ -35,6 +35,26 @@ export default {
       return submitContactForm(request, env, corsHeaders);
     }
 
+    if (request.method === 'POST' && url.pathname === '/downloads') {
+      if (origin && !isAllowedOrigin(origin, env)) {
+        return json({ error: 'Origin is not allowed.' }, 403, corsHeaders);
+      }
+      return requestDownload(request, env, corsHeaders);
+    }
+
+    if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname.startsWith('/downloads/file/')) {
+      return serveDownloadFile(request, env, url);
+    }
+
+    if (request.method === 'GET' && (url.pathname === '/admin/downloads'|| url.pathname === '/admin/downloads.csv')) {
+      if (!(await isAuthorized(request, env))) {
+        return json({ error: 'Unauthorized' }, 401, corsHeaders);
+      }
+      return url.pathname.endsWith('.csv')
+        ? exportDownloadEmails(env, corsHeaders)
+        : getDownloadSummary(request, env, corsHeaders);
+    }
+
     if (request.method === 'POST' && url.pathname === '/checkout') {
       return createCheckoutSession(request, env, corsHeaders);
     }
@@ -543,6 +563,256 @@ async function submitContactForm(request, env, headers) {
   }
 
   return json({ ok: true }, 202, headers);
+}
+
+const DOWNLOAD_LINK_TTL_SECONDS = 10 * 60;
+
+function parseDownloadFiles(env) {
+  try {
+    const parsed = JSON.parse(env.DOWNLOAD_FILES || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+async function signDownload(env, key, expires) {
+  const secret = (env.DOWNLOAD_SIGNING_SECRET || '').trim();
+  if (!secret) return '';
+
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(`${key}:${expires}`));
+  return [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function createSignedDownloadUrl(request, env, key) {
+  const expires = Math.floor(Date.now() / 1000) + DOWNLOAD_LINK_TTL_SECONDS;
+  const signature = await signDownload(env, key, expires);
+  if (!signature) return '';
+
+  const url = new URL(`/downloads/file/${encodeURIComponent(key)}`, request.url);
+  url.searchParams.set('exp', String(expires));
+  url.searchParams.set('sig', signature);
+  return url.toString();
+}
+
+// Supports the single-range forms download managers use to resume: bytes=N-, bytes=N-M and bytes=-N.
+function parseRangeHeader(value) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(String(value || '').trim());
+  if (!match || (!match[1] && !match[2])) return undefined;
+  if (!match[1]) return { suffix: Number(match[2]) };
+
+  const offset = Number(match[1]);
+  if (!match[2]) return { offset };
+  const end = Number(match[2]);
+  return end >= offset ? { offset, length: end - offset + 1 } : undefined;
+}
+
+async function serveDownloadFile(request, env, url) {
+  const key = decodeURIComponent(url.pathname.slice('/downloads/file/'.length));
+  const expires = asInt(url.searchParams.get('exp'), 0);
+  const signature = asString(url.searchParams.get('sig'), 128);
+  const plain = (message, status) => new Response(message, {
+    status,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+
+  if (!Object.values(parseDownloadFiles(env)).includes(key) || !signature) {
+    return plain('Download not found.', 404);
+  }
+
+  const expected = await signDownload(env, key, expires);
+  if (!expected || !timingSafeStringEqual(signature, expected)) {
+    return plain('This download link is invalid.', 403);
+  }
+
+  if (expires < Math.floor(Date.now() / 1000)) {
+    return plain('This download link has expired. Please request a new one from theharveyeffect.com/forproducers.', 410);
+  }
+
+  if (!env.DOWNLOADS) {
+    return plain('Downloads are not configured.', 500);
+  }
+
+  let object = null;
+  try {
+    object = request.method === 'HEAD'
+      ? await env.DOWNLOADS.head(key)
+      : await env.DOWNLOADS.get(key, { range: parseRangeHeader(request.headers.get('Range')), onlyIf: request.headers });
+  } catch {
+    // R2 rejects ranges that start past the end of the file.
+    return plain('Requested range is not satisfiable.', 416);
+  }
+
+  if (!object) {
+    return plain('Download not found.', 404);
+  }
+
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set('ETag', object.httpEtag);
+  headers.set('Accept-Ranges', 'bytes');
+  headers.set('Cache-Control', 'private, no-store');
+  headers.set('Content-Disposition', `attachment; filename="${key.replace(/["\\]/g, '')}"`);
+
+  if (request.method === 'HEAD') {
+    headers.set('Content-Length', String(object.size));
+    return new Response(null, { status: 200, headers });
+  }
+
+  // A failed precondition (If-None-Match, If-Range) returns metadata without a body.
+  if (!('body' in object)) {
+    return new Response(null, { status: request.headers.has('If-None-Match') ? 304 : 412, headers });
+  }
+
+  const range = parseRangeHeader(request.headers.get('Range'));
+  if (range) {
+    const offset = 'suffix' in range ? Math.max(0, object.size - range.suffix) : range.offset;
+    const length = 'suffix' in range ? object.size - offset : Math.min(range.length ?? object.size - offset, object.size - offset);
+    headers.set('Content-Range', `bytes ${offset}-${offset + length - 1}/${object.size}`);
+    headers.set('Content-Length', String(length));
+    return new Response(object.body, { status: 206, headers });
+  }
+
+  headers.set('Content-Length', String(object.size));
+  return new Response(object.body, { status: 200, headers });
+}
+
+async function requestDownload(request, env, headers) {
+  let payload = null;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400, headers);
+  }
+
+  const tier = asString(payload?.tier, 20).trim().toLowerCase() || 'free';
+  const os = asString(payload?.os, 20).trim().toLowerCase();
+  const downloadKey = parseDownloadFiles(env)[`${tier}:${os}`];
+  if (!downloadKey) {
+    return json({ error: 'That download is not available.' }, 404, headers);
+  }
+
+  // Bots that fill the hidden field get a dead end and are not counted or added to the list.
+  if (asString(payload?.website, 120)) {
+    return json({ error: 'Download is unavailable right now.' }, 400, headers);
+  }
+
+  const email = asString(payload?.email, 254).trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ error: 'Please enter a valid email address.' }, 400, headers);
+  }
+
+  const recent = await env.DB
+    .prepare(`SELECT COUNT(*) AS count FROM download_signups WHERE email = ? AND created_at >= datetime('now', '-1 minute')`)
+    .bind(email)
+    .first();
+  if (asInt(recent?.count) >= 3) {
+    return json({ error: 'Too many requests. Please wait a moment.' }, 429, headers);
+  }
+
+  const downloadUrl = await createSignedDownloadUrl(request, env, downloadKey);
+  if (!downloadUrl) {
+    return json({ error: 'Downloads are temporarily unavailable. Please try again later.' }, 503, headers);
+  }
+
+  await env.DB
+    .prepare(`INSERT INTO download_signups (email, os, tier, visitor_id) VALUES (?, ?, ?, ?)`)
+    .bind(email, os, tier, asString(payload?.visitorId, 120))
+    .run();
+
+  return json({ ok: true, url: downloadUrl }, 200, headers);
+}
+
+async function getDownloadSummary(request, env, headers) {
+  const url = new URL(request.url);
+  const days = clamp(asInt(url.searchParams.get('days'), 14), 1, 90);
+
+  const [totals, byOs, trend, recent] = await Promise.all([
+    env.DB
+      .prepare(
+        `SELECT
+           COUNT(*) AS total_downloads,
+           COUNT(DISTINCT email) AS unique_emails,
+           SUM(CASE WHEN created_at >= datetime('now', ?) THEN 1 ELSE 0 END) AS window_downloads
+         FROM download_signups`
+      )
+      .bind(`-${days} day`)
+      .first(),
+    env.DB.prepare(`SELECT os, COUNT(*) AS downloads FROM download_signups GROUP BY os ORDER BY downloads DESC`).all(),
+    env.DB
+      .prepare(
+        `SELECT substr(created_at, 1, 10) AS day, COUNT(*) AS downloads
+         FROM download_signups
+         WHERE created_at >= datetime('now', ?)
+         GROUP BY day
+         ORDER BY day ASC`
+      )
+      .bind(`-${days} day`)
+      .all(),
+    env.DB.prepare(`SELECT email, os, tier, created_at FROM download_signups ORDER BY id DESC LIMIT 10`).all(),
+  ]);
+
+  return json(
+    {
+      days,
+      totals: {
+        totalDownloads: asInt(totals?.total_downloads),
+        uniqueEmails: asInt(totals?.unique_emails),
+        windowDownloads: asInt(totals?.window_downloads),
+      },
+      byOs: (byOs.results || []).map((row) => ({ os: row.os, downloads: asInt(row.downloads) })),
+      trend: (trend.results || []).map((row) => ({ day: row.day, downloads: asInt(row.downloads) })),
+      recent: (recent.results || []).map((row) => ({
+        email: row.email,
+        os: row.os,
+        tier: row.tier,
+        createdAt: row.created_at,
+      })),
+    },
+    200,
+    headers
+  );
+}
+
+async function exportDownloadEmails(env, headers) {
+  const rows = await env.DB
+    .prepare(
+      `SELECT email, MIN(created_at) AS first_download, MAX(created_at) AS last_download,
+              COUNT(*) AS downloads, GROUP_CONCAT(DISTINCT os) AS platforms
+       FROM download_signups
+       GROUP BY email
+       ORDER BY first_download ASC`
+    )
+    .all();
+
+  // Prefix values a spreadsheet would treat as formulas.
+  const csvCell = (value) => {
+    const text = String(value ?? '');
+    const safe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+    return `"${safe.replace(/"/g, '""')}"`;
+  };
+  const lines = [
+    'email,first_download,last_download,downloads,platforms',
+    ...(rows.results || []).map((row) =>
+      [row.email, row.first_download, row.last_download, row.downloads, row.platforms].map(csvCell).join(',')
+    ),
+  ];
+
+  return new Response(lines.join('\n'), {
+    status: 200,
+    headers: {
+      ...headers,
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="forproducers-download-emails.csv"',
+    },
+  });
 }
 
 async function getSummary(request, env, headers) {

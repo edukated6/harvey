@@ -323,13 +323,102 @@ function summarizeCampaignsFromLocal(events) {
   return [...rows.values()].sort((a, b) => b.views - a.views).slice(0, 10);
 }
 
+function getOwnerHeaders() {
+  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '').trim();
+  return ownerKey ? { Authorization: `Bearer ${ownerKey}` } : {};
+}
+
+async function fetchDownloads(apiBase, days) {
+  if (!apiBase) return null;
+
+  try {
+    const response = await fetch(`${apiBase.replace(/\/$/, '')}/admin/downloads?days=${days}`, {
+      headers: getOwnerHeaders(),
+      credentials: 'include',
+    });
+    if (!response.ok) {
+      if (response.status === 401) {
+        window.dispatchEvent(new Event('harvey-session-expired'));
+      }
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    return null;
+  }
+}
+
+function renderDownloads(data, days) {
+  if (!data) {
+    setText('downloadsSummary', 'Download counts are unavailable right now.');
+    return;
+  }
+
+  const totals = data.totals || {};
+  setText('metricDownloads', formatNumber(totals.totalDownloads));
+  setText('metricDownloadEmails', formatNumber(totals.uniqueEmails));
+  setText('metricDownloadsTrend', `Last ${days} days: ${formatNumber(totals.windowDownloads)}`);
+  setText('downloadsSummary', 'Every download requires an email. Counts include repeat downloads.');
+
+  renderSimpleList(
+    'downloadsByOs',
+    data.byOs || [],
+    'No downloads yet.',
+    (row) => `<strong>${formatNumber(row.downloads)}</strong> • ${escapeText(row.os)}`
+  );
+
+  const container = document.getElementById('recentDownloads');
+  if (!container) return;
+  container.innerHTML = '';
+  (data.recent || []).forEach((row) => {
+    const item = document.createElement('div');
+    item.className = 'analytics-row';
+    const email = document.createElement('p');
+    email.className = 'analytics-row-event';
+    email.textContent = row.email;
+    const meta = document.createElement('p');
+    meta.className = 'analytics-row-meta';
+    meta.textContent = `${new Date(`${row.createdAt.replace(' ', 'T')}Z`).toLocaleString()} • ${row.os} • ${row.tier}`;
+    item.append(email, meta);
+    container.appendChild(item);
+  });
+}
+
+function escapeText(value) {
+  const span = document.createElement('span');
+  span.textContent = String(value ?? '');
+  return span.innerHTML;
+}
+
+async function exportDownloadEmails() {
+  const root = document.getElementById('analyticsMain');
+  const apiBase = String(root?.dataset.apiBase || window.HARVEY_ANALYTICS_API_BASE || '').trim().replace(/\/$/, '');
+  if (!apiBase) return;
+
+  try {
+    const response = await fetch(`${apiBase}/admin/downloads.csv`, { headers: getOwnerHeaders(), credentials: 'include' });
+    if (!response.ok) {
+      if (response.status === 401) window.dispatchEvent(new Event('harvey-session-expired'));
+      window.alert('Could not export emails. Please try again.');
+      return;
+    }
+    const blobUrl = URL.createObjectURL(await response.blob());
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = 'forproducers-download-emails.csv';
+    link.click();
+    URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    window.alert('Could not export emails. Please try again.');
+  }
+}
+
 async function fetchRemote(apiBase, days) {
   if (!apiBase) return null;
 
   const summaryUrl = `${apiBase.replace(/\/$/, '')}/summary?days=${days}`;
   const recentUrl = `${apiBase.replace(/\/$/, '')}/recent?limit=${MAX_ROWS}`;
-  const ownerKey = String(window.HARVEY_ANALYTICS_OWNER_KEY || sessionStorage.getItem('harveyAdminSessionToken') || '').trim();
-  const headers = ownerKey ? { Authorization: `Bearer ${ownerKey}` } : {};
+  const headers = getOwnerHeaders();
 
   try {
     const [summaryRes, recentRes] = await Promise.all([
@@ -373,7 +462,8 @@ async function renderDashboard() {
   const localMetrics = computeMetrics(events);
   const dayLabels = getLastNDays(days);
 
-  const remote = await fetchRemote(apiBase, days);
+  const [remote, downloads] = await Promise.all([fetchRemote(apiBase, days), fetchDownloads(apiBase, days)]);
+  renderDownloads(downloads, days);
 
   const metrics = remote
     ? {
@@ -432,6 +522,8 @@ async function renderDashboard() {
 }
 
 function bindActions() {
+  document.getElementById('exportDownloadEmails')?.addEventListener('click', exportDownloadEmails);
+
   const clearButton = document.getElementById('clearAnalytics');
   if (!clearButton) return;
 

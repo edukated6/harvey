@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/styles.css?v=20261008-min">
+  <link rel="stylesheet" href="./css/styles.css?v=20261012-1">
   <script src="./java/analytics-config.js" defer></script>
-  <script src="./java/analytics-dashboard.js?v=20260815-3" defer></script>
+  <script src="./java/analytics-dashboard.js?v=20261012-1" defer></script>
   <script src="./java/local-gate.js?v=20260815-4" defer></script>
 </head>
 <body class="analytics-page">
@@ -104,6 +104,28 @@
           <p>How visitors move from package building to checkout</p>
         </div>
         <ol class="analytics-list" id="serviceFunnelList"></ol>
+      </article>
+
+      <article class="analytics-panel analytics-panel-wide reveal-up is-visible">
+        <div class="analytics-panel-head">
+          <h3>forProducers Downloads</h3>
+          <p id="downloadsSummary">Download counts load from the analytics API.</p>
+        </div>
+        <div class="analytics-metrics analytics-downloads-metrics">
+          <div class="analytics-metric-card">
+            <p>Total Downloads</p>
+            <h2 id="metricDownloads">0</h2>
+            <span id="metricDownloadsTrend">Last 14 days: 0</span>
+          </div>
+          <div class="analytics-metric-card">
+            <p>Email Subscribers</p>
+            <h2 id="metricDownloadEmails">0</h2>
+            <span>Unique emails collected</span>
+          </div>
+        </div>
+        <ul class="analytics-list" id="downloadsByOs"></ul>
+        <div class="analytics-activity" id="recentDownloads"></div>
+        <button class="btn btn-ghost" id="exportDownloadEmails" type="button">Export Emails (CSV)</button>
       </article>
 
       <article class="analytics-panel analytics-panel-wide reveal-up is-visible">

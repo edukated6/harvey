@@ -74,3 +74,15 @@ CREATE TABLE IF NOT EXISTS admin_sessions (
 
 CREATE INDEX IF NOT EXISTS idx_admin_sessions_token_hash ON admin_sessions (token_hash);
 CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires_at ON admin_sessions (expires_at);
+
+CREATE TABLE IF NOT EXISTS download_signups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL,
+  os TEXT NOT NULL,
+  tier TEXT NOT NULL DEFAULT 'free',
+  visitor_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_download_signups_email ON download_signups (email);
+CREATE INDEX IF NOT EXISTS idx_download_signups_created_at ON download_signups (created_at);
