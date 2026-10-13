@@ -1390,6 +1390,11 @@ footer {
   font-size: 13px;
 }
 
+footer a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
 /* ---------- owner pages: login, admin, analytics ---------- */
 
 .analytics-main {
