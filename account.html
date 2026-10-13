@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/forProducers.svg">
+  <meta charset="UTF-8">
+  <title>forProducers Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your forProducers plan, billing and team.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECEFF2">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E1117">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20261013-1">
+  <script src="./java/analytics-config.js" defer></script>
+  <script src="./java/scripts.js" defer></script>
+  <script src="./java/account.js?v=20261013-1" defer></script>
+  <style>
+    .acct { max-width: 760px; margin: 0 auto; padding: clamp(28px, 5vw, 56px) var(--gutter) 64px; }
+    /* Fill at least one screen so the footer stays below the fold */
+    .acct { min-height: 100vh; min-height: 100svh; box-sizing: border-box; }
+    .acct h1 { font-family: var(--display); font-size: clamp(30px, 5vw, 42px); margin: 0 0 6px; }
+    .acct-logo { margin-bottom: 14px; }
+    .acct-logo img { display: block; margin: 0 auto; width: clamp(110px, 18vw, 150px); height: auto; }
+    .acct .lede { color: var(--muted); margin: 0 0 28px; text-align: center; }
+    .acct-card { border-top: 2px solid var(--ink); padding: 18px 0 30px; }
+    .acct-card h2 { font-family: var(--display); font-size: 21px; margin: 0 0 4px; }
+    .acct-card .sub { color: var(--muted); margin: 0 0 14px; font-size: 14px; }
+    .acct-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 10px 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+    .acct-row:first-of-type { border-top: 0; }
+    .acct-row .who { min-width: 0; }
+    .acct-row .who b { display: block; overflow-wrap: anywhere; }
+    .acct-row .who small { color: var(--muted); overflow-wrap: anywhere; }
+    .acct-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .acct-field { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .acct-field input, .acct-field select { flex: 1 1 200px; min-width: 0; }
+    .acct input, .acct select { border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; background: var(--panel); color: var(--ink); font: inherit; font-size: 15px; }
+    .acct input:focus, .acct select:focus { outline: 2px solid var(--focus); outline-offset: 1px; border-color: transparent; }
+    .acct label { display: block; font-weight: 600; font-size: 14px; margin-top: 14px; }
+    .acct .code { font-family: var(--mono); letter-spacing: 8px; font-size: 22px; text-align: center; }
+    .plan-badge { margin-left: 8px; font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); vertical-align: middle; }
+    .plan-badge.pro, .plan-badge.team { color: var(--accent); }
+    .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 28px; margin-top: 12px; }
+    .plan-opt { border-top: 1px solid var(--line); padding: 14px 0 6px; }
+    .plan-opt b { font-family: var(--display); font-size: 18px; }
+    .plan-opt p { color: var(--muted); font-size: 14px; margin: 4px 0 12px; }
+    .acct-msg { padding: 2px 0 2px 14px; margin-bottom: 22px; border-left: 3px solid var(--line); }
+    .acct-msg.good { border-color: var(--go); }
+    .acct-msg.bad { border-color: var(--danger); }
+    .acct-error { color: var(--danger); font-size: 14px; margin: 8px 0 0; }
+    .acct-error:empty { display: none; }
+    .member-controls { display: flex; gap: 10px; align-items: center; }
+    .member-controls select { flex: none; }
+    .seats { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .link-btn { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: 14px; padding: 0; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <nav class="site-nav" aria-label="Primary">
+    <span class="site-nav-brand">The Harvey Effect</span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="./home" data-nav-link>Home</a>
+      <a href="./work" data-nav-link>Work</a>
+      <a href="./blog" data-nav-link>Blog</a>
+      <a href="./services" data-nav-link>Services</a>
+      <a href="./contact" data-nav-link>Contact</a>
+      <a href="./forproducers" data-nav-link class="nav-feature">forProducers</a>
+      <a href="./account" data-nav-link class="is-active" aria-current="page">Login</a>
+    </div>
+  </nav>
+
+  <main class="acct">
+    <h1 class="acct-logo"><img src="./assets/images/forProducers.svg" alt="forProducers account" width="150" height="150"></h1>
+    <p class="lede" id="lede">Sign in with the email you use in the app.</p>
+
+    <div class="acct-msg" id="pageMsg" role="status" hidden></div>
+
+    <!-- Invite (from an invite email link) -->
+    <section class="acct-card" id="inviteCard" hidden>
+      <h2 id="inviteTitle">You're invited</h2>
+      <p class="sub" id="inviteText"></p>
+      <div class="acct-actions" id="inviteActions" hidden>
+        <button class="btn btn-primary" id="inviteAcceptBtn" type="button">Join the team</button>
+      </div>
+      <p class="acct-error" id="inviteError" role="alert"></p>
+    </section>
+
+    <!-- Sign in: email, then the emailed code -->
+    <section class="acct-card" id="signInCard" hidden>
+      <form id="emailForm" novalidate>
+        <h2>Sign in</h2>
+        <p class="sub">We'll email you a 6-digit code. New here? This creates your free account.</p>
+        <label for="email">Email</label>
+        <div class="acct-field"><input id="email" type="email" autocomplete="email" placeholder="you@studio.com" required></div>
+        <p class="acct-error" id="emailError" role="alert"></p>
+        <div class="acct-actions"><button class="btn btn-primary" id="sendCodeBtn" type="submit">Email me a code</button></div>
+      </form>
+      <form id="codeForm" novalidate hidden>
+        <h2>Check your email</h2>
+        <p class="sub" id="codeSub"></p>
+        <label for="code">6-digit code</label>
+        <div class="acct-field"><input id="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></div>
+        <p class="acct-error" id="codeError" role="alert"></p>
+        <div class="acct-actions">
+          <button class="btn btn-primary" id="signInBtn" type="submit">Sign in</button>
+          <button class="link-btn" id="otherEmailBtn" type="button">Use a different email</button>
+          <button class="link-btn" id="resendBtn" type="button">Send a new code</button>
+        </div>
+      </form>
+    </section>
+
+    <div id="dashboard" hidden>
+      <!-- Plan and billing -->
+      <section class="acct-card">
+        <h2>Plan <span class="plan-badge" id="planBadge">Free</span></h2>
+        <p class="sub" id="planText"></p>
+        <div class="plans" id="planOptions" hidden>
+          <div class="plan-opt">
+            <b>Pro · $20/month</b>
+            <p>Brainstorm, Production Docs, Library, Calendar and appearance options.</p>
+            <button class="btn btn-primary" type="button" data-checkout="pro">Upgrade to Pro</button>
+          </div>
+          <div class="plan-opt">
+            <b>Team · $50/month</b>
+            <p>Everything in Pro for up to 10 producers and sales reps. Followers are free.</p>
+            <button class="btn" type="button" data-checkout="team">Get Team</button>
+          </div>
+        </div>
+        <div class="acct-actions" id="billingActions" hidden>
+          <button class="btn" id="portalBtn" type="button">Manage billing</button>
+        </div>
+        <p class="acct-error" id="planError" role="alert"></p>
+      </section>
+
+      <!-- Team -->
+      <section class="acct-card" id="teamCard" hidden>
+        <h2 id="teamTitle">Team</h2>
+        <p class="sub" id="teamText"></p>
+
+        <form id="createTeamForm" novalidate hidden>
+          <label for="teamName">Team name</label>
+          <div class="acct-field">
+            <input id="teamName" type="text" maxlength="80" placeholder="Morning Show" required>
+            <button class="btn btn-primary" type="submit">Create team</button>
+          </div>
+        </form>
+
+        <div id="teamBody" hidden>
+          <p class="seats" id="seatText"></p>
+          <div id="memberList"></div>
+
+          <div id="ownerTools" hidden>
+            <h3 style="margin:22px 0 0; font-size:16px">Invite someone</h3>
+            <form id="inviteForm" novalidate>
+              <div class="acct-field">
+                <input id="inviteEmail" type="email" placeholder="their@email.com" aria-label="Their email" required>
+                <select id="inviteRole" aria-label="Role">
+                  <option value="producer">Producer (uses a seat)</option>
+                  <option value="sales">Sales (uses a seat)</option>
+                  <option value="follower">Follower (free)</option>
+                </select>
+                <button class="btn btn-primary" type="submit">Send invite</button>
+              </div>
+            </form>
+            <div id="pendingList"></div>
+            <h3 style="margin:22px 0 0; font-size:16px">Team name</h3>
+            <form id="renameForm" novalidate>
+              <div class="acct-field">
+                <input id="renameInput" type="text" maxlength="80" aria-label="Team name" required>
+                <button class="btn" type="submit">Rename</button>
+              </div>
+            </form>
+          </div>
+          <div class="acct-actions" id="leaveActions" hidden>
+            <button class="link-btn" id="leaveBtn" type="button">Leave this team</button>
+          </div>
+        </div>
+        <p class="acct-error" id="teamError" role="alert"></p>
+      </section>
+
+      <!-- Profile -->
+      <section class="acct-card">
+        <h2>Profile</h2>
+        <p class="sub" id="profileEmail"></p>
+        <form id="nameForm" novalidate>
+          <label for="nameInput">Your name</label>
+          <div class="acct-field">
+            <input id="nameInput" type="text" maxlength="80" autocomplete="name" placeholder="Your name">
+            <button class="btn" type="submit">Save</button>
+          </div>
+        </form>
+        <p class="acct-error" id="nameError" role="alert"></p>
+        <div class="acct-actions">
+          <a class="btn" href="./forproducers#download">Download forProducers</a>
+          <button class="btn" id="signOutBtn" type="button">Sign out</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Created and Designed by Ahmaad Harvey. All Rights Reserved.
+  </footer>
+</body>
+</html>
