@@ -45,9 +45,9 @@ Set the key used to sign forProducers download links (any long random string):
 
 ## 2b) forProducers Downloads (R2)
 
-The installers live in the R2 bucket bound as `DOWNLOADS` in [analytics-worker/wrangler.toml](analytics-worker/wrangler.toml). `DOWNLOAD_FILES` maps `tier:os` to the object key. After a visitor gives an email, `POST /downloads` returns a signed `/downloads/file/<key>` link that expires after 10 minutes, and the worker streams the file from R2 (resumable downloads supported).
+The installers live in the R2 bucket bound as `DOWNLOADS` in [analytics-worker/wrangler.toml](analytics-worker/wrangler.toml). `DOWNLOAD_FILES` maps `tier:os` to the object key. Visitors sign in (or sign up) with their forProducers account first. `POST /downloads` takes the account's session token as a bearer token, checks it with the `forproducers-api` Worker through the `FORPRODUCERS_API` service binding, records the account's email, and returns a signed `/downloads/file/<key>` link that expires after 10 minutes, and the worker streams the file from R2 (resumable downloads supported).
 
-Keep the bucket private: turn off the r2.dev URL and disconnect the public custom domain, or the files can be downloaded without an email. To release a new version, upload the file to the bucket and update its key in `DOWNLOAD_FILES`.
+Keep the bucket private: turn off the r2.dev URL and disconnect the public custom domain, or the files can be downloaded without an account. Deploy `forproducers-api` before this worker so the service binding resolves. To release a new version, upload the file to the bucket and update its key in `DOWNLOAD_FILES`.
 
 ## 3) Configure Stripe Prices
 
@@ -82,7 +82,7 @@ The login endpoint creates an eight-hour session. A valid session token is requi
 - `POST /auth/logout` (revokes the current server session)
 - `GET /summary?days=14` (authenticated session required)
 - `GET /recent?limit=30` (authenticated session required)
-- `POST /downloads` (public; saves the visitor's email and returns a 10-minute signed download link)
+- `POST /downloads` (forProducers account bearer token required; saves the account email and returns a 10-minute signed download link)
 - `GET /downloads/file/<key>?exp=&sig=` (public; streams the installer from R2 when the signature is valid)
 - `GET /admin/downloads?days=14` (authenticated session required; download counts, OS mix, recent signups)
 - `GET /admin/downloads.csv` (authenticated session required; one row per email for newsletter import)

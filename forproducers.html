@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="./css/styles.css?v=20261012-1">
   <script src="./java/analytics-config.js" defer></script>
   <script src="./java/scripts.js" defer></script>
-  <script src="./java/download-gate.js" defer></script>
+  <script src="./java/download-gate.js?v=20261013-1" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <style>
 :root{
@@ -272,9 +272,15 @@
 .fp .os-menu .btn{justify-content:center}
 .fp .os-menu [aria-disabled="true"]{opacity:.45;cursor:default}
 .fp .dl-form label{font-size:13px;font-weight:600;color:var(--muted)}
-.fp .dl-form input[type=email]{font:inherit;font-size:14px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:0}
-.fp .dl-form input[type=email]:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
-.fp .dl-form .dl-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fp .dl-step{display:grid;gap:8px}
+.fp .dl-step[hidden]{display:none}
+.fp .dl-form .dl-lead{font-size:13.5px;color:var(--muted)}
+.fp .dl-form .dl-lead b{color:var(--ink);overflow-wrap:anywhere}
+.fp .dl-form .dl-links{font-size:12.5px;color:var(--muted)}
+.fp .dl-form .dl-link{background:none;border:0;padding:0;font:inherit;color:var(--muted);text-decoration:underline;cursor:pointer}
+.fp .dl-form input[type=email],.fp .dl-form #dlCode{font:inherit;font-size:14px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:0}
+.fp .dl-form #dlCode{font-family:var(--mono);letter-spacing:6px;text-align:center}
+.fp .dl-form input:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 .fp .dl-form .dl-note{font-size:12.5px;color:var(--muted)}
 .fp .dl-form .dl-status{font-size:13.5px}
 .fp .dl-form .dl-status:empty{display:none}
@@ -463,16 +469,30 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
       </ul>
       <details class="os-pick">
         <summary class="btn">Download free</summary>
-        <form class="os-menu dl-form" data-tier="free" novalidate>
-          <label for="dlEmail">Email</label>
-          <input id="dlEmail" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required>
-          <input class="dl-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button class="btn" type="submit" name="os" value="linux">Linux</button>
-          <button class="btn" type="submit" name="os" value="windows">Windows</button>
-          <span class="btn" aria-disabled="true">macOS · coming later</span>
-          <p class="dl-note">I'll send forProducers updates to this email. Unsubscribe anytime.</p>
+        <div class="os-menu dl-form" data-tier="free">
+          <form class="dl-step" data-step="email" novalidate>
+            <p class="dl-lead">Sign in or create a free account to download. No password, just a code by email.</p>
+            <label for="dlEmail">Email</label>
+            <input id="dlEmail" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required>
+            <button class="btn" type="submit">Continue</button>
+            <p class="dl-note">I'll send forProducers updates to this email. Unsubscribe anytime.</p>
+          </form>
+          <form class="dl-step" data-step="code" novalidate hidden>
+            <p class="dl-lead" data-code-sub></p>
+            <label for="dlCode">Code</label>
+            <input id="dlCode" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" required>
+            <button class="btn" type="submit">Sign in</button>
+            <p class="dl-links"><button class="dl-link" type="button" data-action="resend">Send a new code</button> · <button class="dl-link" type="button" data-action="change-email">Use another email</button></p>
+          </form>
+          <form class="dl-step" data-step="os" novalidate hidden>
+            <p class="dl-lead">Signed in as <b data-account-email></b>. Choose your system.</p>
+            <button class="btn" type="submit" name="os" value="linux">Linux</button>
+            <button class="btn" type="submit" name="os" value="windows">Windows</button>
+            <span class="btn" aria-disabled="true">macOS · coming later</span>
+            <p class="dl-links"><button class="dl-link" type="button" data-action="sign-out">Not you? Sign out</button></p>
+          </form>
           <p class="dl-status" role="status" aria-live="polite"></p>
-        </form>
+        </div>
       </details>
     </div>
     <div class="tier pick">
@@ -509,7 +529,7 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
 <section id="private">
   <h2>Questions</h2>
   <dl class="faq">
-    <div><dt>Do I need an account?</dt><dd>Not for Free version. Install it and start a project, with no sign-up and no login. Pro and Teams will need a license, and pricing will be announced at launch.</dd></div>
+    <div><dt>Do I need an account?</dt><dd>A free one, to download. Sign in with your email and the code it sends you; there is no password. Pro and Teams will need a license, and pricing will be announced at launch.</dd></div>
     <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your work down with it.</dd></div>
     <div><dt>Do I have to use AI?</dt><dd>No. You only use it if you set it up. If you do, it can run on your own machine through Ollama, or through an OpenAI-compatible service with your own key.</dd></div>
     <div><dt>Can I move a project to another computer?</dt><dd>Yes. A whole project packs into one <code>.fpshow</code> file.</dd></div>

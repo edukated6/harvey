@@ -684,6 +684,28 @@ async function serveDownloadFile(request, env, url) {
   return new Response(object.body, { status: 200, headers });
 }
 
+// Downloads need a forProducers account: the page sends the account's session token, and
+// forproducers-api (through the FORPRODUCERS_API service binding) says whose it is.
+async function getForProducersEmail(request, env) {
+  const authorization = request.headers.get('Authorization') || '';
+  if (!/^Bearer\s+\S+/i.test(authorization)) return '';
+
+  const init = { headers: { Authorization: authorization } };
+  let response;
+  try {
+    response = env.FORPRODUCERS_API
+      ? await env.FORPRODUCERS_API.fetch('https://forproducers-api/v1/me', init)
+      : await fetch(`${String(env.FORPRODUCERS_API_URL || '').replace(/\/$/, '')}/v1/me`, init);
+  } catch {
+    return '';
+  }
+  if (!response.ok) return '';
+
+  const me = await response.json().catch(() => ({}));
+  const email = asString(me?.email, 254).trim().toLowerCase();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
+}
+
 async function requestDownload(request, env, headers) {
   let payload = null;
   try {
@@ -699,14 +721,9 @@ async function requestDownload(request, env, headers) {
     return json({ error: 'That download is not available.' }, 404, headers);
   }
 
-  // Bots that fill the hidden field get a dead end and are not counted or added to the list.
-  if (asString(payload?.website, 120)) {
-    return json({ error: 'Download is unavailable right now.' }, 400, headers);
-  }
-
-  const email = asString(payload?.email, 254).trim().toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return json({ error: 'Please enter a valid email address.' }, 400, headers);
+  const email = await getForProducersEmail(request, env);
+  if (!email) {
+    return json({ error: 'Please sign in to download.' }, 401, headers);
   }
 
   const recent = await env.DB
