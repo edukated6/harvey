@@ -13,7 +13,7 @@ RESEND_FROM = "contact@theharveyeffect.com"
 EMAIL_TO = "ahmaadharvey@pm.me"
 # R2 object keys handed out by POST /downloads to signed-in forProducers accounts, keyed tier:os.
 # The worker serves them through short-lived signed links (secret: DOWNLOAD_SIGNING_SECRET).
-DOWNLOAD_FILES = '{"free:linux":"forProducers-linux.AppImage","free:windows":"forProducers-Setup.exe"}'
+DOWNLOAD_FILES = '{"free:linux":"forProducers-linux.AppImage","free:windows":"forProducers-Setup-win.exe"}'
 
 [[d1_databases]]
 binding = "DB"
