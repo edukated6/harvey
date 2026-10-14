@@ -55,7 +55,7 @@
 .fp .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .fp button{font:inherit;color:inherit;cursor:pointer}
 .fp :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.fp .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.fp .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
 .fp .btn:hover{border-color:var(--muted)}
 .fp .btn.primary{background:var(--tally);border-color:var(--tally);color:#fff}
 .fp .btn.primary:hover{filter:brightness(1.08)}
@@ -350,7 +350,7 @@
       <a class="dl-jump" href="#download">Get forProducers</a>
       <span class="scribble" aria-hidden="true">it actually runs. try it </span>
     </div>
-    <p class="hint">Runs offline on Linux and Windows, with no account. macOS is coming later. During a run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
+    <p class="hint">Runs offline on Linux and Windows. macOS is coming later. During a run: <kbd>Space</kbd> next, <kbd>←</kbd> back, <kbd>P</kbd> pause, <kbd>Esc</kbd> end.</p>
   </div>
 
   <div class="flow" id="flow" aria-label="Example flow">
@@ -454,7 +454,7 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
 
 <section id="download">
   <h2>Pick your solution</h2>
-  <p class="lede" style="margin-top:14px">Start free and move up when your work needs it. Downloads for Linux and Windows open when forProducers launches; macOS coming soon.</p>
+  <p class="lede" style="margin-top:14px">Start free and move up when your work needs it. Available now for Linux and Windows; macOS coming soon.</p>
   <div class="tiers">
     <div class="tier">
       <div class="tier-top"><h3>Free</h3></div>
@@ -465,10 +465,10 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
         <li>Storyboards</li>
         <li>Templates</li>
         <li>Import and export</li>
-        <li class="no">No Brainstorm, Production Docs, Library, Calendar or appearance options</li>
+        <li class="no">No Brainstorm, Production Docs, Guest Questions, AI drafting, Library, Calendar, sync or appearance options</li>
       </ul>
       <details class="os-pick">
-        <summary class="btn">Download free</summary>
+        <summary class="btn">Download forProducers</summary>
         <div class="os-menu dl-form" data-tier="free">
           <form class="dl-step" data-step="email" novalidate>
             <p class="dl-lead">Sign in or create a free account to download. No password, just a code by email.</p>
@@ -504,11 +504,15 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
         <li class="plus">Everything in Free</li>
         <li>Brainstorm</li>
         <li>Production Docs that fill themselves from the Flow</li>
+        <li>Guest Questions with a fillable approval form</li>
+        <li>Optional AI drafting, including fully local</li>
         <li>Library</li>
         <li>Calendar</li>
+        <li>Sync across your computers with 10 GB of cloud storage</li>
+        <li>Kept copies: restore anything replaced or deleted in the last 90 days</li>
         <li>Appearance options</li>
       </ul>
-      <button class="btn primary" disabled>coming soon</button>
+      <a class="btn primary" href="./account.html?plan=pro">Subscribe & Download</a>
     </div>
     <div class="tier">
       <div class="tier-top"><h3>Teams</h3></div>
@@ -519,7 +523,8 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
         <li>Shared projects across the whole crew</li>
         <li>Roles for producers, directors and talent</li>
         <li>A shared template library for every project</li>
-        <li>One license for multiple seats</li>
+        <li>Up to 10 producers and sales reps on one license; followers are free</li>
+        <li>Sync across your computers with 20 GB of cloud storage</li>
       </ul>
       <button class="btn" disabled>coming soon</button>
     </div>
@@ -529,11 +534,11 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
 <section id="private">
   <h2>Questions</h2>
   <dl class="faq">
-    <div><dt>Do I need an account?</dt><dd>A free one, to download. Sign in with your email and the code it sends you; there is no password. Pro and Teams will need a license, and pricing will be announced at launch.</dd></div>
-    <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your work down with it.</dd></div>
+    <div><dt>Do I need an account?</dt><dd>A free one, to download. Sign in with your email and the code it sends you; there is no password. Pro ($20/mo) and Teams ($50/mo) are subscriptions on the same account, managed from your account page. The same download unlocks whatever your plan includes.</dd></div>
+    <div><dt>Does it need the internet?</dt><dd>No. Projects live on your computer, so a bad studio connection can't take your work down with it. On Pro and Teams, your work syncs across your computers whenever you're back online, and the app keeps working offline for 14 days between plan checks.</dd></div>
     <div><dt>Do I have to use AI?</dt><dd>No. You only use it if you set it up. If you do, it can run on your own machine through Ollama, or through an OpenAI-compatible service with your own key.</dd></div>
     <div><dt>Can I move a project to another computer?</dt><dd>Yes. A whole project packs into one <code>.fpshow</code> file.</dd></div>
-    <div><dt>When can I get it?</dt><dd>There's no release date yet. I'd rather it be right than early. The launch will be announced on the blog.</dd></div>
+    <div><dt>When can I get it?</dt><dd>Now. Free and Pro are available for Linux and Windows today, and the app updates itself as new versions come out. Teams and macOS are next; I'll announce them on the blog.</dd></div>
   </dl>
 </section>
 

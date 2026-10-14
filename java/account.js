@@ -13,6 +13,8 @@
 
   var params = new URLSearchParams(location.search);
   var inviteToken = params.get('invite');
+  // ?plan=pro from the pricing cards: go straight to checkout once signed in
+  var wantPlan = ['pro', 'team'].indexOf(params.get('plan')) >= 0 ? params.get('plan') : null;
   var email = '';
   var account = null;
   var team = null;
@@ -121,6 +123,12 @@
     renderPlan();
     renderProfile();
     await renderTeam();
+    if (wantPlan) {
+      var plan = wantPlan;
+      wantPlan = null;
+      history.replaceState(null, '', location.pathname + (inviteToken ? '?invite=' + encodeURIComponent(inviteToken) : ''));
+      if (!account.subscription) await checkout(plan);
+    }
   }
 
   function renderPlan() {
