@@ -161,7 +161,7 @@
 .fp .wrow .wdesc{grid-column:1/-1;grid-row:2}
 .fp .faq div{grid-template-columns:minmax(0,1fr);gap:4px}}
 .fp .arc-head{display:grid;gap:14px;margin-bottom:28px}
-.fp .stops{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;list-style:none;margin:0;padding:0;position:relative}
+.fp .stops{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;list-style:none;margin:0;padding:0;position:relative}
 .fp .stops::before{content:"";position:absolute;left:4%;right:4%;top:19px;height:2px;background:var(--line)}
 .fp .stop button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:8px;text-align:center;width:100%;padding-bottom:8px;position:relative}
 .fp .stop button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:8px}
@@ -228,6 +228,20 @@
 .fp .file .tag{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .fp .file mark{background:color-mix(in srgb,var(--amber) 35%,transparent);color:inherit;border-radius:2px}
 .fp .empty{font-size:14px;color:var(--muted);padding:8px 2px}
+.fp .lanes{display:grid;gap:8px}
+.fp .lane{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:grid;gap:8px;min-width:0}
+.fp .lane-h{display:flex;gap:10px;align-items:baseline;font-size:13px;min-width:0}
+.fp .lane-h b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp .lane-h small{margin-left:auto;font:11px var(--mono);color:var(--muted);white-space:nowrap}
+.fp .shots{display:flex;gap:8px;overflow-x:auto;padding:2px}
+.fp .shot{flex:none;width:108px;aspect-ratio:16/9;border:1px solid var(--line);border-radius:6px;padding:0;position:relative;overflow:hidden}
+.fp .shot[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.fp .shot .sz{position:absolute;left:4px;top:4px;font:700 9px/1 var(--mono);background:rgba(0,0,0,.6);color:#fff;padding:3px 4px;border-radius:3px}
+.fp .shot .star{position:absolute;right:5px;top:2px;color:#F2C94C;font-size:14px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.fp .shot .used{position:absolute;right:5px;bottom:8px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 1.5px #fff}
+.fp .shot .pal{position:absolute;left:0;right:0;bottom:0;height:4px;display:flex}
+.fp .shot .pal i{flex:1}
+.fp .pin-detail{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:8px;font-size:14px}
 .fp .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(20px,4vw,48px);align-items:start}
 .fp .script{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .fp .script textarea{width:100%;min-height:230px;border:0;resize:vertical;padding:18px;font:15px/1.7 var(--mono);background:transparent;color:var(--ink);display:block}
@@ -300,7 +314,7 @@
 .fp .get{grid-template-columns:minmax(0,1fr)}
 .fp .tiers{grid-template-columns:minmax(0,1fr)}
 .fp .get .logo-big{display:none}}
-@media (max-width:640px){.fp .stops{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:14px}
+@media (max-width:640px){.fp .stops{grid-template-columns:repeat(4,minmax(0,1fr));row-gap:14px}
 .fp .stops::before{display:none}
 .fp .stop .sub{display:none}
 .fp .seg{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:10px 14px}
@@ -407,7 +421,7 @@
 <section id="arc">
   <div class="arc-head">
     <h2>How a production moves through it</h2>
-    <p class="lede">Six stages, and each one hands its work to the next. Click through them. Every stage has a small working piece of the app.</p>
+    <p class="lede">Seven stages, and each one hands its work to the next. Click through them. Every stage has a small working piece of the app.</p>
   </div>
   <ol class="stops" role="tablist" id="stops"></ol>
   <div class="panel" id="panel" role="tabpanel"></div>
@@ -465,7 +479,7 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
         <li>Storyboards</li>
         <li>Templates</li>
         <li>Import and export</li>
-        <li class="no">No Brainstorm, Production Docs, Guest Questions, AI drafting, Library, Calendar, sync or appearance options</li>
+        <li class="no">No Brainstorm, Pinboard, Production Docs, Guest Questions, AI drafting, Library, Calendar, sync or appearance options</li>
       </ul>
       <details class="os-pick">
         <summary class="btn">Download forProducers</summary>
@@ -503,6 +517,7 @@ Plus your weekend forecast. It's all ahead, so stay with us.</textarea>
       <ul>
         <li class="plus">Everything in Free</li>
         <li>Brainstorm</li>
+        <li>Pinboard: reference shots for every segment, with a Lookbook PDF</li>
         <li>Production Docs that fill themselves from the Flow</li>
         <li>Guest Questions with a fillable approval form</li>
         <li>Optional AI drafting, including fully local</li>
@@ -735,6 +750,7 @@ const STAGES=[
  {k:"Brainstorm",sub:"Scope it",c:"--c-violet"},
  {k:"Plan",sub:"Schedule it",c:"--c-teal"},
  {k:"Storyboard",sub:"Picture it",c:"--c-coral"},
+ {k:"Pinboard",sub:"Match it",c:"--c-amber"},
  {k:"Paperwork",sub:"Document it",c:"--c-sky"},
  {k:"Run live",sub:"Run it",c:"--c-red"},
  {k:"Archive",sub:"Keep it",c:"--c-green"},
@@ -745,7 +761,7 @@ $("#stops").addEventListener("click",e=>{const b=e.target.closest("button[data-s
 $("#stops").addEventListener("keydown",e=>{
   if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
   e.preventDefault();e.stopPropagation();
-  setStage((stage+(e.key==="ArrowRight"?1:5))%6);$("#tab"+stage).focus();
+  setStage((stage+(e.key==="ArrowRight"?1:STAGES.length-1))%STAGES.length);$("#tab"+stage).focus();
 });
 function setStage(i){
   stage=i;
@@ -774,7 +790,7 @@ const PANELS=[
   <div class="demo"><div class="demo-label">Production Planner · October 2026</div><div class="cal" id="cal"></div><div class="tasks" id="tasks"></div></div>`,
 ()=>`<div class="copy"><h3>A whiteboard for every segment</h3>
   <p class="lede" style="font-size:15px">Sketch frames with a pressure-sensitive pen, marker and highlighter. Give each frame its scene direction so the crew knows the intent as well as the picture.</p>
-  <ul class="ticks"><li>Frames with a strip view, duplicate and undo</li><li>Scene title, stage description, narrative beat, emotion and a producer risk tag</li><li>Export frames to PNG or the whole board to PDF</li><li>Jump from a frame straight to its segment in the Flow</li></ul></div>
+  <ul class="ticks"><li>Frames with a strip view, duplicate and undo</li><li>Scene title, stage description, narrative beat, emotion and a producer risk tag</li><li>Trace a Pinboard shot faintly under any frame and sketch over it</li><li>Export frames to PNG or the whole board to PDF</li><li>Jump from a frame straight to its segment in the Flow</li></ul></div>
   <div class="demo"><div class="demo-label">Segment 4 · Frame 1 — draw something</div>
   <div class="board-tools" id="tools">
     <button class="pill" data-tool="pen" aria-pressed="true">Pen</button><button class="pill" data-tool="marker" aria-pressed="false">Marker</button><button class="pill" data-tool="hi" aria-pressed="false">Highlighter</button>
@@ -784,9 +800,17 @@ const PANELS=[
   <canvas id="board" width="960" height="540"></canvas>
   <div class="meta-row"><span>Beat: <b>Mayor dodges the fare question</b></span><span>Emotion: <b>Tension</b></span></div>
   <div class="meta-row" style="align-items:center">Producer risk <span class="risk" id="risk" style="border:0;padding:0;background:none"><button data-r="low" aria-pressed="false">low</button><button data-r="medium" aria-pressed="true">medium</button><button data-r="high" aria-pressed="false">high</button></span></div></div>`,
+()=>`<div class="copy"><h3>A Pinboard for the shots you want to match</h3>
+  <p class="lede" style="font-size:15px">Pin the reference frames a production is chasing: framing, lighting, a moment from something you loved. Every segment gets its own lane, in flow order, so the look sits right next to the plan.</p>
+  <ul class="ticks"><li>Paste a screenshot, drop images on a lane, or drop them straight onto a segment in the Flow</li><li>Camera language on every shot: size (EWS to ECU), angle, movement, lens and camera, plus talent, location and a note</li><li>Mark shots Reference, Planned or Used it, and star a hero shot that shows on its segment's row in the Flow</li><li>Zoom in, compare two shots side by side, and check 16:9, 9:16, 2.39:1, 4:3 or 1:1 framing guides</li><li>Present the board full screen, or send a Lookbook PDF to clients and crew</li></ul>
+  <p class="hint">Pinboard comes with Pro and Teams. Shots travel with the flow: filed in the Library, included in exports and synced across your computers.</p></div>
+  <div class="demo"><div class="demo-label">The Morning Desk · Pinboard</div>
+  <div class="pills" id="pinF">${["All","Reference","Planned","Used it"].map((v,i)=>`<button class="pill" aria-pressed="${i===0}">${v}</button>`).join("")}</div>
+  <div class="lanes" id="lanes"></div>
+  <div class="pin-detail" id="pinDetail"></div></div>`,
 ()=>`<div class="copy"><h3>Paperwork that fills itself in</h3>
   <p class="lede" style="font-size:15px">Production docs are generated live from the Flow. Edit any cell by hand. If the Flow changes later, your edited cells are flagged stale so nothing quietly drifts out of date.</p>
-  <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved flow; print or save to the Library</li></ul>
+  <ul class="ticks"><li>Production Order, Mic Assignment Sheet, Production Memo</li><li>Production Budget with summary</li><li>Reference Shot List built from the Pinboard, pictures included</li><li>Script Proposal (optional AI drafting) and Creative Brief</li><li>Build from the current flow or any saved flow; print or save to the Library</li></ul>
   <p class="hint">Try it: click a cell in the order and type over it. Then change that segment's duration in the flow at the top, or use the button below.</p></div>
   <div class="demo"><div class="doc-tabs"><span class="pill" aria-pressed="true">Production Order</span><span class="pill">Mic Sheet</span><span class="pill">Memo</span><span class="pill">Budget</span></div>
   <div class="doc"><table><thead><tr><th>#</th><th>Segment</th><th>Talent</th><th>Dur</th></tr></thead><tbody id="docBody"></tbody></table></div>
@@ -794,7 +818,7 @@ const PANELS=[
   <div class="legend"><span><i style="background:var(--c-sky)"></i>Edited by hand</span><span><i style="background:var(--amber)"></i>Stale: flow changed since</span></div></div></div>`,
 ()=>`<div class="copy"><h3>Drift tracking while you're live or rolling</h3>
   <p class="lede" style="font-size:15px">A live bar sits on top of the flow with the current segment, its timer, total elapsed, what's next, the scheduled time and the drift. The flow stays editable while the clock runs.</p>
-  <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-run</li><li><b>Film / Full view</b> shows one segment at a time, full screen</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
+  <ul class="ticks"><li><b>Live mode</b> keeps the whole flow in view; you can switch pages mid-run</li><li><b>Film / Full view</b> shows one segment at a time, full screen, with its Pinboard reference shot</li><li>Next, previous, pause and end from the keyboard</li><li>A run report of planned vs. actual for every segment, saved to the Library</li></ul>
   <div><button class="btn primary" id="runFromArc">▶ Run the flow at the top</button></div></div>
   <div class="demo"><div class="demo-label">How drift reads</div>
   <div class="qs" style="display:grid;gap:8px">
@@ -822,6 +846,19 @@ const LIB=[
  {k:"RUN",c:"--c-teal",t:"Ridge County Fire special · Sep 29",s:"Rundown · Luis Ortega · Ridge County",tag:"wrapped",w:""},
 ];
 let libView="Recent";
+const PIN_ST={Reference:"--muted","Planned":"--c-sky","Used it":"--go"};
+const PINS=[
+ {lane:"Unsorted",seg:0,shots:[{sz:"EWS",a:"High angle",m:"Drone push",lens:"18mm",cam:"Mavic 3",st:"Reference",note:"Harbor skyline at sunrise. Could open the show or the weekend close.",pal:["#2B3A55","#D9925B","#F2D4A8","#1A1D24"],x:50}]},
+ {lane:"Welcome & headlines",seg:1,shots:[
+  {sz:"WS",a:"Eye level",m:"Static",lens:"24mm",cam:"Studio ped 1",st:"Used it",note:"Two-shot at the desk, monitor wall behind. Keep the wall warm.",pal:["#1F2B44","#3D6E99","#E8C9A8","#C8323F"],x:50,hero:1},
+  {sz:"MCU",a:"Eye level",m:"Slow push",lens:"50mm",cam:"Studio ped 2",st:"Planned",note:"Dana's single for the headline read.",pal:["#24324A","#5A7FA6","#E3BE9A","#F2F2F2"],x:46}]},
+ {lane:"Mayor Okafor on the transit budget",seg:1,shots:[
+  {sz:"MS",a:"Eye level",m:"Static",lens:"35mm",cam:"FX6 (remote)",st:"Planned",note:"City Hall flags soft behind him. Match the color of the studio side.",pal:["#3A2F2A","#8A6E52","#D9B391","#3F7F78"],x:56,hero:1},
+  {sz:"CU",a:"Slightly low",m:"Handheld",lens:"85mm",cam:"FX6 (remote)",st:"Reference",note:"Tight on the mayor for the fare answer. Only if he dodges.",pal:["#2E2724","#6B5241","#C9A07E","#B4583F"],x:50},
+  {sz:"WS",a:"Eye level",m:"Static",lens:"24mm",cam:"FX6 (remote)",st:"Reference",note:"Establishing shot of the steps, if the truck can park on Main.",pal:["#4A5560","#9AA7B0","#C9CDD4","#6A6F7A"],x:50}]},
+ {lane:"Ridge fire: containment update",seg:1,shots:[
+  {sz:"MS",a:"Eye level",m:"Static",lens:"28mm",cam:"Live U kit",st:"Reference",note:"Luis frame left, the ridge line and smoke frame right.",pal:["#3B2A26","#C2612F","#E8B07A","#4C7A55"],x:32,hero:1}]},
+];
 const INIT={
  0(){
   const draw=()=>{$("#qList").innerHTML=QS[qType].map(([h,q])=>`<li><small>${h}</small>${q}</li>`).join("")+`<li style="border-style:dashed;color:var(--muted)"><small>AI follow-up · optional</small>Written from your answers so far, by a local model or your own endpoint.</li>`};
@@ -865,13 +902,36 @@ const INIT={
    if(b.id==="clr")seed()};
   $("#risk").onclick=e=>{const b=e.target.closest("button");if(b)document.querySelectorAll("#risk button").forEach(x=>x.setAttribute("aria-pressed",x===b))};
  },
- 3(){renderDocs();
+ 3(){
+  let f="All",sel=[2,0];
+  const R={EWS:4,WS:8,MS:13,MCU:17,CU:24,ECU:34};
+  const bg=s=>`radial-gradient(circle at ${s.x}% 62%,${s.pal[2]} 0 ${R[s.sz]}%,transparent ${R[s.sz]+1}%),linear-gradient(170deg,${s.pal[0]},${s.pal[1]})`;
+  const draw=()=>{
+   $("#lanes").innerHTML=PINS.map((l,li)=>{const vis=l.shots.map((s,si)=>[s,si]).filter(([s])=>f==="All"||s.st===f);
+    const n=l.shots.length,used=l.shots.filter(s=>s.st==="Used it").length;
+    return `<div class="lane"><div class="lane-h"><b>${l.lane}</b><small>${l.seg?`${used} of ${n} used`:`${n} not placed`}</small></div><div class="shots">${vis.length?vis.map(([s,si])=>`<button class="shot" data-l="${li}" data-s="${si}" aria-pressed="${sel[0]===li&&sel[1]===si}" aria-label="${s.sz} shot, ${s.st}${s.hero?", hero shot":""}" style="background:${bg(s)}"><span class="sz">${s.sz}</span>${s.hero?`<span class="star" aria-hidden="true">★</span>`:""}${s.st!=="Reference"?`<span class="used" style="background:var(${PIN_ST[s.st]})"></span>`:""}<span class="pal">${s.pal.map(c=>`<i style="background:${c}"></i>`).join("")}</span></button>`).join(""):`<span class="empty" style="padding:4px 0">No shots marked ${f}</span>`}</div></div>`}).join("");
+   const l=PINS[sel[0]],s=l.shots[sel[1]];
+   $("#pinDetail").innerHTML=`<div class="demo-label">${l.lane}${l.seg?" · shot "+(sel[1]+1):""}</div>
+    <div class="meta-row"><span><b>${s.sz}</b></span><span>${s.a}</span><span>${s.m}</span><span>${s.lens} · ${s.cam}</span></div>
+    <p>${s.note}</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="risk">${Object.keys(PIN_ST).map(k=>`<button data-st="${k}" aria-pressed="${s.st===k}" style="${s.st===k?`background:var(${PIN_ST[k]});color:#fff;border-color:var(${PIN_ST[k]})`:""}">${k}</button>`).join("")}</span>
+    ${l.seg?`<button class="btn" id="pinHero" style="margin-left:auto;padding:4px 10px;font-size:12px" ${s.hero?"disabled":""}>${s.hero?"★ Hero shot":"☆ Make hero"}</button>`:`<small class="hint" style="margin-left:auto">Drag onto a segment to place it</small>`}</div>`;
+  };
+  draw();
+  $("#pinF").onclick=e=>{const b=e.target.closest("button");if(!b)return;f=b.textContent;document.querySelectorAll("#pinF button").forEach(x=>x.setAttribute("aria-pressed",x===b));draw()};
+  $("#lanes").onclick=e=>{const b=e.target.closest(".shot");if(b){sel=[+b.dataset.l,+b.dataset.s];draw()}};
+  $("#pinDetail").onclick=e=>{const l=PINS[sel[0]],s=l.shots[sel[1]],b=e.target.closest("button");if(!b)return;
+   if(b.dataset.st)s.st=b.dataset.st;
+   if(b.id==="pinHero")l.shots.forEach(x=>x.hero=x===s?1:0);
+   draw()};
+ },
+ 4(){renderDocs();
   $("#bump").onclick=()=>{segs[3].dur+=F.step*2;renderSegs()};
   $("#docBody").addEventListener("input",e=>{const td=e.target.closest("td[data-f]");if(!td)return;
    const i=+td.dataset.i,f=td.dataset.f;edits[i+f]={val:td.textContent,src:srcVal(i,f)};td.classList.add("edited");td.classList.remove("stale")});
  },
- 4(){$("#runFromArc").onclick=()=>{document.getElementById("flow").scrollIntoView({behavior:"smooth",block:"center"});if(!run.on)startRun()}},
- 5(){
+ 5(){$("#runFromArc").onclick=()=>{document.getElementById("flow").scrollIntoView({behavior:"smooth",block:"center"});if(!run.on)startRun()}},
+ 6(){
   const draw=()=>{const q=$("#libQ").value.trim().toLowerCase();
    let items=LIB.filter(x=>libView==="Recent"?x.w.includes("recent"):libView==="This week"?x.w.includes("week"):libView==="Trash"?false:true);
    if(q)items=LIB.filter(x=>(x.t+" "+x.s+" "+x.tag).toLowerCase().includes(q));
